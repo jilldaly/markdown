@@ -1,0 +1,184 @@
+---
+title: "Chp 4 Results - Random Forest"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:  
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error=TRUE)
+```
+
+```{r import_setup_chunk, include=FALSE}
+source("SensorDataPreparation.R")
+source("Chp4-LSMRF.R")
+source("SensorFeatExtract.R")
+source("InstallImport.R")
+
+install_imports(c("tidyverse", "caret", "kableExtra", "ranger", "MLmetrics", "RANN", "pROC", "gtable", "grid", "gridExtra", "RColorBrewer"))
+
+```
+
+```{r data_sets, include=FALSE}
+x_cols <- c("Timestamp", "X_AXIS", "State")
+y_cols <- c("Timestamp", "Y_AXIS", "State")
+z_cols <- c("Timestamp", "Z_AXIS", "State")
+xy_cols <- c("Timestamp", "X_AXIS", "Y_AXIS", "State")
+yz_cols <- c("Timestamp", "Y_AXIS", "Z_AXIS", "State")
+xz_cols <- c("Timestamp", "X_AXIS", "Z_AXIS", "State")
+vel <- 0.2
+acc <- 1  
+POS_CLASS <- "PATH_MOVING"
+LSM_LEVELS <- levels(tidy_sensor_df$State)
+
+
+imu11_mc_allspeed_z <- filter_sensor_all_speed(tidy_sensor_df, c("ACC", "MAG"), "IMU11", z_cols)
+imu11_rolling_allspeed_z_df <- lsm_rolling_agg(imu11_mc_allspeed_z$Z_AXIS)
+imu11_mc_allspeed_z <- imu11_mc_allspeed_z[30:nrow(imu11_mc_allspeed_z), c("Timestamp", "State")]
+imu11_mc_allspeed_z <- cbind(imu11_mc_allspeed_z, imu11_rolling_allspeed_z_df)
+imu11_mean_fft <- fft(imu11_mc_allspeed_z$mean)
+imu11_sd_fft <- fft(imu11_mc_allspeed_z$sd)
+imu11_mean_fft_Re <- imu11_mean_fft %>% Re
+imu11_mean_fft_Im <- imu11_mean_fft %>% Im
+imu11_sd_fft_Re <- imu11_sd_fft %>% Re
+imu11_sd_fft_Im <- imu11_sd_fft %>% Im
+imu11_fft_df <- data.frame(imu11_mean_fft_Re, imu11_mean_fft_Im, imu11_sd_fft_Re, imu11_sd_fft_Im)
+colnames(imu11_fft_df) <- c("fft_mean_Re", "fft_mean_Im", "fft_sd_Re", "fft_sd_Im")
+imu11_mc_allspeed_z$max <- NULL
+imu11_mc_allspeed_z$min <- NULL
+imu11_mc_allspeed_z$mean <- NULL
+imu11_mc_allspeed_z$median <- NULL
+imu11_mc_allspeed_z$sd <- NULL
+imu11_mc_allspeed_z <- cbind(imu11_mc_allspeed_z, imu11_fft_df)
+
+imu12_mc_allspeed_z <- filter_sensor_all_speed(tidy_sensor_df, c("ACC", "MAG"), "IMU12", z_cols)
+imu12_rolling_allspeed_z_df <- lsm_rolling_agg(imu12_mc_allspeed_z$Z_AXIS)
+imu12_mc_allspeed_z <- imu12_mc_allspeed_z[30:nrow(imu12_mc_allspeed_z), c("Timestamp", "State")]
+imu12_mc_allspeed_z <- cbind(imu12_mc_allspeed_z, imu12_rolling_allspeed_z_df)
+imu12_mean_fft <- fft(imu12_mc_allspeed_z$mean)
+imu12_sd_fft <- fft(imu12_mc_allspeed_z$sd)
+imu12_mean_fft_Re <- imu12_mean_fft %>% Re
+imu12_mean_fft_Im <- imu12_mean_fft %>% Im
+imu12_sd_fft_Re <- imu12_sd_fft %>% Re
+imu12_sd_fft_Im <- imu12_sd_fft %>% Im
+imu12_fft_df <- data.frame(imu12_mean_fft_Re, imu12_mean_fft_Im, imu12_sd_fft_Re, imu12_sd_fft_Im)
+colnames(imu12_fft_df) <- c("fft_mean_Re", "fft_mean_Im", "fft_sd_Re", "fft_sd_Im")
+imu12_mc_allspeed_z$max <- NULL
+imu12_mc_allspeed_z$min <- NULL
+imu12_mc_allspeed_z$mean <- NULL
+imu12_mc_allspeed_z$median <- NULL
+imu12_mc_allspeed_z$sd <- NULL
+imu12_mc_allspeed_z <- cbind(imu12_mc_allspeed_z, imu12_fft_df)
+
+```
+
+```{r build-models, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide', echo=FALSE}
+
+# Create custom indices: myFolds
+myFolds <- createFolds(imu11_mc_allspeed_z$State, k = 10)
+
+
+# Create reusable trainControl object: mc_myControl
+set.seed(42)
+mc_myControl <- trainControl(
+  summaryFunction = multiClassSummary, #mnLogLoss does not perform as well
+  classProbs = TRUE,
+  verboseIter = TRUE,
+  savePredictions = TRUE,
+  index = myFolds)
+
+
+```
+
+
+```{r get-results, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide', echo=FALSE}
+
+imu11_mc_allspeed_z_model <- model_for_knitr(imu11_mc_allspeed_z, mc_myControl, "FFT Z", 42)
+imu12_mc_allspeed_z_results <- results_for_knitr(imu12_mc_allspeed_z, imu11_mc_allspeed_z_model$mc_model_rf, "FFT Z", 42)
+
+
+```
+
+
+<!--  Z FFT COMBINED MODEL RESULTS  -->
+
+```{r 6A-sensor-plot-fft_z, echo=FALSE, fig.cap="FFT - Z - Model"}
+plot(imu12_mc_allspeed_z_results$mc_model_rf)
+```
+
+```{r sensor-fft_z-rf-params, echo=FALSE, fig.cap="FFT - Z - Model Parameters"}
+knitr::kable(imu12_mc_allspeed_z_results$mc_model_rf$results, caption = "FFT - Z - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(imu12_mc_allspeed_z_results$mc_model_rf$modelInfo$parameters, caption = "FFT - Z Combined - RF Model Tuning Params", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(imu12_mc_allspeed_z_results$mc_model_rf$bestTune, caption = "FFT - Z Combined - RF Best Tuned Model from Caret", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(imu12_mc_allspeed_z_results$mc_model_rf$coefnames, caption = "FFT - Z Combined - RF Model Coefficients", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+
+# print screen
+imu12_mc_allspeed_z_results$mc_model_rf$finalModel 
+imu12_mc_allspeed_z_results$mc_model_rf
+```
+
+```{r sensor-fft_z-rf-results, echo=FALSE}
+knitr::kable(imu12_mc_allspeed_z_results$rf_accuracy, caption = "FFT - Z - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(imu12_mc_allspeed_z_results$lsm_metrics, caption = "FFT - Z - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(imu12_mc_allspeed_z_results$lsm_cm, caption = "FFT - Z - RF Vaidation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(imu12_mc_allspeed_z_results$lsm_mlogloss, caption = "FFT - Z - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 6A-sensor-roc-fft_z, echo=FALSE, fig.cap="FFT - Z - ROC using 4 Binary ROC Curves"}
+res_path_idle <- imu12_mc_allspeed_z_results$roc_res[[1]]
+res_path_moving <- imu12_mc_allspeed_z_results$roc_res[[2]]
+res_path_trans <- imu12_mc_allspeed_z_results$roc_res[[3]]
+res_shuttle <- imu12_mc_allspeed_z_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+

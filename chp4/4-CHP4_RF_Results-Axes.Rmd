@@ -1,0 +1,1428 @@
+---
+title: "Chp 4 Results - Random Forest"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:  
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error=TRUE)
+```
+
+```{r import_setup_chunk, include=FALSE}
+source("SensorDataPreparation.R")
+source("Chp4-LSMRF.R")
+source("SensorFeatExtract.R")
+source("InstallImport.R")
+
+install_imports(c("tidyverse", "caret", "kableExtra", "ranger", "MLmetrics", "RANN", "pROC", "gtable", "grid", "gridExtra", "RColorBrewer"))
+
+```
+
+```{r data_sets, include=FALSE}
+x_cols <- c("X_AXIS", "State")
+y_cols <- c("Y_AXIS", "State")
+z_cols <- c("Z_AXIS", "State")
+xy_cols <- c("X_AXIS", "Y_AXIS", "State")
+yz_cols <- c("Y_AXIS", "Z_AXIS", "State")
+xz_cols <- c("X_AXIS", "Z_AXIS", "State")
+vel <- 0.2
+acc <- 1  
+POS_CLASS <- "PATH_MOVING"
+LSM_LEVELS <- levels(tidy_sensor_df$State)
+
+# Sensor Effect Model Training & Test Datasets
+IMU11_mc_vib_x <- filter_sensor(tidy_sensor_df, c("ACC"), "IMU11", acc, vel, x_cols)
+IMU11_mc_vib_y <- filter_sensor(tidy_sensor_df, c("ACC"), "IMU11", acc, vel, y_cols)
+IMU11_mc_vib_z <- filter_sensor(tidy_sensor_df, c("ACC"), "IMU11", acc, vel, z_cols)
+IMU11_mc_vib_xy <- filter_sensor(tidy_sensor_df, c("ACC"), "IMU11", acc, vel, xy_cols)
+IMU11_mc_vib_xz <- filter_sensor(tidy_sensor_df, c("ACC"), "IMU11", acc, vel, xz_cols)
+IMU11_mc_vib_yz <- filter_sensor(tidy_sensor_df, c("ACC"), "IMU11", acc, vel, yz_cols)
+
+IMU11_mc_mag_x <- filter_sensor(tidy_sensor_df, c("MAG"), "IMU11", acc, vel, x_cols)
+IMU11_mc_mag_y <- filter_sensor(tidy_sensor_df, c("MAG"), "IMU11", acc, vel, y_cols)
+IMU11_mc_mag_z <- filter_sensor(tidy_sensor_df, c("MAG"), "IMU11", acc, vel, z_cols)
+IMU11_mc_mag_xy <- filter_sensor(tidy_sensor_df, c("MAG"), "IMU11", acc, vel, xy_cols)
+IMU11_mc_mag_xz <- filter_sensor(tidy_sensor_df, c("MAG"), "IMU11", acc, vel, xz_cols)
+IMU11_mc_mag_yz <- filter_sensor(tidy_sensor_df, c("MAG"), "IMU11", acc, vel, yz_cols)
+
+IMU11_mc_combined_x <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU11", acc, vel, x_cols)
+IMU11_mc_combined_y <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU11", acc, vel, y_cols)
+IMU11_mc_combined_z <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU11", acc, vel, z_cols)
+IMU11_mc_combined_xy <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU11", acc, vel, xy_cols)
+IMU11_mc_combined_xz <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU11", acc, vel, xz_cols)
+IMU11_mc_combined_yz <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU11", acc, vel, yz_cols)
+
+
+IMU12_mc_vib_x <- filter_sensor(tidy_sensor_df, c("ACC"), "IMU12", acc, vel, x_cols)
+IMU12_mc_vib_y <- filter_sensor(tidy_sensor_df, c("ACC"), "IMU12", acc, vel, y_cols)
+IMU12_mc_vib_z <- filter_sensor(tidy_sensor_df, c("ACC"), "IMU12", acc, vel, z_cols)
+IMU12_mc_vib_xy <- filter_sensor(tidy_sensor_df, c("ACC"), "IMU12", acc, vel, xy_cols)
+IMU12_mc_vib_xz <- filter_sensor(tidy_sensor_df, c("ACC"), "IMU12", acc, vel, xz_cols)
+IMU12_mc_vib_yz <- filter_sensor(tidy_sensor_df, c("ACC"), "IMU12", acc, vel, yz_cols)
+
+IMU12_mc_mag_x <- filter_sensor(tidy_sensor_df, c("MAG"), "IMU12", acc, vel, x_cols)
+IMU12_mc_mag_y <- filter_sensor(tidy_sensor_df, c("MAG"), "IMU12", acc, vel, y_cols)
+IMU12_mc_mag_z <- filter_sensor(tidy_sensor_df, c("MAG"), "IMU12", acc, vel, z_cols)
+IMU12_mc_mag_xy <- filter_sensor(tidy_sensor_df, c("MAG"), "IMU12", acc, vel, xy_cols)
+IMU12_mc_mag_xz <- filter_sensor(tidy_sensor_df, c("MAG"), "IMU12", acc, vel, xz_cols)
+IMU12_mc_mag_yz <- filter_sensor(tidy_sensor_df, c("MAG"), "IMU12", acc, vel, yz_cols)
+
+IMU12_mc_combined_x <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU12", acc, vel, x_cols)
+IMU12_mc_combined_y <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU12", acc, vel, y_cols)
+IMU12_mc_combined_z <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU12", acc, vel, z_cols)
+IMU12_mc_combined_xy <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU12", acc, vel, xy_cols)
+IMU12_mc_combined_xz <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU12", acc, vel, xz_cols)
+IMU12_mc_combined_yz <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU12", acc, vel, yz_cols)
+
+
+```
+
+```{r build-models, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide', echo=FALSE}
+
+# Create custom indices: myFolds
+myFolds <- createFolds(IMU11_mc_vib_x$State, k = 10)
+
+
+# Create reusable trainControl object: mc_myControl
+set.seed(42)
+mc_myControl <- trainControl(
+  summaryFunction = multiClassSummary, #mnLogLoss does not perform as well
+  classProbs = TRUE,
+  verboseIter = TRUE,
+  savePredictions = TRUE,
+  index = myFolds)
+
+
+```
+
+
+```{r get-results, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide', echo=FALSE}
+
+x_vib_sensor_rf_model <- model_for_knitr(IMU11_mc_vib_x, mc_myControl, "Vibration X Axis", 42)
+x_vib_sensor_rf_results <- results_for_knitr(IMU12_mc_vib_x, x_vib_sensor_rf_model$mc_model_rf, "Vibration X Axis", 42)
+
+y_vib_sensor_rf_model <- model_for_knitr(IMU11_mc_vib_y, mc_myControl, "Vibration Y Axis", 42)
+y_vib_sensor_rf_results <- results_for_knitr(IMU12_mc_vib_y, y_vib_sensor_rf_model$mc_model_rf, "Vibration Y Axis", 42)
+
+z_vib_sensor_rf_model <- model_for_knitr(IMU11_mc_vib_z, mc_myControl, "Vibration Z Axis", 42)
+z_vib_sensor_rf_results <- results_for_knitr(IMU12_mc_vib_z, z_vib_sensor_rf_model$mc_model_rf, "Vibration Z Axis", 42)
+
+xy_vib_sensor_rf_model <- model_for_knitr(IMU11_mc_vib_xy, mc_myControl, "Vibration XY Axes", 42)
+xy_vib_sensor_rf_results <- results_for_knitr(IMU12_mc_vib_xy, xy_vib_sensor_rf_model$mc_model_rf, "Vibration XY Axis", 42)
+
+xz_vib_sensor_rf_model <- model_for_knitr(IMU11_mc_vib_xz, mc_myControl, "Vibration XZ Axes", 42)
+xz_vib_sensor_rf_results <- results_for_knitr(IMU12_mc_vib_xz, xz_vib_sensor_rf_model$mc_model_rf, "Vibration XZ Axis", 42)
+
+yz_vib_sensor_rf_model <- model_for_knitr(IMU11_mc_vib_yz, mc_myControl, "Vibration YZ Axes", 42)
+yz_vib_sensor_rf_results <- results_for_knitr(IMU12_mc_vib_yz, yz_vib_sensor_rf_model$mc_model_rf, "Vibration YZ Axis", 42)
+
+
+x_mag_sensor_rf_model <- model_for_knitr(IMU11_mc_mag_x, mc_myControl, "Magnetometer X Axis", 42)
+x_mag_sensor_rf_results <- results_for_knitr(IMU12_mc_mag_x, x_mag_sensor_rf_model$mc_model_rf, "Magnetometer X Axis", 42)
+
+y_mag_sensor_rf_model <- model_for_knitr(IMU11_mc_mag_y, mc_myControl, "Magnetometer Y Axis", 42)
+y_mag_sensor_rf_results <- results_for_knitr(IMU12_mc_mag_y, y_mag_sensor_rf_model$mc_model_rf, "Magnetometer Y Axis", 42)
+
+z_mag_sensor_rf_model <- model_for_knitr(IMU11_mc_mag_z, mc_myControl, "Magnetometer Z Axis", 42)
+z_mag_sensor_rf_results <- results_for_knitr(IMU12_mc_mag_z, z_mag_sensor_rf_model$mc_model_rf, "Magnetometer Z Axis", 42)
+
+xz_mag_sensor_rf_model <- model_for_knitr(IMU11_mc_mag_xz, mc_myControl, "Magnetometer XZ Axis", 42)
+xz_mag_sensor_rf_results <- results_for_knitr(IMU12_mc_mag_xz, xz_mag_sensor_rf_model$mc_model_rf, "Magnetometer Z Axis", 42)
+
+xy_mag_sensor_rf_model <- model_for_knitr(IMU11_mc_mag_xy, mc_myControl, "Magnetometer XY Axis", 42)
+xy_mag_sensor_rf_results <- results_for_knitr(IMU12_mc_mag_xy, xy_mag_sensor_rf_model$mc_model_rf, "Magnetometer Z Axis", 42)
+
+yz_mag_sensor_rf_model <- model_for_knitr(IMU11_mc_mag_yz, mc_myControl, "Magnetometer YZ Axis", 42)
+yz_mag_sensor_rf_results <- results_for_knitr(IMU12_mc_mag_yz, yz_mag_sensor_rf_model$mc_model_rf, "Magnetometer Z Axis", 42)
+
+x_combined_sensor_rf_model <- model_for_knitr(IMU11_mc_combined_x, mc_myControl, "Combined X Axis", 42)
+x_combined_sensor_rf_results <- results_for_knitr(IMU12_mc_combined_x, x_combined_sensor_rf_model$mc_model_rf, "Combined X Axis", 42)
+
+y_combined_sensor_rf_model <- model_for_knitr(IMU11_mc_combined_y, mc_myControl, "Combined Y Axis", 42)
+y_combined_sensor_rf_results <- results_for_knitr(IMU12_mc_combined_y, y_combined_sensor_rf_model$mc_model_rf, "Combined Y Axis", 42)
+
+z_combined_sensor_rf_model <- model_for_knitr(IMU11_mc_combined_z, mc_myControl, "Combined Z Axis", 42)
+z_combined_sensor_rf_results <- results_for_knitr(IMU12_mc_combined_z, z_combined_sensor_rf_model$mc_model_rf, "Combined Z Axis", 42)
+
+xy_combined_sensor_rf_model <- model_for_knitr(IMU11_mc_combined_xy, mc_myControl, "Combined XY Axis", 42)
+xy_combined_sensor_rf_results <- results_for_knitr(IMU12_mc_combined_xy, xy_combined_sensor_rf_model$mc_model_rf, "Combined XY Axis", 42)
+
+xz_combined_sensor_rf_model <- model_for_knitr(IMU11_mc_combined_xz, mc_myControl, "Combined XZ Axis", 42)
+xz_combined_sensor_rf_results <- results_for_knitr(IMU12_mc_combined_xz, xz_combined_sensor_rf_model$mc_model_rf, "Combined XZ Axis", 42)
+
+yz_combined_sensor_rf_model <- model_for_knitr(IMU11_mc_combined_yz, mc_myControl, "Combined YZ Axis", 42)
+yz_combined_sensor_rf_results <- results_for_knitr(IMU12_mc_combined_yz, yz_combined_sensor_rf_model$mc_model_rf, "Combined YZ Axis", 42)
+
+```
+
+<!--  X AXES Vibration MODEL RESULTS  -->
+
+```{r 4a-axis-plot-x-vib, echo=FALSE, fig.cap="Axis - X Vibration - Model"}
+plot(x_vib_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-x-vib-rf-params, echo=FALSE, fig.cap="Axis - X Vibration - Model Parameters"}
+knitr::kable(x_vib_sensor_rf_results$mc_model_rf$results, caption = "Axes - X Vibration - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+x_vib_sensor_rf_results$mc_model_rf$finalModel 
+x_vib_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-x-vib-rf-results, echo=FALSE}
+knitr::kable(x_vib_sensor_rf_results$rf_accuracy, caption = "Axis - X Vibration - RF - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(x_vib_sensor_rf_results$lsm_metrics, caption = "Axis - X Vibration - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(x_vib_sensor_rf_results$lsm_cm, caption = "Axis - X Vibration - RF Validation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(x_vib_sensor_rf_results$lsm_mlogloss, caption = "Axis - X Vibration - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4a-axis-roc-x-vib, echo=FALSE, fig.cap="Axis - X Vibration ROC - using 4 Binary ROC Curves"}
+res_path_idle <- x_vib_sensor_rf_results$roc_res[[1]]
+res_path_moving <- x_vib_sensor_rf_results$roc_res[[2]]
+res_path_trans <- x_vib_sensor_rf_results$roc_res[[3]]
+res_shuttle <- x_vib_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+<!--  Y AXES Vibration MODEL RESULTS  -->
+
+```{r 4b-axis-plot-y-vib, echo=FALSE, fig.cap="Axis - Y Vibration - Model"}
+plot(y_vib_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-y-vib-rf-params, echo=FALSE, fig.cap="Axis - Y Vibration - Model Parameters"}
+knitr::kable(y_vib_sensor_rf_results$mc_model_rf$results, caption = "Axes - Y Vibration - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+y_vib_sensor_rf_results$mc_model_rf$finalModel 
+y_vib_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-y-vib-rf-results, echo=FALSE}
+knitr::kable(y_vib_sensor_rf_results$rf_accuracy, caption = "Axis - Y Vibration - RF - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(y_vib_sensor_rf_results$lsm_metrics, caption = "Axis - Y Vibration - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(y_vib_sensor_rf_results$lsm_cm, caption = "Axis - Y Vibration - RF Validation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(y_vib_sensor_rf_results$lsm_mlogloss, caption = "Axis - Y Vibration - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4b-axis-roc-y-vib, echo=FALSE, fig.cap="Axis - Y Vibration ROC - using 4 Binary ROC Curves"}
+res_path_idle <- y_vib_sensor_rf_results$roc_res[[1]]
+res_path_moving <- y_vib_sensor_rf_results$roc_res[[2]]
+res_path_trans <- y_vib_sensor_rf_results$roc_res[[3]]
+res_shuttle <- y_vib_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+<!-- Z Axis Vibration -->
+
+```{r 4c-axis-plot-z-vib, echo=FALSE, fig.cap="Axis - Z Vibration - Model"}
+plot(z_vib_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-z-vib-rf-params, echo=FALSE, fig.cap="Axis - Z Vibration - Model Parameters"}
+knitr::kable(z_vib_sensor_rf_results$mc_model_rf$results, caption = "Axes - Z Vibration - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+z_vib_sensor_rf_results$mc_model_rf$finalModel 
+z_vib_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-z-vib-rf-results, echo=FALSE}
+knitr::kable(z_vib_sensor_rf_results$rf_accuracy, caption = "Axis - Z Vibration - RF - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(z_vib_sensor_rf_results$lsm_metrics, caption = "Axis - Z Vibration - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(z_vib_sensor_rf_results$lsm_cm, caption = "Axis - Z Vibration - RF Validation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(z_vib_sensor_rf_results$lsm_mlogloss, caption = "Axis - Z Vibration - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4c-axis-roc-z-vib, echo=FALSE, fig.cap="Axis - Z Vibration ROC - using 4 Binary ROC Curves"}
+res_path_idle <- z_vib_sensor_rf_results$roc_res[[1]]
+res_path_moving <- z_vib_sensor_rf_results$roc_res[[2]]
+res_path_trans <- z_vib_sensor_rf_results$roc_res[[3]]
+res_shuttle <- z_vib_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+
+<!--  XY AXES Vibration MODEL RESULTS  -->
+
+```{r 4d-axis-plot-xy-vib, echo=FALSE, fig.cap="Axes - XY Vibration - Model"}
+plot(xy_vib_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-xy-vib-rf-params, echo=FALSE, fig.cap="Axes - XY Vibration - Model Parameters"}
+knitr::kable(xy_vib_sensor_rf_results$mc_model_rf$results, caption = "Axes - XY Vibration - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+xy_vib_sensor_rf_results$mc_model_rf$finalModel 
+xy_vib_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-xy-vib-rf-results, echo=FALSE}
+knitr::kable(xy_vib_sensor_rf_results$rf_accuracy, caption = "Axes - XY Vibration - RF - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xy_vib_sensor_rf_results$lsm_metrics, caption = "Axes - XY Vibration - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xy_vib_sensor_rf_results$lsm_cm, caption = "Axes - XY Vibration - RF Validation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xy_vib_sensor_rf_results$lsm_mlogloss, caption = "Axes - XY Vibration - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4d-axis-roc-xy-vib, echo=FALSE, fig.cap="Axes - XY Vibration ROC - using 4 Binary ROC Curves"}
+res_path_idle <- xy_vib_sensor_rf_results$roc_res[[1]]
+res_path_moving <- xy_vib_sensor_rf_results$roc_res[[2]]
+res_path_trans <- xy_vib_sensor_rf_results$roc_res[[3]]
+res_shuttle <- xy_vib_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+<!--  XZ AXES Vibration MODEL RESULTS  -->
+
+```{r 4e-axis-plot-xz-vib, echo=FALSE, fig.cap="Axes - XZ Vibration - Model"}
+plot(xz_vib_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-xz-vib-rf-params, echo=FALSE, fig.cap="Axes - XZ Vibration - Model Parameters"}
+knitr::kable(xz_vib_sensor_rf_results$mc_model_rf$results, caption = "Axes - XZ Vibration - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+xz_vib_sensor_rf_results$mc_model_rf$finalModel 
+xz_vib_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-xz-vib-rf-results, echo=FALSE}
+knitr::kable(xz_vib_sensor_rf_results$rf_accuracy, caption = "Axes - XZ Vibration - RF - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xz_vib_sensor_rf_results$lsm_metrics, caption = "Axes - XZ Vibration - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xz_vib_sensor_rf_results$lsm_cm, caption = "Axes - XZ Vibration - RF Validation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xz_vib_sensor_rf_results$lsm_mlogloss, caption = "Axes - XZ Vibration - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4e-axis-roc-xz-vib, echo=FALSE, fig.cap="Axes - XZ Vibration ROC - using 4 Binary ROC Curves"}
+res_path_idle <- xz_vib_sensor_rf_results$roc_res[[1]]
+res_path_moving <- xz_vib_sensor_rf_results$roc_res[[2]]
+res_path_trans <- xz_vib_sensor_rf_results$roc_res[[3]]
+res_shuttle <- xz_vib_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+
+<!--  YZ AXES Vibration MODEL RESULTS  -->
+
+```{r 4f-axis-plot-yz-vib, echo=FALSE, fig.cap="Axes - YZ Vibration - Model"}
+plot(yz_vib_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-yz-vib-rf-params, echo=FALSE, fig.cap="Axes - YZ Vibration - Model Parameters"}
+knitr::kable(yz_vib_sensor_rf_results$mc_model_rf$results, caption = "Axes - YZ Vibration - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+yz_vib_sensor_rf_results$mc_model_rf$finalModel 
+yz_vib_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-yz-vib-rf-results, echo=FALSE}
+knitr::kable(yz_vib_sensor_rf_results$rf_accuracy, caption = "Axes - YZ Vibration - RF - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(yz_vib_sensor_rf_results$lsm_metrics, caption = "Axes - YZ Vibration - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(yz_vib_sensor_rf_results$lsm_cm, caption = "Axes - YZ Vibration - RF Validation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(yz_vib_sensor_rf_results$lsm_mlogloss, caption = "Axes - YZ Vibration - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4f-axis-roc-yz-vib, echo=FALSE, fig.cap="Axes - YZ Vibration ROC - using 4 Binary ROC Curves"}
+res_path_idle <- yz_vib_sensor_rf_results$roc_res[[1]]
+res_path_moving <- yz_vib_sensor_rf_results$roc_res[[2]]
+res_path_trans <- yz_vib_sensor_rf_results$roc_res[[3]]
+res_shuttle <- yz_vib_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+<!--  X AXIS MAG MODEL RESULTS  -->
+
+```{r 4g-axis-plot-x-mag, echo=FALSE, fig.cap="Axis - X Magnetometer - Model"}
+plot(x_mag_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-x-mag-rf-params, echo=FALSE, fig.cap="Axis X Magnetometer Model Parameters"}
+knitr::kable(x_mag_sensor_rf_results$mc_model_rf$results, caption = "Axis - X Magnetometer - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+x_mag_sensor_rf_results$mc_model_rf$finalModel 
+x_mag_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-x-mag-rf-results, echo=FALSE}
+knitr::kable(x_mag_sensor_rf_results$rf_accuracy, caption = "Axis - X Magnetometer - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(x_mag_sensor_rf_results$lsm_metrics, caption = "Axis - X Magnetometer - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(x_mag_sensor_rf_results$lsm_cm, caption = "Axis - X Magnetometer - RF Vaidation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(x_mag_sensor_rf_results$lsm_mlogloss, caption = "Axis - X Magnetometer - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4g-axis-roc-x-mag, echo=FALSE, fig.cap="Axis - X Magnetometer - ROC using 4 Binary ROC Curves"}
+res_path_idle <- x_mag_sensor_rf_results$roc_res[[1]]
+res_path_moving <- x_mag_sensor_rf_results$roc_res[[2]]
+res_path_trans <- x_mag_sensor_rf_results$roc_res[[3]]
+res_shuttle <- x_mag_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+<!--  Y AXIS MAG MODEL RESULTS  -->
+
+```{r 4h-axis-plot-y-mag, echo=FALSE, fig.cap="Axis - Y Magnetometer - Model"}
+plot(y_mag_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-y-mag-rf-params, echo=FALSE, fig.cap="Axis Y Magnetometer Model Parameters"}
+knitr::kable(y_mag_sensor_rf_results$mc_model_rf$results, caption = "Axis - Y Magnetometer - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+y_mag_sensor_rf_results$mc_model_rf$finalModel 
+y_mag_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-y-mag-rf-results, echo=FALSE}
+knitr::kable(y_mag_sensor_rf_results$rf_accuracy, caption = "Axis - Y Magnetometer - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(y_mag_sensor_rf_results$lsm_metrics, caption = "Axis - Y Magnetometer - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(y_mag_sensor_rf_results$lsm_cm, caption = "Axis - Y Magnetometer - RF Vaidation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(y_mag_sensor_rf_results$lsm_mlogloss, caption = "Axis - Y Magnetometer - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4h-axis-roc-y-mag, echo=FALSE, fig.cap="Axis - Y Magnetometer - ROC using 4 Binary ROC Curves"}
+res_path_idle <- y_mag_sensor_rf_results$roc_res[[1]]
+res_path_moving <- y_mag_sensor_rf_results$roc_res[[2]]
+res_path_trans <- y_mag_sensor_rf_results$roc_res[[3]]
+res_shuttle <- y_mag_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+
+<!--  Z AXIS MAG MODEL RESULTS  -->
+
+```{r 4i-axis-plot-z-mag, echo=FALSE, fig.cap="Axis - Z Magnetometer - Model"}
+plot(z_mag_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-z-mag-rf-params, echo=FALSE, fig.cap="Sensor Z Magnetometer Model Parameters"}
+knitr::kable(z_mag_sensor_rf_results$mc_model_rf$results, caption = "Axis - Z Magnetometer - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+z_mag_sensor_rf_results$mc_model_rf$finalModel 
+z_mag_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-z-mag-rf-results, echo=FALSE}
+knitr::kable(z_mag_sensor_rf_results$rf_accuracy, caption = "Axis - Z Magnetometer - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(z_mag_sensor_rf_results$lsm_metrics, caption = "Axis - Z Magnetometer - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(z_mag_sensor_rf_results$lsm_cm, caption = "Axis - Z Magnetometer - RF Vaidation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(z_mag_sensor_rf_results$lsm_mlogloss, caption = "Axis - Z Magnetometer - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4i-axis-roc-z-mag, echo=FALSE, fig.cap="Axis - Z Magnetometer - ROC using 4 Binary ROC Curves"}
+res_path_idle <- z_mag_sensor_rf_results$roc_res[[1]]
+res_path_moving <- z_mag_sensor_rf_results$roc_res[[2]]
+res_path_trans <- z_mag_sensor_rf_results$roc_res[[3]]
+res_shuttle <- z_mag_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+<!--  XY AXIS MAG MODEL RESULTS  -->
+
+```{r 4j-axis-plot-xy-mag, echo=FALSE, fig.cap="Axes - XY Magnetometer - Model"}
+plot(xy_mag_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-xy-mag-rf-params, echo=FALSE, fig.cap="Axes - XY Magnetometer Model Parameters"}
+knitr::kable(xy_mag_sensor_rf_results$mc_model_rf$results, caption = "Axes - XY Magnetometer - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+xy_mag_sensor_rf_results$mc_model_rf$finalModel 
+xy_mag_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-xy-mag-rf-results, echo=FALSE}
+knitr::kable(xy_mag_sensor_rf_results$rf_accuracy, caption = "Axes - XY Magnetometer - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xy_mag_sensor_rf_results$lsm_metrics, caption = "Axes - XY Magnetometer - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xy_mag_sensor_rf_results$lsm_cm, caption = "Axes - XY Magnetometer - RF Vaidation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xy_mag_sensor_rf_results$lsm_mlogloss, caption = "Axes - XY Magnetometer - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4j-axis-roc-xy-mag, echo=FALSE, fig.cap="Axes - XY Magnetometer - ROC using 4 Binary ROC Curves"}
+res_path_idle <- xy_mag_sensor_rf_results$roc_res[[1]]
+res_path_moving <- xy_mag_sensor_rf_results$roc_res[[2]]
+res_path_trans <- xy_mag_sensor_rf_results$roc_res[[3]]
+res_shuttle <- xy_mag_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+
+
+<!--  XZ AXIS MAG MODEL RESULTS  -->
+
+```{r 4k-axis-plot-xz-mag, echo=FALSE, fig.cap="Axes - XZ Magnetometer - Model"}
+plot(xz_mag_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-xz-mag-rf-params, echo=FALSE, fig.cap="Axes - XZ Magnetometer Model Parameters"}
+knitr::kable(xz_mag_sensor_rf_results$mc_model_rf$results, caption = "Axes - XZ Magnetometer - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+xz_mag_sensor_rf_results$mc_model_rf$finalModel 
+xz_mag_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-xz-mag-rf-results, echo=FALSE}
+knitr::kable(xz_mag_sensor_rf_results$rf_accuracy, caption = "Axes - XZ Magnetometer - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xz_mag_sensor_rf_results$lsm_metrics, caption = "Axes - XZ Magnetometer - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xz_mag_sensor_rf_results$lsm_cm, caption = "Axes - XZ Magnetometer - RF Vaidation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xz_mag_sensor_rf_results$lsm_mlogloss, caption = "Axes - XZ Magnetometer - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4k-axis-roc-xz-mag, echo=FALSE, fig.cap="Axes - XZ Magnetometer - ROC using 4 Binary ROC Curves"}
+res_path_idle <- xz_mag_sensor_rf_results$roc_res[[1]]
+res_path_moving <- xz_mag_sensor_rf_results$roc_res[[2]]
+res_path_trans <- xz_mag_sensor_rf_results$roc_res[[3]]
+res_shuttle <- xz_mag_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+
+<!--  YZ AXIS MAG MODEL RESULTS  -->
+
+```{r 4l-axis-plot-yz-mag, echo=FALSE, fig.cap="Axes - YZ Magnetometer - Model"}
+plot(yz_mag_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-yz-mag-rf-params, echo=FALSE, fig.cap="Axes - YZ Magnetometer Model Parameters"}
+knitr::kable(yz_mag_sensor_rf_results$mc_model_rf$results, caption = "Axes - YZ Magnetometer - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+yz_mag_sensor_rf_results$mc_model_rf$finalModel 
+yz_mag_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-yz-mag-rf-results, echo=FALSE}
+knitr::kable(yz_mag_sensor_rf_results$rf_accuracy, caption = "Axes - YZ Magnetometer - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(yz_mag_sensor_rf_results$lsm_metrics, caption = "Axes - YZ Magnetometer - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(yz_mag_sensor_rf_results$lsm_cm, caption = "Axes - YZ Magnetometer - RF Vaidation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(yz_mag_sensor_rf_results$lsm_mlogloss, caption = "Axes - YZ Magnetometer - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4l-axis-roc-yz-mag, echo=FALSE, fig.cap="Axes - YZ Magnetometer - ROC using 4 Binary ROC Curves"}
+res_path_idle <- yz_mag_sensor_rf_results$roc_res[[1]]
+res_path_moving <- yz_mag_sensor_rf_results$roc_res[[2]]
+res_path_trans <- yz_mag_sensor_rf_results$roc_res[[3]]
+res_shuttle <- yz_mag_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+<!--  X Axis COMBINED MODEL RESULTS  -->
+
+```{r 4m-axis-plot-x-combined, echo=FALSE, fig.cap="Axes - X Combined - Model"}
+plot(x_combined_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-x-combined-rf-params, echo=FALSE, fig.cap="Axis - X Combined - Model Parameters"}
+knitr::kable(x_combined_sensor_rf_results$mc_model_rf$results, caption = "Axis - X Combined - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+x_combined_sensor_rf_results$mc_model_rf$finalModel 
+x_combined_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-x-combined-rf-results, echo=FALSE}
+knitr::kable(x_combined_sensor_rf_results$rf_accuracy, caption = "Axis - X Combined - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(x_combined_sensor_rf_results$lsm_metrics, caption = "Axis - X Combined - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(x_combined_sensor_rf_results$lsm_cm, caption = "Axis - X Combined - RF Vaidation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(x_combined_sensor_rf_results$lsm_mlogloss, caption = "Axis - X Combined - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4m-axis-roc-x-combined, echo=FALSE, fig.cap="Axis - X Combined - ROC using 4 Binary ROC Curves"}
+res_path_idle <- x_combined_sensor_rf_results$roc_res[[1]]
+res_path_moving <- x_combined_sensor_rf_results$roc_res[[2]]
+res_path_trans <- x_combined_sensor_rf_results$roc_res[[3]]
+res_shuttle <- x_combined_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+<!--  Y Axis COMBINED MODEL RESULTS  -->
+
+```{r 4n-axis-plot-y-combined, echo=FALSE, fig.cap="Axes - Y Combined - Model"}
+plot(y_combined_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-y-combined-rf-params, echo=FALSE, fig.cap="Axis - Y Combined - Model Parameters"}
+knitr::kable(y_combined_sensor_rf_results$mc_model_rf$results, caption = "Axis - Y Combined - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+y_combined_sensor_rf_results$mc_model_rf$finalModel 
+y_combined_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-y-combined-rf-results, echo=FALSE}
+knitr::kable(y_combined_sensor_rf_results$rf_accuracy, caption = "Axis - Y Combined - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(y_combined_sensor_rf_results$lsm_metrics, caption = "Axis - Y Combined - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(y_combined_sensor_rf_results$lsm_cm, caption = "Axis - Y Combined - RF Vaidation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(y_combined_sensor_rf_results$lsm_mlogloss, caption = "Axis - Y Combined - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4n-axis-roc-y-combined, echo=FALSE, fig.cap="Axis - Y Combined - ROC using 4 Binary ROC Curves"}
+res_path_idle <- y_combined_sensor_rf_results$roc_res[[1]]
+res_path_moving <- y_combined_sensor_rf_results$roc_res[[2]]
+res_path_trans <- y_combined_sensor_rf_results$roc_res[[3]]
+res_shuttle <- y_combined_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+<!--  Z Axis COMBINED MODEL RESULTS  -->
+
+```{r 4o-axis-plot-z-combined, echo=FALSE, fig.cap="Axes - Y Combined - Model"}
+plot(z_combined_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-z-combined-rf-params, echo=FALSE, fig.cap="Axis - Z Combined - Model Parameters"}
+knitr::kable(z_combined_sensor_rf_results$mc_model_rf$results, caption = "Axis - Z Combined - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+z_combined_sensor_rf_results$mc_model_rf$finalModel 
+z_combined_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-z-combined-rf-results, echo=FALSE}
+knitr::kable(z_combined_sensor_rf_results$rf_accuracy, caption = "Axis - Z Combined - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(z_combined_sensor_rf_results$lsm_metrics, caption = "Axis - Z Combined - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(z_combined_sensor_rf_results$lsm_cm, caption = "Axis - Z Combined - RF Vaidation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(z_combined_sensor_rf_results$lsm_mlogloss, caption = "Axis - Z Combined - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4o-axis-roc-z-combined, echo=FALSE, fig.cap="Axis - Z Combined - ROC using 4 Binary ROC Curves"}
+res_path_idle <- z_combined_sensor_rf_results$roc_res[[1]]
+res_path_moving <- z_combined_sensor_rf_results$roc_res[[2]]
+res_path_trans <- z_combined_sensor_rf_results$roc_res[[3]]
+res_shuttle <- z_combined_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+<!--  XY Axes COMBINED MODEL RESULTS  -->
+
+```{r 4p-axis-plot-xy-combined, echo=FALSE, fig.cap="Axes - XY Combined - Model"}
+plot(xy_combined_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-xy-combined-rf-params, echo=FALSE, fig.cap="Axes - XY Combined - Model Parameters"}
+knitr::kable(xy_combined_sensor_rf_results$mc_model_rf$results, caption = "Axes - XY Combined - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+xy_combined_sensor_rf_results$mc_model_rf$finalModel 
+xy_combined_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-xy-combined-rf-results, echo=FALSE}
+knitr::kable(xy_combined_sensor_rf_results$rf_accuracy, caption = "Axes - XY Combined - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xy_combined_sensor_rf_results$lsm_metrics, caption = "Axes - XY Combined - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xy_combined_sensor_rf_results$lsm_cm, caption = "Axes - XY Combined - RF Vaidation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xy_combined_sensor_rf_results$lsm_mlogloss, caption = "Axes - XY Combined - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4p-axis-roc-xy-combined, echo=FALSE, fig.cap="Axes - XY Combined - ROC using 4 Binary ROC Curves"}
+res_path_idle <- xy_combined_sensor_rf_results$roc_res[[1]]
+res_path_moving <- xy_combined_sensor_rf_results$roc_res[[2]]
+res_path_trans <- xy_combined_sensor_rf_results$roc_res[[3]]
+res_shuttle <- xy_combined_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+
+<!--  XZ Axes COMBINED MODEL RESULTS  -->
+
+```{r 4q-axis-plot-xz-combined, echo=FALSE, fig.cap="Axes - XZ Combined - Model"}
+plot(xz_combined_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-xz-combined-rf-params, echo=FALSE, fig.cap="Axes - XZ Combined - Model Parameters"}
+knitr::kable(xz_combined_sensor_rf_results$mc_model_rf$results, caption = "Axes - XZ Combined - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+xz_combined_sensor_rf_results$mc_model_rf$finalModel 
+xz_combined_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-xz-combined-rf-results, echo=FALSE}
+knitr::kable(xz_combined_sensor_rf_results$rf_accuracy, caption = "Axes - XZ Combined - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xz_combined_sensor_rf_results$lsm_metrics, caption = "Axes - XZ Combined - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xz_combined_sensor_rf_results$lsm_cm, caption = "Axes - XZ Combined - RF Vaidation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(xz_combined_sensor_rf_results$lsm_mlogloss, caption = "Axes - XZ Combined - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4q-axis-roc-xz-combined, echo=FALSE, fig.cap="Axes - XZ Combined - ROC using 4 Binary ROC Curves"}
+res_path_idle <- xz_combined_sensor_rf_results$roc_res[[1]]
+res_path_moving <- xz_combined_sensor_rf_results$roc_res[[2]]
+res_path_trans <- xz_combined_sensor_rf_results$roc_res[[3]]
+res_shuttle <- xz_combined_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+
+<!--  YZ Axes COMBINED MODEL RESULTS  -->
+
+```{r 4r-axis-plot-yz-combined, echo=FALSE, fig.cap="Axes - YZ Combined - Model"}
+plot(yz_combined_sensor_rf_results$mc_model_rf)
+```
+
+```{r sensor-yz-combined-rf-params, echo=FALSE, fig.cap="Axes - YZ Combined - Model Parameters"}
+knitr::kable(yz_combined_sensor_rf_results$mc_model_rf$results, caption = "Axes - YZ Combined - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+yz_combined_sensor_rf_results$mc_model_rf$finalModel 
+yz_combined_sensor_rf_results$mc_model_rf
+```
+
+```{r sensor-yz-combined-rf-results, echo=FALSE}
+knitr::kable(yz_combined_sensor_rf_results$rf_accuracy, caption = "Axes - YZ Combined - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(yz_combined_sensor_rf_results$lsm_metrics, caption = "Axes - YZ Combined - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(yz_combined_sensor_rf_results$lsm_cm, caption = "Axes - YX Combined - RF Vaidation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(yz_combined_sensor_rf_results$lsm_mlogloss, caption = "Axes - YZ Combined - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 4r-axis-roc-yz-combined, echo=FALSE, fig.cap="Axes - YZ Combined - ROC using 4 Binary ROC Curves"}
+res_path_idle <- yz_combined_sensor_rf_results$roc_res[[1]]
+res_path_moving <- yz_combined_sensor_rf_results$roc_res[[2]]
+res_path_trans <- yz_combined_sensor_rf_results$roc_res[[3]]
+res_shuttle <- yz_combined_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+

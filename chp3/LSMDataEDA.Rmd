@@ -1,0 +1,63 @@
+---
+title: "LSMDataEDA"
+author: "Jill Daly"
+date: "10/21/2018"
+output: 
+  pdf_document:
+    keep_tex: true
+---
+
+
+```{r include=FALSE}
+source("InstallImport.R")
+source("DataCleaning.R")
+source("EDA.R")
+
+install_imports(c("tidyverse", "VIM", "PerformanceAnalytics", "Hmisc", "outliers")) 
+```
+
+```{r config, include=FALSE}
+##############################################################################
+#                                   EDA                                      #
+##############################################################################
+
+# Sensor Positions:
+s_pos_df <- data.frame(t(c("IMU1_X"="FRONT_SURFACE", 
+                           "IMU3_X"="TOP_SURFACE_WITH_PALETTE",
+                           "IMU7_X"="FRONT_SURFACE", 
+                           "IMU8_X"="FRONT_SURFACE", 
+                           "IMU9_X"="SIDE_SURFACE", 
+                           "IMU11_X"="TOP_SURFACE", 
+                           "IMU12_X"="TOP_SURFACE")))
+```
+
+
+
+```{r data-vars, include=FALSE}
+# Seperate out the magnetic / acc and X / Y / Z sensor data
+s_mag_data <- filter_mag_sdata(sensor_data)
+s_acc_data <- filter_acc_sdata(sensor_data)
+
+# Create DFs of all X axes data (with accel, vel, plat incluced)
+s_mag_x_df <- map_df(s_mag_data, sensor_col_names, col_str = "X|velocity|acceleration|platform")
+s_mag_y_df <- map_df(s_mag_data, sensor_col_names, col_str = "Y|velocity|acceleration|platform")
+s_mag_z_df <- map_df(s_mag_data, sensor_col_names, col_str = "Z|velocity|acceleration|platform")
+
+s_acc_x_df <- map_df(s_acc_data, sensor_col_names, col_str = "X|velocity|acceleration|platform")
+s_acc_y_df <- map_df(s_acc_data, sensor_col_names, col_str = "Y|velocity|acceleration|platform")
+s_acc_z_df <- map_df(s_acc_data, sensor_col_names, col_str = "Z|velocity|acceleration|platform")
+
+
+# Create separate lists with DFs of X axes for a given run
+s_mag_x_data_list <- lapply(s_mag_data, extract_axes, axis_str = "X")
+s_mag_y_data_list <- lapply(s_mag_data, extract_axes, axis_str = "Y")
+s_mag_z_data_list <- lapply(s_mag_data, extract_axes, axis_str = "Z")
+
+s_acc_x_data_list <- lapply(s_acc_data, extract_axes, axis_str = "X")
+s_acc_y_data_list <- lapply(s_acc_data, extract_axes, axis_str = "Y")
+s_acc_z_data_list <- lapply(s_acc_data, extract_axes, axis_str = "Z")
+```
+
+
+
+

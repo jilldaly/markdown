@@ -1,0 +1,83 @@
+---
+title: "raw sensor data"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  pdf_document: 
+    fig_caption: yes
+    keep_tex: yes
+    number_sections: yes
+    toc: yes
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r import_setup_chunk, echo=TRUE}
+#' Take a list of sensor dataframes and re-postion the columns
+#' to correct the XYZ ordering for each sensor. This accounts 
+#' for the different orientation for each sensor axis.
+#' 
+#' @param sensor_list a list of dataframe objects
+#' @param reordered_header a vector of the true XYZ ordering
+#' for each sensor
+#' @return a list of dataframes with a true XYZ ordering of 
+#' sensor data
+#' @example 
+#' convert_axis(senosr_ds_list, c("1_Z", "1_X", "1_Y", "2_Y",...))
+convert_axis <- function(sensor_list, mag_hdr, mag_negate_hdr, orient_hdr, orient_negate_hdr) {
+  
+  abs_swap <- function(df_name, mag_swap, mag_negate, orient_swap, orient_negate, sd_list) {
+
+    # Extract the dataframe
+    df <- sd_list[[df_name]]
+    
+    # 1. Take a copy of the original header
+    o_hdr <- colnames(df)
+    
+    # 2. Apply X, Y col swap & Negate Z for Mag axes only
+    if (str_detect(df_name, "mag")) {
+      # 2a. Swap Raw Magnetometer Col1 with Col 2
+      df <- df[, mag_swap] 
+
+      # 2b. Negate Raw Magnetometer Col3
+      df[, mag_negate] <- -df[, mag_negate]
+
+      # 2c. Restore original header
+      colnames(df) <- o_hdr
+    }
+    
+    # 3. Re-order the axes according to position/orientation
+    df <- df[, orient_swap] 
+    
+    # 4. Restore original header
+    colnames(df) <- o_hdr
+    
+    # 5. Negate values for given columns
+    df[, negate_hdr] <- -df[, orient_negate]
+    
+    return(df)
+  }
+  
+  # store list names
+  s_list_names <- names(sensor_list)
+  
+  # apply the swap function to entire list
+  sensor_list <- lapply(s_list_names, 
+                        abs_swap, 
+                        mag_swap=mag_hdr,
+                        mag_negate=mag_negate_hdr,
+                        orient_swap=orient_hdr, 
+                        orient_negate=orient_negate_hdr, 
+                        sd_list=sensor_list)
+  
+  # restore the list names
+  names(sensor_list) <- s_list_names
+  
+  # return the adjusted list
+  return(sensor_list)
+}
+```
+

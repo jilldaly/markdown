@@ -1,0 +1,58 @@
+---
+title: "LSM Random Forest"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: pdf_document
+---
+
+```{r setup_chunk, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r import_setup_chunk, include=FALSE}
+source("InstallImport.R")
+source("DataCleaning.R")
+source("MulticlassROC.R")
+source("SensorFeatExtract.R")
+source("EDA.R")
+
+install_imports(c("tidyverse", "caret", "kableExtra", "ranger", "MLmetrics", "RANN", "pROC", "gtable", "grid", "gridExtra")) 
+
+```
+
+
+```{r child = 'LSMVisualisation.Rmd'}
+```
+
+
+\newpage
+# Vibration and Magnetometer - Model Building and Validation
+
+```{r create_dfs_chunk, include=FALSE}
+
+cols <- c("Timestamp", "X_AXIS", "Y_AXIS", "Z_AXIS", "State")
+sensor_type <- "ACC"
+vel <- 0.2
+acc <- 1  
+
+
+sensor_name <- "IMU8"
+imu8_acc_1_0_2 <- filter_sensor(tidy_sensor_df, sensor_type, sensor_name, acc, vel, cols)
+imu11_acc_1_0_2 <- filter_sensor(tidy_sensor_df, sensor_type, sensor_name, acc, vel, cols)
+imu12_acc_1_0_2 <- filter_sensor(tidy_sensor_df, sensor_type, sensor_name, acc, vel, cols)
+
+sensor_name <- "IMU11"
+imu8_mag_1_0_2 <- filter_sensor(tidy_sensor_df, sensor_type, sensor_name, acc, vel, cols)
+imu11_mag_1_0_2 <- filter_sensor(tidy_sensor_df, sensor_type, sensor_name, acc, vel, cols)
+imu12_mag_1_0_2 <- filter_sensor(tidy_sensor_df, sensor_type, sensor_name, acc, vel, cols)
+
+cols_type <- c(cols, "State")
+sensor_name <- "IMU12"
+sensor_type <- c("ACC", "MAG")
+imu8_mag_acc_1_0_2 <- filter_sensor(tidy_sensor_df, sensor_type, sensor_name, acc, vel, cols_type)
+imu11_mag_acc_1_0_2 <- filter_sensor(tidy_sensor_df, sensor_type, sensor_name, acc, vel, cols_type)
+imu12_mag_acc_1_0_2 <- filter_sensor(tidy_sensor_df, sensor_type, sensor_name, acc, vel, cols_type)
+
+```
+
+

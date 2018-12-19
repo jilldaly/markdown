@@ -1,0 +1,348 @@
+---
+title: "Chp 4 Results - Random Forest"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:  
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error=TRUE)
+```
+
+```{r import_setup_chunk, include=FALSE}
+source("SensorDataPreparation.R")
+source("Chp4-LSMRF.R")
+source("SensorFeatExtract.R")
+source("InstallImport.R")
+
+install_imports(c("tidyverse", "caret", "kableExtra", "ranger", "MLmetrics", "RANN", "pROC", "gtable", "grid", "gridExtra", "RColorBrewer"))
+
+```
+
+```{r data_sets, include=FALSE}
+x_cols <- c("Timestamp", "X_AXIS", "State")
+y_cols <- c("Timestamp", "Y_AXIS", "State")
+z_cols <- c("Timestamp", "Z_AXIS", "State")
+xy_cols <- c("Timestamp", "X_AXIS", "Y_AXIS", "State")
+yz_cols <- c("Timestamp", "Y_AXIS", "Z_AXIS", "State")
+xz_cols <- c("Timestamp", "X_AXIS", "Z_AXIS", "State")
+
+z_cols_no_ts <- c("Z_AXIS", "State")
+
+vel <- 0.2
+acc <- 1  
+POS_CLASS <- "PATH_MOVING"
+LSM_LEVELS <- levels(tidy_sensor_df$State)
+
+# Sensor Effect Model Training & Test Datasets
+
+IMU11_mc_combined_z <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU11", acc, vel, z_cols)
+IMU11_rolling_z_df <- lsm_rolling_agg(IMU11_mc_combined_z$Z_AXIS)
+IMU11_combined_rolling <- IMU11_mc_combined_z[30:nrow(IMU11_mc_combined_z), ]
+IMU11_combined_rolling <- cbind(IMU11_combined_rolling, IMU11_rolling_z_df)
+
+IMU11_combined_rolling_only <- IMU11_mc_combined_z[30:nrow(IMU11_mc_combined_z), c("Timestamp", "State")]
+IMU11_combined_rolling_only <- cbind(IMU11_combined_rolling_only, IMU11_rolling_z_df)
+
+
+# IMU 11 - Mag + Vib, rolling Only, No Timestamp
+IMU11_mc_combined_z_no_ts <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU11", acc, vel, z_cols_no_ts)
+IMU11_combined_no_ts_rolling_only <- IMU11_mc_combined_z_no_ts[30:nrow(IMU11_mc_combined_z_no_ts), "State"]
+IMU11_combined_no_ts_rolling_only <- cbind(IMU11_rolling_z_df, IMU11_combined_no_ts_rolling_only)
+colnames(IMU11_combined_no_ts_rolling_only) <- c("max", "min", "mean", "median", "sd", "State")
+
+
+
+# IMU 12 - Mag + Vib, rolling Only
+IMU12_mc_combined_z <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU12", acc, vel, z_cols)
+IMU12_rolling_z_df <- lsm_rolling_agg(IMU12_mc_combined_z$Z_AXIS)
+IMU12_combined_rolling <- IMU11_mc_combined_z[30:nrow(IMU12_mc_combined_z), ]
+IMU12_combined_rolling <- cbind(IMU11_combined_rolling, IMU12_rolling_z_df)
+
+IMU12_combined_rolling_only <- IMU11_mc_combined_z[30:nrow(IMU12_mc_combined_z), c("Timestamp", "State")]
+IMU12_combined_rolling_only <- cbind(IMU12_combined_rolling_only, IMU12_rolling_z_df)
+
+
+# IMU 12 - Mag + Vib, rolling Only, No Timestamp
+IMU12_mc_combined_z_no_ts <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU12", acc, vel, z_cols_no_ts)
+IMU12_combined_no_ts_rolling_only <- IMU12_mc_combined_z_no_ts[30:nrow(IMU12_mc_combined_z_no_ts), "State"]
+IMU12_combined_no_ts_rolling_only <- cbind(IMU12_rolling_z_df, IMU12_combined_no_ts_rolling_only)
+colnames(IMU12_combined_no_ts_rolling_only) <- c("max", "min", "mean", "median", "sd", "State")
+
+
+```
+
+```{r build-models, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide', echo=FALSE}
+
+# Create custom indices: myFolds
+myFolds <- createFolds(IMU11_combined_rolling$State, k = 10)
+
+
+# Create reusable trainControl object: mc_myControl
+set.seed(42)
+mc_myControl <- trainControl(
+  summaryFunction = multiClassSummary, #mnLogLoss does not perform as well
+  classProbs = TRUE,
+  verboseIter = TRUE,
+  savePredictions = TRUE,
+  index = myFolds)
+
+
+```
+
+
+```{r get-results, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide', echo=FALSE}
+
+IMU11_combined_rolling_model <- model_for_knitr(IMU11_combined_rolling, mc_myControl, "Combined Z Rolling", 42)
+IMU12_combined_rolling_results <- results_for_knitr(IMU12_combined_rolling, IMU11_combined_rolling_model$mc_model_rf, "Combined Z Rolling", 42)
+
+IMU11_combined_rolling_only_model <- model_for_knitr(IMU11_combined_rolling_only, mc_myControl, "Combined Z Rolling Only (No TS)", 42)
+IMU12_combined_rolling_only_results <- results_for_knitr(IMU12_combined_rolling_only, IMU11_combined_rolling_only_model$mc_model_rf, "Combined Z Rolling Only (No TS)", 42)
+
+IMU11_combined_rolling_only_no_ts_model <- model_for_knitr(IMU11_combined_no_ts_rolling_only, mc_myControl, "Combined Z Rolling Only (No TS)", 42)
+IMU12_combined_rolling_only_no_ts_results <- results_for_knitr(IMU12_combined_no_ts_rolling_only, IMU11_combined_rolling_only_no_ts_model$mc_model_rf, "Combined Z Rolling Only (No TS)", 42)
+
+```
+
+
+<!--  Z Axis COMBINED MODEL RESULTS  -->
+
+```{r sensor-z-5A-sensor-plot-agg_plus_nonagg-rolling-rf-plot, echo=FALSE, fig.cap="Rolling - Z Combined - Model"}
+plot(IMU12_combined_rolling_results$mc_model_rf)
+```
+
+```{r sensor-z-combined-rolling-rf-params, echo=FALSE, fig.cap="Rolling and Non Rolling - Z Combined - Model Parameters"}
+knitr::kable(IMU12_combined_rolling_results$mc_model_rf$results, caption = "Rolling and Non Rolling - Z Combined - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_results$mc_model_rf$modelInfo$parameters, caption = "Rolling and Non Rolling - Z Combined - RF Model Tuning Params", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_results$mc_model_rf$bestTune, caption = "Rolling and Non Rolling - Z Combined - RF Best Tuned Model from Caret", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_results$mc_model_rf$coefnames, caption = "Rolling and Non Rolling - Z Combined - RF Model Coefficients", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+IMU12_combined_rolling_results$mc_model_rf$finalModel 
+IMU12_combined_rolling_results$mc_model_rf
+```
+
+```{r sensor-z-combined-rolling-rf-results, echo=FALSE}
+knitr::kable(IMU12_combined_rolling_results$rf_accuracy, caption = "Rolling and Non Rolling - Z Combined - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_results$lsm_metrics, caption = "Rolling and Non Rolling - Z Combined - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_results$lsm_cm, caption = "Rolling and Non Rolling - Z Combined - RF Vaidation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_results$lsm_mlogloss, caption = "Rolling and Non Rolling - Z Combined - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 5A-sensor-roc-agg_plus_nonagg, echo=FALSE, fig.cap="Rolling and Non Rolling - Z Combined - ROC using 4 Binary ROC Curves"}
+res_path_idle <- IMU12_combined_rolling_results$roc_res[[1]]
+res_path_moving <- IMU12_combined_rolling_results$roc_res[[2]]
+res_path_trans <- IMU12_combined_rolling_results$roc_res[[3]]
+res_shuttle <- IMU12_combined_rolling_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+
+<!--  Z Axis COMBINED ROLLING ONLY MODEL RESULTS  -->
+
+```{r 5B-sensor-plot-aggonly, echo=FALSE, fig.cap="Rolling Only - Z Combined - Model"}
+plot(IMU12_combined_rolling_only_results$mc_model_rf)
+```
+
+```{r sensor-z-combined-rolling-only-rf-params, echo=FALSE, fig.cap="Rolling Only - Z Combined - Model Parameters"}
+knitr::kable(IMU12_combined_rolling_only_results$mc_model_rf$results, caption = "Rolling Only - Z Combined - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_only_results$mc_model_rf$modelInfo$parameters, caption = "Rolling Only - Z Combined - RF Model Tuning Params", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_only_results$mc_model_rf$bestTune, caption = "Rolling Only - Z Combined - RF Best Tuned Model from Caret", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_only_results$mc_model_rf$coefnames, caption = "Rolling Only - Z Combined - RF Model Coefficients", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+
+# print screen
+IMU12_combined_rolling_only_results$mc_model_rf$finalModel 
+IMU12_combined_rolling_only_results$mc_model_rf
+```
+
+```{r sensor-z-combined-rolling-only-rf-results, echo=FALSE}
+knitr::kable(IMU12_combined_rolling_only_results$rf_accuracy, caption = "Rolling Only - Z Combined - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_only_results$lsm_metrics, caption = "Rolling Only - Z Combined - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_only_results$lsm_cm, caption = "Rolling Only - Z Combined - RF Vaidation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_only_results$lsm_mlogloss, caption = "Rolling Only - Z Combined - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 5B-sensor-roc-aggonly, echo=FALSE, fig.cap="Rolling Only - Z Combined - ROC using 4 Binary ROC Curves"}
+res_path_idle <- IMU12_combined_rolling_only_results$roc_res[[1]]
+res_path_moving <- IMU12_combined_rolling_only_results$roc_res[[2]]
+res_path_trans <- IMU12_combined_rolling_only_results$roc_res[[3]]
+res_shuttle <- IMU12_combined_rolling_only_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+<!--  Z Axis COMBINED ROLLING ONLY (No TS) MODEL RESULTS  -->
+
+```{r 5C-sensor-plot-aggonly-no-ts, echo=FALSE, fig.cap="Rolling Only (No TS) - Z Combined - Model"}
+plot(IMU12_combined_rolling_only_no_ts_results$mc_model_rf)
+```
+
+```{r sensor-z-combined-rolling-only-no-ts-rf-params, echo=FALSE, fig.cap="Rolling Only (No TS) - Z Combined - Model Parameters"}
+knitr::kable(IMU12_combined_rolling_only_no_ts_results$mc_model_rf$results, caption = "Rolling Only (No TS) - Z Combined - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_only_no_ts_results$mc_model_rf$modelInfo$parameters, caption = "Rolling Only (No TS) - Z Combined - RF Model Tuning Params", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_only_no_ts_results$mc_model_rf$bestTune, caption = "Rolling Only (No TS) - Z Combined - RF Best Tuned Model from Caret", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_only_no_ts_results$mc_model_rf$coefnames, caption = "Rolling Only (No TS) - Z Combined - RF Model Coefficients", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+
+# print screen
+IMU12_combined_rolling_only_no_ts_results$mc_model_rf$finalModel 
+IMU12_combined_rolling_only_no_ts_results$mc_model_rf
+```
+
+```{r sensor-z-combined-rolling-only-no-ts-rf-results, echo=FALSE}
+knitr::kable(IMU12_combined_rolling_only_no_ts_results$rf_accuracy, caption = "Rolling Only (No TS) - Z Combined - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_only_no_ts_results$lsm_metrics, caption = "Rolling Only (No TS) - Z Combined - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_only_no_ts_results$lsm_cm, caption = "Rolling Only (No TS) - Z Combined - RF Vaidation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(IMU12_combined_rolling_only_no_ts_results$lsm_mlogloss, caption = "Rolling Only (No TS) - Z Combined - RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 5C-sensor-roc-aggonly-no-ts, echo=FALSE, fig.cap="Rolling Only (No TS) - Z Combined - ROC using 4 Binary ROC Curves"}
+res_path_idle <- IMU12_combined_rolling_only_no_ts_results$roc_res[[1]]
+res_path_moving <- IMU12_combined_rolling_only_no_ts_results$roc_res[[2]]
+res_path_trans <- IMU12_combined_rolling_only_no_ts_results$roc_res[[3]]
+res_shuttle <- IMU12_combined_rolling_only_no_ts_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```

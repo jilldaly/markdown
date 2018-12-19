@@ -1,0 +1,83 @@
+---
+title: "LSM - DC2 All settings - Z Axis Plots"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  pdf_document: 
+    fig_caption: yes
+    keep_tex: yes
+    number_sections: yes
+    toc: yes
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r import_setup_chunk, include=FALSE}
+source("InstallImport.R")
+source("DataCleaning.R")
+source("EDA.R")
+
+install_imports(c("tidyverse", "caret", "kableExtra", "ranger", "MLmetrics", "RANN", "pROC", "gtable", "grid", "gridExtra")) 
+
+```
+
+```{r, echo=FALSE}
+Z_AXIS <- "Z_AXIS"
+leg_pos <- "bottom"
+
+# Here are the different raw sensor file names... however, the tidy dataset is used
+# modular_a_1_v_0_2_mag
+# modular_a_1_v_0_03_mag
+# modular_a_1_v_0_4_mag
+# modular_a_1_v_0_06_mag
+# modular_a_1_v_0_0135_mag
+# modular_a_2_v_0_2_mag
+# modular_a_2_v_0_4_mag
+# modular_a_2_v_0_06_mag
+
+p12_Z_a_1_v_0_2_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", 1, 0.2, Z_AXIS, leg_pos)
+p12_Z_a_1_v_0_03_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", 1, 0.03, Z_AXIS, leg_pos)
+p12_Z_a_1_v_0_04_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", 1, 0.4, Z_AXIS, leg_pos)
+p12_Z_a_1_v_0_06_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", 1, 0.06, Z_AXIS, leg_pos)
+p12_Z_a_1_v_0_0135_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", 1, 0.0135, Z_AXIS, leg_pos)
+p12_Z_a_2_v_0_02_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", 2, 0.2, Z_AXIS, leg_pos)
+p12_Z_a_2_v_0_4_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", 2, 0.4, Z_AXIS, leg_pos)
+p12_Z_a_2_v_0_06_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", 2, 0.06, Z_AXIS, leg_pos)
+
+```
+
+```{r ggplot_chunk_1, echo=FALSE, fig.cap="Mag IMU12 Z Axis (Acc 1, Vel 0.2)"}
+p12_Z_a_1_v_0_2_mag
+```
+
+```{r ggplot_chunk_2, echo=FALSE, fig.cap="Mag IMU12 Z Axis (Acc 1, Vel 0.03)"}
+p12_Z_a_1_v_0_03_mag
+```
+
+```{r ggplot_chunk_3, echo=FALSE, fig.cap="Mag IMU12 Z Axis (Acc 1, Vel 0.04)"}
+p12_Z_a_1_v_0_04_mag
+```
+
+```{r ggplot_chunk_4, echo=FALSE, fig.cap="Mag IMU12 Z Axis (Acc 1, Vel 0.06)"}
+p12_Z_a_1_v_0_06_mag
+```
+
+```{r ggplot_chunk_5, echo=FALSE, fig.cap="Mag IMU12 Z Axis (Acc 1, Vel 0.0135)"}
+p12_Z_a_1_v_0_0135_mag
+```
+
+```{r ggplot_chunk_6, echo=FALSE, fig.cap="Mag IMU12 Z Axis (Acc 2, Vel 0.2)"}
+p12_Z_a_2_v_0_02_mag
+```
+
+```{r ggplot_chunk_7, echo=FALSE, fig.cap="Mag IMU12 Z Axis (Acc 2, Vel 0.4)"}
+p12_Z_a_2_v_0_4_mag
+```
+
+```{r ggplot_chunk_8, echo=FALSE, fig.cap="Mag IMU12 Z Axis (Acc 2, Vel 0.06)"}
+p12_Z_a_2_v_0_06_mag
+```

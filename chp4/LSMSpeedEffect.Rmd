@@ -1,0 +1,64 @@
+---
+title: "Random Forest: Measuring the Effect of Speed"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:  
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r import_setup_chunk, include=FALSE}
+source("InstallImport.R")
+source("LSMSpeedEffect.R")
+
+install_imports(c("tidyverse", "caret", "kableExtra", "ranger", "MLmetrics", "RANN", "pROC", "gtable", "grid", "gridExtra", "RColorBrewer"))
+
+```
+
+
+
+```{r get_bc_roc_chunk, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide', fig.cap="All Speed FFT ROC Curve"}
+par(pty="s")
+fft_rocCurve = roc(response = fft_allspeed_rf_metrics$State,
+               predictor = fft_allspeed_rf_metrics$RFProb,
+               levels = rev(levels(fft_allspeed_rf_metrics$State)))
+
+# fft_auc <- auc(fft_rocCurve)
+# fft_auc_ci <- ci.auc(fft_rocCurve)
+
+plot(fft_rocCurve, legacy.axes = TRUE,
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     print.thres = "best")
+
+legend("bottomright", 0, 1, legend="All Speed (FFT) RF", 
+       lty=1:2, cex=0.8)
+
+
+```
+    
+
+    
+
+```{r accuracy_chunk, echo=FALSE}
+auc_df<-data.frame(auc(fft_rocCurve))
+rownames(auc_df) <- "AUC"
+colnames(auc_df) <- colnames(speed_metrics)
+speed_metrics <- rbind(speed_metrics, auc_df)
+
+
+knitr::kable(speed_metrics, caption = "All Speed Metrics ", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+```
+
+
+\newpage
+```{r speed_fourfold_plot, echo=FALSE, fig.cap="Accelerometer Confusion Matrix"}
+fourfoldplot(fft_allspeed_rf_cm$table)
+```
+

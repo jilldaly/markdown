@@ -1,0 +1,100 @@
+---
+title: "Chp 4 Results - Matrix Profile"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:  
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)#, error=TRUE)
+```
+
+```{r import_setup_chunk, include=FALSE}
+source("Measure_matrixprofile.R")
+source("InstallImport.R")
+
+install_imports(c("tidyverse", "caret", "kableExtra", "ranger", "MLmetrics", "RANN", "pROC", "gtable", "grid", "gridExtra", "RColorBrewer"))
+
+```
+
+
+<!--  Vibration X RESULTS  -->
+
+```{r mp-vib-x-results, echo=FALSE}
+knitr::kable(vib_x_mp_res$rf_accuracy, caption = "Matrix Profile - Vibration X Axis - Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(vib_x_mp_res$lsm_metrics, caption = "Matrix Profile - Vibration X Axis - Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(vib_x_mp_res$lsm_cm, caption = "Matrix Profile - Vibration X Axis - Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+<!--  Vibration Y RESULTS  -->
+
+```{r mp-vib-y-results, echo=FALSE}
+knitr::kable(vib_y_mp_res$rf_accuracy, caption = "Matrix Profile - Vibration Y Axis - Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(vib_y_mp_res$lsm_metrics, caption = "Matrix Profile - Vibration Y Axis - Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(vib_y_mp_res$lsm_cm, caption = "Matrix Profile - Vibration Y Axis - Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+<!--  Vibration Z RESULTS  -->
+
+```{r mp-vib-z-results, echo=FALSE}
+knitr::kable(vib_z_mp_res$rf_accuracy, caption = "Matrix Profile - Vibration Z Axis - Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(vib_z_mp_res$lsm_metrics, caption = "Matrix Profile - Vibration Z Axis - Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(vib_z_mp_res$lsm_cm, caption = "Matrix Profile - Vibration Z Axis - Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+
+<!--  Magnetometer X RESULTS  -->
+
+```{r mp-mag-x-results, echo=FALSE}
+knitr::kable(mag_x_mp_res$rf_accuracy, caption = "Matrix Profile - Magnetometer X Axis - Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(mag_x_mp_res$lsm_metrics, caption = "Matrix Profile - Magnetometer X Axis - Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(mag_x_mp_res$lsm_cm, caption = "Matrix Profile - Magnetometer X Axis - Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+<!--  Magnetometer Y RESULTS  -->
+
+```{r mp-mag-y-results, echo=FALSE}
+knitr::kable(mag_y_mp_res$rf_accuracy, caption = "Matrix Profile - Magnetometer Y Axis - Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(mag_y_mp_res$lsm_metrics, caption = "Matrix Profile - Magnetometer Y Axis - Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(mag_y_mp_res$lsm_cm, caption = "Matrix Profile - Magnetometer Y Axis - Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+<!--  Magnetometer Z RESULTS  -->
+
+```{r mp-mag-z-results, echo=FALSE}
+knitr::kable(mag_z_mp_res$rf_accuracy, caption = "Matrix Profile - Magnetometer Z Axis - Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(mag_z_mp_res$lsm_metrics, caption = "Matrix Profile - Magnetometer Z Axis - Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(mag_z_mp_res$lsm_cm, caption = "Matrix Profile - Magnetometer Z Axis - Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```

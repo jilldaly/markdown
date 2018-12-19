@@ -1,0 +1,118 @@
+---
+title: "Random Forest: Measuring the Effect of Type"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:  
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r import_setup_chunk, include=FALSE}
+source("InstallImport.R")
+source("LSMTypeEffect.R")
+
+install_imports(c("tidyverse", "caret", "kableExtra", "ranger", "MLmetrics", "RANN", "pROC", "gtable", "grid", "gridExtra", "RColorBrewer"))
+
+```
+
+
+
+  
+ 
+
+```{r get_acc_roc_chunk, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide', fig.cap="Binary-Class ROC Curve"}
+par(pty="s")
+acc_rocCurve = roc(response = acc_rf_metrics$State,
+               predictor = acc_rf_metrics$RFProb,
+               levels = rev(levels(acc_imu12_moving$State)))
+
+# acc_auc <- auc(acc_rocCurve)
+# acc_auc_ci <- ci.auc(acc_rocCurve)
+
+plot(acc_rocCurve, legacy.axes = TRUE,
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     print.thres = "best")
+
+legend("bottomright", 0, 1, legend="Accelerometer RF", 
+       lty=1:2, cex=0.8)
+
+
+```
+
+
+```{r get_mag_roc_chunk, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide', fig.cap="Binary-Class ROC Curve"}
+par(pty="s")
+mag_rocCurve = roc(response = mag_rf_metrics$State,
+               predictor = mag_rf_metrics$RFProb,
+               levels = rev(levels(mag_imu12_moving$State)))
+
+# mag_auc <- auc(mag_rocCurve)
+# mag_auc_ci <- ci.auc(mag_rocCurve)
+
+plot(mag_rocCurve, legacy.axes = TRUE,
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     print.thres = "best")
+
+legend("bottomright", 0, 1, legend="Magnetometer RF", 
+       lty=1:2, cex=0.8)
+
+
+```
+
+
+```{r get_combined_roc_chunk, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide', fig.cap="Binary-Class ROC Curve"}
+par(pty="s")
+combined_rocCurve = roc(response = combined_rf_metrics$State,
+               predictor = combined_rf_metrics$RFProb,
+               levels = rev(levels(combined_imu12_moving$State)))
+
+# combined_auc <- auc(combined_rocCurve)
+# combined_auc_ci <- ci.auc(combined_rocCurve)
+
+plot(combined_rocCurve, legacy.axes = TRUE,
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     print.thres = "best")
+
+legend("bottomright", 0, 1, legend="Combined RF", 
+       lty=1:2, cex=0.8)
+
+
+```
+
+
+```{r all_accuracy_chunk, echo=FALSE}
+auc_df<-data.frame(auc(acc_rocCurve),auc(mag_rocCurve), auc(combined_rocCurve))
+rownames(auc_df) <- "AUC"
+colnames(auc_df) <- colnames(type_metrics)
+type_metrics <- rbind(type_metrics, auc_df)
+
+
+knitr::kable(type_metrics, caption = "Model Metrics (IMU12, Acc 1, Vel 0.2)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+```
+
+\newpage
+```{r acc_fourfold_plot, echo=FALSE, fig.cap="Accelerometer Confusion Matrix"}
+fourfoldplot(acc_rf_cm$table)
+```
+
+
+```{r mag_fourfold_plot, echo=FALSE, fig.cap="Magnetometer Confusion Matrix"}
+fourfoldplot(mag_rf_cm$table)
+```
+
+
+```{r combined_fourfold_plot, echo=FALSE, fig.cap="Combined Confusion Matrix"}
+fourfoldplot(combined_rf_cm$table)
+```
+
+
+

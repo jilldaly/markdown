@@ -1,0 +1,136 @@
+# Visualisation of Sensor Data
+```{r yisualise_plots_prep_chunk, echo=FALSE}
+
+# TODO - once working, change to use lapply, to return all X_Axis for type/vel/acc
+
+vel <- 0.2
+acc <- 1  
+X_AXIS <- "X_AXIS"
+Y_AXIS <- "Y_AXIS"
+Z_AXIS <- "Z_AXIS"
+leg_pos <- "none"
+
+
+p8_X_acc <- imu_ggplot(tidy_sensor_df, "ACC", "IMU8", acc, vel, X_AXIS, leg_pos)
+p8_Y_acc = imu_ggplot(tidy_sensor_df, "ACC", "IMU8", acc, vel, Y_AXIS, leg_pos)
+p8_Z_acc = imu_ggplot(tidy_sensor_df, "ACC", "IMU8", acc, vel, Z_AXIS, leg_pos)
+
+p11_X_acc = imu_ggplot(tidy_sensor_df, "ACC", "IMU11", acc, vel, X_AXIS, leg_pos)
+p11_Y_acc = imu_ggplot(tidy_sensor_df, "ACC", "IMU11", acc, vel, Y_AXIS, leg_pos)
+p11_Z_acc = imu_ggplot(tidy_sensor_df, "ACC", "IMU11", acc, vel, Z_AXIS, leg_pos)
+
+p12_X_acc = imu_ggplot(tidy_sensor_df, "ACC", "IMU12", acc, vel, X_AXIS, leg_pos)
+p12_Y_acc = imu_ggplot(tidy_sensor_df, "ACC", "IMU12", acc, vel, Y_AXIS, leg_pos)
+p12_Z_acc = imu_ggplot(tidy_sensor_df, "ACC", "IMU12", acc, vel, Z_AXIS, leg_pos)
+
+p8_X_mag <- imu_ggplot(tidy_sensor_df, "MAG", "IMU8", acc, vel, X_AXIS, leg_pos)
+p8_Y_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU8", acc, vel, Y_AXIS, leg_pos)
+p8_Z_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU8", acc, vel, Z_AXIS, leg_pos)
+
+p11_X_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU11", acc, vel, X_AXIS, leg_pos)
+p11_Y_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU11", acc, vel, Y_AXIS, leg_pos)
+p11_Z_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU11", acc, vel, Z_AXIS, leg_pos)
+
+p12_X_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", acc, vel, X_AXIS, leg_pos)
+p12_Y_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", acc, vel, Y_AXIS, leg_pos)
+p12_Z_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", acc, vel, Z_AXIS, leg_pos)
+
+```
+    
+
+```{r ggplot_acc_IMU8_x_chunk, echo=FALSE, fig.cap="Acc IMU8 X Axis (Acc 1, Vel 0.2)"}
+p8_X_acc
+```
+      
+      
+```{r ggplot_acc_IMU8_y_chunk, echo=FALSE, fig.cap="Acc IMU8 Y AXIS (Acc 1, Vel 0.2)" }
+p8_Y_acc
+```
+        
+        
+```{r ggplot_acc_IMU8_z_chunk, echo=FALSE, fig.cap="Acc IMU8 Z AXIS (Acc 1, Vel 0.2)" }
+p8_Y_acc
+```
+    
+    
+```{r ggplot_acc_IMU11_x_chunk, echo=FALSE, fig.cap="Acc IMU11 X Axis (Acc 1, Vel 0.2)"}
+p11_X_acc
+```
+      
+      
+```{r ggplot_acc_IMU11_y_chunk, echo=FALSE, fig.cap="Acc IMU11 Y AXIS (Acc 1, Vel 0.2)" }
+p11_Y_acc
+```
+        
+        
+```{r ggplot_acc_IMU11_z_chunk, echo=FALSE, fig.cap="Acc IMU11 Z AXIS (Acc 1, Vel 0.2)" }
+p11_Y_acc
+```
+    
+    
+```{r ggplot_acc_IMU12_x_chunk, echo=FALSE, fig.cap="Acc IMU12 X Axis (Acc 1, Vel 0.2)"}
+p12_X_acc
+```
+      
+      
+```{r ggplot_acc_IMU12_y_chunk, echo=FALSE, fig.cap="Acc IMU12 Y AXIS (Acc 1, Vel 0.2)" }
+p12_Y_acc
+```
+        
+        
+```{r ggplot_acc_IMU12_z_chunk, echo=FALSE, fig.cap="Acc IMU12 Z AXIS (Acc 1, Vel 0.2)" }
+p12_Y_acc
+```
+    
+    
+
+```{r ggplot_mag_IMU8_x_chunk, echo=FALSE, fig.cap="Mag IMU8 X Axis (Acc 1, Vel 0.2)"}
+p8_X_mag
+```
+      
+      
+```{r ggplot_mag_IMU8_y_chunk, echo=FALSE, fig.cap="Mag IMU8 Y AXIS (Acc 1, Vel 0.2)" }
+p8_Y_mag
+```
+        
+        
+```{r ggplot_mag_IMU8_z_chunk, echo=FALSE, fig.cap="Mag IMU8 Z AXIS (Acc 1, Vel 0.2)" }
+p8_Y_mag
+```
+    
+        
+```{r ggplot_mag_IMU11_x_chunk, echo=FALSE, fig.cap="Mag IMU11 X Axis (Acc 1, Vel 0.2)"}
+p11_X_mag
+```
+      
+      
+```{r ggplot_mag_IMU11_y_chunk, echo=FALSE, fig.cap="Mag IMU11 Y AXIS (Acc 1, Vel 0.2)" }
+p11_Y_mag
+```
+        
+        
+```{r ggplot_mag_IMU11_z_chunk, echo=FALSE, fig.cap="Mag IMU11 Z AXIS (Acc 1, Vel 0.2)" }
+p11_Y_mag
+```
+    
+        
+    
+```{r ggplot_mag_IMU12_x_chunk, echo=FALSE, fig.cap="Mag IMU12 X Axis (Acc 1, Vel 0.2)"}
+p12_X_mag
+```
+      
+      
+```{r ggplot_mag_IMU12_y_chunk, echo=FALSE, fig.cap="Mag IMU12 Y AXIS (Acc 1, Vel 0.2)" }
+p12_Y_mag
+```
+        
+        
+```{r visualise_olots_IMU12_chunk, echo=FALSE, fig.cap="Mag IMU12 Z AXIS (Acc 1, Vel 0.2)" }
+grid_arrange_shared_legend(p12_Z_mag, ncol = 1, nrow = 1)
+```
+    
+ 
+    
+
+
+

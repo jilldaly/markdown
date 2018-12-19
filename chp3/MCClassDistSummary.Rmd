@@ -1,0 +1,84 @@
+---
+title: "Class Distribution for each Run Setting"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:  
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r import_setup_chunk, include=FALSE}
+source("SensorDataPreparation.R")
+source("InstallImport.R")
+source("MCClassDist.R")
+
+install_imports(c("kableExtra", "gtable", "grid", "gridExtra"))
+
+```
+
+
+
+```{r imu11_acc_1_0_2_desc_chunk, echo=FALSE}
+knitr::kable(class_dist_summ, caption = "Class Distribution for LSM State Labels", booktabs=TRUE)%>%
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+
+```
+
+
+
+```{r bc_accuracy_chunk, echo=FALSE}
+
+# Create custom indices: myFolds
+myFolds <- createFolds(s11_a_1_v_0_2$State, k = 10)
+
+# Create reusable trainControl object: mc_myControl
+set.seed(42)
+mc_myControl <- trainControl(
+  summaryFunction = mnLogLoss,
+  classProbs = TRUE,
+  verboseIter = TRUE,
+  savePredictions = TRUE,
+  index = myFolds)
+
+all_speed_knitr_metrics <- get_indiv_speed_metrics(mc_myControl)
+
+```
+
+```{r rf-plot, echo=FALSE, fig.cap="Baseline Model"}
+rf_1_results <- all_speed_knitr_metrics[[1]]
+
+plot(rf_1_results$mc_model_rf)
+```
+
+```{r rf-params, echo=FALSE, fig.cap="Baseline Model Parameters"}
+knitr::kable(rf_1_results$mc_model_rf$results, caption = "Baseline RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+
+```{r rf-results, echo=FALSE}
+knitr::kable(rf_1_results$rf_accuracy, caption = "Baseline RF - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(rf_1_results$lsm_metrics, caption = "Baseline RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+```
+
+
+
+```{r cal_plots_mc_data, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide',fig.cap="Calibration PLot - MC Validation Data"}
+# calCurve <- calibration(State ~ bc_rf_metrics$RFProb + mc_rf_metrics$RFProb, data = mc_imu12)
+# calCurve
+# xyplot(calCurve, auto.key = list(columns = 2))
+
+```
+
+
+
+
+

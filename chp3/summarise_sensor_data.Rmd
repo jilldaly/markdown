@@ -1,0 +1,177 @@
+---
+title: "SummariseSensorData"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: pdf_document
+---
+
+<!-- 
+Online information about creating technical documents with RMarkdown and knitr:
+https://bookdown.org/
+https://bookdown.org/yihui/bookdown/
+https://rmarkdown.rstudio.com/
+https://github.com/rstudio/rmarkdown
+https://rmarkdown.rstudio.com/pdf_document_format
+http://kbroman.org/knitr_knutshell/pages/Rmarkdown.html
+https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf
+https://yihui.name/knitr/options/?version=1.2.830&mode=desktop#code-chunk
+https://stackoverflow.com/questions/12546365/subfigures-or-subcaptions-with-knitr/49086985#49086985
+https://rmarkdown.rstudio.com/articles_report_from_r_script.html
+-->
+
+<!-- TODO: Create separate .tex files to deal with styling issues, eg. toc on same page as title -->
+\newpage 
+\tableofcontents 
+\listoffigures
+\listoftables
+\newpage
+
+
+<!--##########################################################################
+##############################################################################
+##                                                                          ##
+##                               DATA EXPLORATION                           ##
+##                         FOR LOADING & TIDYING DATASET                    ##  
+##                                                                          ##
+##############################################################################
+##############################################################################-->
+
+
+```{r config, include=FALSE}
+# Modules used by this script
+source("InstallImport.R")
+source("DataCleaning.R")
+source("EDA.R")
+
+# Required Packages
+install_imports(c("tidyverse", "VIM", "kableExtra", "PerformanceAnalytics", "Hmisc", "outliers", "psych")) 
+```
+
+
+<!-- FIGURES FROM SECTIONS CAN BE SAVED TO DISK FOR THE FINAL THESIS DOCUMENT -->
+
+
+\newpage
+
+
+
+
+\newpage
+# Sensor Summary 
+
+```{r create_summary_list, include=FALSE}
+summ_list <- lapply(names(sensor_data_list), summarise_sensorlist_by_axis, df_list=sensor_data_list)
+#summ_list <- lapply(names(sensor_data_list), summarise_sensor_by_axis, df=gather_axes)
+```
+
+
+\newpage
+
+```{r summaries, echo=FALSE}
+knitr::kable( as.data.frame(summ_list[[1]][2]))%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( as.data.frame(summ_list[[3]][2]))%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( as.data.frame(summ_list[[5]][2]))%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( as.data.frame(summ_list[[7]][2]))%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( as.data.frame(summ_list[[9]][2]))%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( as.data.frame(summ_list[[11]][2]))%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( as.data.frame(summ_list[[13]][2]))%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( as.data.frame(summ_list[[15]][2]))%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( as.data.frame(summ_list[[2]][2]))%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( as.data.frame(summ_list[[4]][2]))%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( as.data.frame(summ_list[[6]][2]))%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( as.data.frame(summ_list[[8]][2]))%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( as.data.frame(summ_list[[10]][2]))%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( as.data.frame(summ_list[[12]][2]))%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( as.data.frame(summ_list[[14]][2]))%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( as.data.frame(summ_list[[16]][2]))%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+```
+
+
+```{r data, include=FALSE}
+acc_df <- sensor_data %>% dplyr::filter(Type == "ACC")
+mag_df <- sensor_data %>% dplyr::filter(Type == "MAG")
+
+mag_X_df <- mag_df %>% dplyr::select(contains("_X"))
+mag_Y_df <- mag_df %>% dplyr::select(contains("_Y"))
+mag_Z_df <- mag_df %>% dplyr::select(contains("_Z"))
+
+acc_X_df <- acc_df %>% dplyr::select(contains("_X"))
+acc_Y_df <- acc_df %>% dplyr::select(contains("_Y"))
+acc_Z_df <- acc_df %>% dplyr::select(contains("_Z"))
+```
+
+
+## Histogram
+```{r histograms}
+hist(mag_X_df)
+hist(mag_Y_df)
+hist(mag_Z_df)
+hist(acc_X_df)
+hist(acc_Y_df)
+hist(acc_Z_df)
+```
+
+## Boxplots
+```{r}
+boxplot(mag_X_df)
+boxplot(mag_Y_df)
+boxplot(mag_Z_df)
+boxplot(acc_X_df)
+boxplot(acc_Y_df)
+boxplot(acc_Z_df)
+```
+
+
+```{r corrplot, echo=FALSE}
+## CORRELATION
+
+
+par(mar=c(6.1,5.1,2.1,1.1), oma=c(0,0,1,0), mfrow=c(1, 2))
+plot_object_acc_x <- chart.Correlation(acc_X_df, histogram=TRUE, pch=19)  
+title(paste("Vibration X Axis Data"), outer = TRUE) # 4 is the mag data
+dev.off()
+
+par(mar=c(6.1,5.1,2.1,1.1), oma=c(0,0,1,0), mfrow=c(1, 2))
+plot_object_acc_y <- chart.Correlation(acc_Y_df, histogram=TRUE, pch=19)  
+title(paste("Vibration Y Axis Data"), outer = TRUE) # 4 is the mag data
+dev.off()
+
+par(mar=c(6.1,5.1,2.1,1.1), oma=c(0,0,1,0), mfrow=c(1, 2))
+plot_object_acc_z <- chart.Correlation(acc_Z_df, histogram=TRUE, pch=19)  
+title(paste("Vibration Z Axis Data"), outer = TRUE) # 4 is the mag data
+dev.off()
+
+par(mar=c(6.1,5.1,2.1,1.1), oma=c(0,0,1,0), mfrow=c(1, 2))
+plot_object_x <- chart.Correlation(mag_X_df, histogram=TRUE, pch=19)  
+title(paste("Magnetometer X Axis Data"), outer = TRUE) # 4 is the mag data
+dev.off()
+
+par(mar=c(6.1,5.1,2.1,1.1), oma=c(0,0,1,0), mfrow=c(1, 2))
+plot_object_y <- chart.Correlation(mag_Y_df, histogram=TRUE, pch=19)  
+title(paste("Magnetometer Y Axis Data"), outer = TRUE) # 4 is the mag data
+dev.off()
+
+par(mar=c(6.1,5.1,2.1,1.1), oma=c(0,0,1,0), mfrow=c(1, 2))
+plot_object_z <- chart.Correlation(mag_Z_df, histogram=TRUE, pch=19)  
+title(paste("Magnetometer Z Axis Data"), outer = TRUE) # 4 is the mag data
+dev.off()
+```
+
+
+

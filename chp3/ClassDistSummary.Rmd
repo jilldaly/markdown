@@ -1,0 +1,93 @@
+---
+title: "Class Distribution for each Run Setting"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:  
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r import_setup_chunk, include=FALSE}
+source("InstallImport.R")
+source("ClassDist.R")
+
+install_imports(c("kableExtra", "gtable", "grid", "gridExtra"))
+
+```
+
+
+
+```{r imu11_acc_1_0_2_desc_chunk, echo=FALSE}
+knitr::kable(bc_class_dist_summ, caption = "Class Distribution for LSM State Labels", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+
+```
+
+
+
+```{r bc_accuracy_chunk, echo=FALSE}
+# list("lsm_setting"=lsm_setting, "overall"=bc_overall, "byClass"=bc_byClass, "cm"=bc_table)
+
+run_bc_1 <- bc_metric_list[[1]]
+knitr::kable(run_bc_1$overall, caption = "BC Overall Statistics (Acc 1, Vel 0.2)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(run_bc_1$byClass, caption = "BC Statistics (Acc 1, Vel 0.2)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+run_bc_2 <- bc_metric_list[[2]]
+knitr::kable(run_bc_2$overall, caption = "BC Overall Statistics (Acc 1, Vel 0.03)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(run_bc_2$byClass, caption = "BC Statistics (Acc 1, Vel 0.03)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+run_bc_3 <- bc_metric_list[[3]]
+knitr::kable(run_bc_3$overall, caption = "BC Overall Statistics (Acc 1, Vel 0.4)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(run_bc_3$byClass, caption = "BC Statistics (Acc 1, Vel 0.4)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+run_bc_4 <- bc_metric_list[[4]]
+knitr::kable(run_bc_4$overall, caption = "BC Overall Statistics (Acc 1, Vel 0.06)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(run_bc_4$byClass, caption = "BC Statistics (Acc 1, Vel 0.06)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+run_bc_5 <- bc_metric_list[[5]]
+knitr::kable(run_bc_5$overall, caption = "BC Overall Statistics (Acc 1, Vel 0.0135)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(run_bc_5$byClass, caption = "BC Statistics (Acc 1, Vel 0.0135)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+run_bc_6 <- bc_metric_list[[6]]
+knitr::kable(run_bc_6$overall, caption = "BC Overall Statistics (Acc 2, Vel 0.2)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(run_bc_6$byClass, caption = "BC Statistics (Acc 2, Vel 0.2)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+run_bc_7 <- bc_metric_list[[7]]
+knitr::kable(run_bc_7$overall, caption = "BC Overall Statistics (Acc 2, Vel 0.4)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(run_bc_7$byClass, caption = "BC Statistics (Acc 2, Vel 0.4)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+run_bc_8 <- bc_metric_list[[8]]
+knitr::kable(run_bc_8$overall, caption = "BC Overall Statistics (Acc 2, Vel 0.06)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(run_bc_8$byClass, caption = "BC Statistics (Acc 2, Vel 0.06)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+```
+
+

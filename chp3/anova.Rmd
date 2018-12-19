@@ -1,0 +1,99 @@
+---
+title: "Sensor Anova"
+author: "Jill Daly"
+date: "10/15/2018"
+output:
+  pdf_document: 
+    fig_caption: yes
+    keep_tex: yes
+    number_sections: yes
+    toc: yes
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE }
+# Modules used by this script
+source("../InstallImport.R", chdir = TRUE)
+source("../DataCleaning.R", chdir = TRUE)
+
+# Required Packages
+install_imports(c("tidyverse", "VIM", "kableExtra", "PerformanceAnalytics", "Hmisc", "outliers")) 
+```
+
+
+## Anova
+
+```{r anova-zlabel}
+gathered_df <- s_acc_x_data_list[[3]] %>% 
+  gather(key = "X_Sensor", value = "X_Value")
+
+gathered_df %>% group_by(X_Sensor) %>%
+  summarise(mean_reading = mean(X_Value, na.rm = TRUE), sd_reading = sd(X_Value, na.rm = TRUE))
+gathered_df$X_Sensor <- as.factor(gathered_df$X_Sensor)
+
+head(gathered_df)
+levels(gathered_df$X_Sensor)
+nlevels(gathered_df$X_Sensor)
+
+bwplot(X_Value~X_Sensor, data = gathered_df, pch="|")
+
+grubbs.test(gathered_df$X_Value[gathered_df$X_Sensor == "IMU1_X"])
+
+model_sensor <- aov(gathered_df$X_Value~gathered_df$X_Sensor)
+summary(model_sensor)
+summary.lm(model_sensor)
+
+contrasts(gathered_df$X_Sensor)
+contrasts(gathered_df$X_Sensor) <- contr.sum
+model_sensor <- aov(gathered_df$X_Value~gathered_df$X_Sensor)
+summary(model_sensor)
+summary.lm(model_sensor)
+
+plot.design(gathered_df$X_Value~gathered_df$X_Sensor)
+model.tables(model_sensor)
+
+contrasts(gathered_df$X_Sensor) <- NULL
+ 
+
+TukeyHSD(model_sensor)
+plot(TukeyHSD(model_sensor))
+
+par(mfrow = c(2,2))
+plot(model_sensor)
+par(mfrow = c(1,1))
+```
+
+
+
+```{r anova-zpos}
+gathered_pos <- s_pos_df %>% gather(key = "X_Sensor", value = "Position")
+gathered_pos <- gathered_df %>% left_join(gathered_pos)
+gathered_pos$X_Sensor <- as.factor(gathered_pos$X_Sensor)
+gathered_pos$Position <- as.factor(gathered_pos$Position)
+
+bwplot(X_Value~Position, data = gathered_pos, pch="|")
+
+model_sensor_pos <- aov(gathered_pos$X_Value~gathered_pos$Position)
+summary(model_sensor_pos)
+summary.lm(model_sensor_pos)
+
+contrasts(gathered_pos$Position)
+contrasts(gathered_pos$Position) <- contr.sum
+model_sensor_pos <- aov(gathered_pos$X_Value~gathered_pos$Position)
+summary(model_sensor_pos)
+summary.lm(model_sensor_pos)
+
+plot.design(gathered_pos$X_Value~gathered_pos$Position)
+model.tables(model_sensor_pos)
+
+contrasts(gathered_pos$Position) <- NULL
+model_sensor_pos <- aov(gathered_pos$X_Value~gathered_pos$Position)
+
+TukeyHSD(model_sensor_pos)
+plot(TukeyHSD(model_sensor_pos))
+
+par(mfrow = c(2,2))
+plot(model_sensor_pos)
+par(mfrow = c(1,1))
+```
+

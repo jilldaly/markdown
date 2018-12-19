@@ -1,0 +1,377 @@
+---
+title: "Random Forest: Measuring the Effect of Labels"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:  
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r import_setup_chunk, include=FALSE}
+source("InstallImport.R")
+source("SensorDataPreparation.R")
+source("MulticlassROC.R")
+source("SensorFeatExtract.R")
+source("EDA.R")
+
+install_imports(c("tidyverse", "caret", "kableExtra", "ranger", "MLmetrics", "RANN", "pROC", "gtable", "grid", "gridExtra", "RColorBrewer"))
+
+```
+
+
+```{r create_content, echo=FALSE}
+
+label_num_1 <- c(1,2,3,4,5,6)
+label_desc_1 <- c("Track Run of Track (w/ Transition to next part of track - i.e. every metre)",
+  "Transition from Track to Shuttle",
+  "Shuttle Run",
+  "Transition from Shuttle to Track",
+  "Idle State",
+  "Everything Else (unexplained track data)")
+Label_df_1 <- data.frame(label_num_1, label_desc_1)
+colnames(Label_df_1) <- c("Label #", "Label Description")
+
+
+label_num_2 <- c(1,2,3,4)
+label_name_2 <- c("PATH_IDLE","PATH_MOVING","PATH_OTHER", "SHUTTLE")
+label_desc_2 <- c("Vehicle Idle on Track", "Vehicle Moving on Track", "Unexplained Track Data", "Vehicle Transferring between Tracks")
+Label_df_2 <- data.frame(label_num_2, label_name_2, label_desc_2)
+colnames(Label_df_2) <- c("Label #", "Label Name", "Label Description")
+
+
+label_num_3 <- c(1,2,3)
+label_name_3 <- c("PATH_IDLE","PATH_MOVING", "SHUTTLE")
+label_desc_3 <- c("Vehicle Idle on Track", "Vehicle Moving on Track", "Vehicle Transferring between Tracks")
+Label_df_3 <- data.frame(label_num_3, label_name_3, label_desc_3)
+colnames(Label_df_3) <- c("Label #", "Label Name", "Label Description")
+
+
+label_3_dist <- data.frame(c(0.25969143), c(0.69858809), c(0.04172048))
+colnames(label_3_dist) <- c("PATH_IDLE", "PATH_MOVING", "SHUTTLE")
+
+
+label_num_4 <- c(1,2,3,4)
+label_name_4 <- c("PATH_IDLE", "PATH_MOVING", "PATH_TRANSITION", "SHUTTLE")
+label_desc_4 <- c("Vehicle Idle on Track", "Vehicle Moving on Track", "Vehicle Transition between Track Modules", "Vehicle Transferring between Tracks")
+Label_df_4 <- data.frame(label_num_4, label_name_4, label_desc_4)
+colnames(Label_df_4) <- c("Label #", "Label Name", "Label Description")
+
+
+label_4_dist <- data.frame(c(0.25969143), c(0.61077691), c(0.08781118), c(0.04172048))
+colnames(label_4_dist) <- c("PATH_IDLE", "PATH_MOVING", "PATH_TRANSITION", "SHUTTLE")
+
+
+
+
+```
+
+
+
+```{r print table, echo=FALSE}
+knitr::kable(Label_df_1, caption = "Initial Platform State Labels (Acceleration 1, Velocity 0.2)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(Label_df_2, caption = "4 Platform State Labels (Acceleration 1, Velocity 0.2)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(Label_df_3, caption = "3 Platform State Labels (Acceleration 1, Velocity 0.2)", booktabs=TRUE)%>%
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(label_3_dist, caption = "Distribution of Observations with 3 State Labels (Acceleration 1, Velocity 0.2)", booktabs=TRUE)%>%
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(Label_df_4, caption = "4 Platform State Labels (Acceleration 1, Velocity 0.2)", booktabs=TRUE)%>%
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(label_4_dist, caption = "Distribution of Observations with 4 State Labels (Acceleration 1, Velocity 0.2)", booktabs=TRUE)%>%
+  kable_styling(latex_options=c("hold_position"))
+
+```
+
+
+```{r, echo=FALSE}
+# modular_a_1_v_0_2_mag
+# modular_a_1_v_0_03_mag
+# modular_a_1_v_0_4_mag
+# modular_a_1_v_0_06_mag
+# modular_a_1_v_0_0135_mag
+# modular_a_2_v_0_2_mag
+# modular_a_2_v_0_4_mag
+# modular_a_2_v_0_06_mag
+
+p_11_colour = imu_ggplot(tidy_sensor_df, "MAG", "IMU11", 1, 0.2, "Z_AXIS", "bottom")
+p_11_no_colour = imu_ggplot_bw(tidy_sensor_df, "MAG", "IMU11", 1, 0.2, "Z_AXIS", "none")
+# p12_Z_a_1_v_0_03_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", 1, 0.03, Z_AXIS, leg_pos)
+# p12_Z_a_1_v_0_04_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", 1, 0.4, Z_AXIS, leg_pos)
+# p12_Z_a_1_v_0_06_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", 1, 0.06, Z_AXIS, leg_pos)
+# p12_Z_a_1_v_0_0135_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", 1, 0.0135, Z_AXIS, leg_pos)
+# p12_Z_a_2_v_0_02_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", 2, 0.2, Z_AXIS, leg_pos)
+# p12_Z_a_2_v_0_4_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", 2, 0.4, Z_AXIS, leg_pos)
+# p12_Z_a_2_v_0_06_mag = imu_ggplot(tidy_sensor_df, "MAG", "IMU12", 2, 0.06, Z_AXIS, leg_pos)
+
+```
+
+
+```{r ggplot_chunk_1, echo=FALSE, fig.cap="Magnetomer IMU12 Z Axis (Acc 1, Vel 0.2)"}
+p_11_no_colour
+```
+
+
+```{r ggplot_chunk_2, echo=FALSE, fig.cap="Magnetomer IMU11 Z Axis (Acc 1, Vel 0.2) - State Label Highlighted"}
+p_11_colour
+```
+
+
+
+
+
+```{r create_dfs_chunk, include=FALSE}
+
+cols <- c("Timestamp", "X_AXIS", "Y_AXIS", "Z_AXIS", "State")
+cols_type <- c(cols, "State")
+vel <- 0.2
+acc <- 1  
+POS_CLASS <- "PATH_MOVING"
+  
+# Training Data for RF Models
+mc_imu11 <- filter_sensor(tidy_sensor_df, "ACC", "IMU11", acc, vel, cols)
+bc_imu11_moving <- lsm_binary_label(mc_imu11, POS_CLASS)
+
+# Independent Validation Data 
+mc_imu12 <- filter_sensor(tidy_sensor_df, "ACC", "IMU12", acc, vel, cols)
+bc_imu12_moving <- lsm_binary_label(mc_imu12, POS_CLASS)
+```
+
+
+
+```{r class_dist_chunk, echo=FALSE}
+sen_prop11 <- as.data.frame(prop.table(table(mc_imu11$State)))
+colnames(sen_prop11) <- c("State", "Freq")
+
+sen_prop_bc_11 <- as.data.frame(prop.table(table(bc_imu11_moving$State)))
+colnames(sen_prop_bc_11) <- c("State", "Freq")
+
+knitr::kable(sen_prop11, caption = "Mutli-Class Distribution for Aceleration 1, Velocity 0.2", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(sen_prop_bc_11, caption = "Binary-Class Distribution for Aceleration 1, Velocity 0.2", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+```
+           
+           
+           
+           
+    
+## Re-usable Cross Validation
+
+```{r model_setup_chunk}
+# Set seed so that we can reproduce the results
+set.seed(42)
+
+# Create custom indices: myFolds
+myFolds <- createFolds(mc_imu11$State, k = 10)
+
+# Create reusable trainControl object: mc_myControl
+mc_myControl <- trainControl(
+  summaryFunction = multiClassSummary,
+  classProbs = TRUE,
+  verboseIter = TRUE,
+  savePredictions = TRUE,
+  index = myFolds)
+
+# Create reusable trainControl object: bc_myControl
+bc_myControl <- trainControl(
+  summaryFunction = twoClassSummary,
+  classProbs = TRUE,
+  verboseIter = TRUE,
+  savePredictions = TRUE,
+  index = myFolds)
+
+```
+    
+    
+## Two Random Forest Models
+  
+```{r mag_train_model_chunk, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide'}
+bc_model_rf <- train(State ~ ., bc_imu11_moving,
+                  metric = "logLoss", 
+                  method = "ranger",
+                  preProcess = "knnImpute",
+                  na.action = na.pass,
+                  trControl = bc_myControl)
+
+```
+    
+
+
+```{r acc_train_model_chunk, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide'}
+# Create Model
+mc_model_rf <- train(State ~ ., mc_imu11,
+                  metric = "logLoss", 
+                  method = "ranger",
+                  preProcess = "knnImpute",
+                  na.action = na.pass,
+                  trControl = mc_myControl)
+
+```
+    
+
+
+
+```{r acc_model_predictions_chunk, echo=FALSE,results='hide'}
+set.seed(42)
+mc_imu12_pred <- predict(mc_model_rf, newdata=mc_imu12, na.action = na.pass)
+mc_imu12_cm <- confusionMatrix(mc_imu12_pred, mc_imu12$State, mode='everything', positive="PATH_MOVING")
+
+bc_imu12_moving_pred <- predict(bc_model_rf, newdata=bc_imu12_moving, na.action = na.pass)
+bc_imu12_moving_cm <- confusionMatrix(bc_imu12_moving_pred, bc_imu12_moving$State, mode='everything', positive="PATH_MOVING")
+
+```
+
+# Model Performance Metrics
+
+```{r get_bc_roc_chunk, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide', fig.cap="Binary-Class ROC Curve"}
+bc_imu12_moving_prob <- predict(bc_model_rf, newdata=bc_imu12_moving, type='prob', na.action = na.pass)
+
+score <- bc_imu12_moving_prob[, "PATH_MOVING"]
+bc_pred <- prediction(score, bc_imu12_moving$State)
+lsm_bc_perf <- performance(bc_pred, "tpr", "fpr")
+  
+# Calculate and extract the AUC value  
+lsm_bc_auc <- performance(bc_pred, "auc")
+#lsm_bc_auc <- unlist(slot(lsm_bc_perf, "y.values"))
+lsm_bc_auc_df <- data.frame(unlist(lsm_bc_auc@y.values))
+colnames(lsm_bc_auc_df) <- c("AUC")
+
+
+bc_path_moving_roc.x <- unlist(lsm_bc_perf@x.values)
+bc_path_moving_roc.y <- unlist(lsm_bc_perf@y.values)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate',
+     xlab='False Positive Rate',
+     bty='n')
+
+lines(bc_path_moving_roc.y ~ bc_path_moving_roc.x, lwd=2)
+
+legend("bottomright", 0, 1, legend="PATH_MOVING", 
+       lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+
+```
+    
+
+
+```{r get_mc_roc_chunk, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide', fig.cap="Multi-Class ROC Curve"}
+roc_res <-lsm_roc(levels(mc_imu12$State), mc_model_rf, mc_imu12)
+res_path_idle <- roc_res[[1]]
+auc_path_idle <- res_path_idle["lsm_auc"]
+res_path_moving <- roc_res[[2]]
+auc_path_moving <- res_path_moving["lsm_auc"]
+res_path_trans <- roc_res[[3]]
+auc_path_trans <- res_path_trans["lsm_auc"]
+res_shuttle <- roc_res[[4]]
+auc_shuttle <- res_shuttle["lsm_auc"]
+auc_df <- data.frame(list(c(res_path_idle$POS_CLASS,
+                           res_path_moving$POS_CLASS,
+                           res_path_trans$POS_CLASS,
+                           res_shuttle$POS_CLASS),
+                     c(auc_path_idle,
+                       auc_path_moving,
+                       auc_path_trans,
+                       auc_shuttle)))
+colnames(auc_df) <- c("State", "AUC")
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+```
+    
+
+```{r overall_accuracy_chunk, echo=FALSE}
+mc_overall <- as.data.frame(mc_imu12_cm$overall)
+colnames(mc_overall) <- c("MultiClass Label")
+
+mc_byClass <- as.data.frame(mc_imu12_cm$byClass)
+#colnames(mc_byClass) <- c("MultiClass Label")
+
+
+
+bc_overall <- as.data.frame(bc_imu12_moving_cm$overall)
+colnames(bc_overall) <- "Binary Class Label"
+
+bc_byClass <- as.data.frame(bc_imu12_moving_cm$byClass)
+
+
+
+knitr::kable(mc_overall, caption = "Multi-Class Overall Statistics (IMU12, Acc 1, Vel 0.2)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(bc_overall, caption = "Binary-Class Overall Statistics (IMU12, Acc 1, Vel 0.2)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(mc_byClass, caption = "Multi-Class By Class Statistics (IMU12, Acc 1, Vel 0.2)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(bc_byClass, caption = "Binary-Class By Class Statistics (IMU12, Acc 1, Vel 0.2)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+
+
+
+```
+
+
+
+    
+```{r show_auc_chunk, echo=FALSE}
+
+knitr::kable( auc_df , caption = "AUC Values for Multi-Class Model (Validated with IMU12, Acc 1, Vel 0.2)", booktabs=TRUE)%>% 
+   kable_styling(latex_options=c("hold_position"))
+
+
+knitr::kable( lsm_bc_auc_df , caption = "AUC Values for Binary-Class Model (Validated with IMU12, Acc 1, Vel 0.2)", booktabs=TRUE)%>% 
+   kable_styling(latex_options=c("hold_position"))
+
+```
+    
+
+
+
+```{r plot_roc, echo=FALSE, fig.cap="Multi-Class ROC using 4 Binary ROC Curves"}
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate',
+     xlab='False Positive Rate',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=levels(mc_imu12$State), 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+

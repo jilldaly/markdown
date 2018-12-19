@@ -1,0 +1,299 @@
+---
+title: "MSc Data Science & Analytics: LSM Track Data Exploration"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  pdf_document: 
+    fig_caption: yes
+    keep_tex: yes
+    number_sections: yes
+    toc: yes
+    toc_depth: 2
+---
+
+<!-- 
+Online information about creating technical documents with RMarkdown and knitr:
+https://bookdown.org/
+https://bookdown.org/yihui/bookdown/
+https://rmarkdown.rstudio.com/
+https://github.com/rstudio/rmarkdown
+https://rmarkdown.rstudio.com/pdf_document_format
+http://kbroman.org/knitr_knutshell/pages/Rmarkdown.html
+https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf
+https://yihui.name/knitr/options/?version=1.2.830&mode=desktop#code-chunk
+https://stackoverflow.com/questions/12546365/subfigures-or-subcaptions-with-knitr/49086985#49086985
+https://rmarkdown.rstudio.com/articles_report_from_r_script.html
+-->
+
+<!-- TODO: Create separate .tex files to deal with styling issues, eg. toc on same page as title -->
+\newpage 
+\tableofcontents 
+\listoffigures
+\listoftables
+\newpage
+
+
+<!--##########################################################################
+##############################################################################
+##                                                                          ##
+##                               DATA EXPLORATION                           ##
+##                         FOR LOADING & TIDYING DATASET                    ##  
+##                                                                          ##
+##############################################################################
+##############################################################################-->
+
+
+```{r config, include=FALSE}
+# Modules used by this script
+source("InstallImport.R")
+source("SensorDataPreparation.R")
+source("EDA.R")
+
+# Required Packages
+install_imports(c("tidyverse", "VIM", "kableExtra", "PerformanceAnalytics", "Hmisc", "outliers", "psych")) 
+```
+
+
+<!-- FIGURES FROM SECTIONS CAN BE SAVED TO DISK FOR THE FINAL THESIS DOCUMENT -->
+
+
+\newpage
+
+```{r sensor_postion, include=FALSE}
+# IMU Sensor Positions:
+s_pos_df <- data.frame(t(c("IMU1_POS"="FRONT_SURFACE", 
+                         "IMU3_POS"="TOP_SURFACE_WITH_PALETTE",
+                         "IMU7_POS"="FRONT_SURFACE", 
+                         "IMU8_POS"="FRONT_SURFACE", 
+                         "IMU9_POS"="SIDE_SURFACE", 
+                         "IMU11_POS"="TOP_SURFACE", 
+                         "IMU12_POS"="TOP_SURFACE")))
+```
+
+
+
+## Summary 
+
+```{r create_summary_list, include=FALSE}
+summ_list <- lapply(names(sensor_data_list), summarise_sensorlist_by_axis, df_list=sensor_data_list)
+```
+
+
+`r stringr::str_interp("${summ_list[[1]][1]} Sensor Summary")`
+```{r echo=FALSE}
+# print title 1
+k_df <- as.data.frame(summ_list[[1]][2])
+knitr::kable(k_df)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+
+`r stringr::str_interp("${summ_list[[1]][1]} Sensor Summary")`
+```{r echo=FALSE}
+# print title 1
+k_df <- as.data.frame(summ_list[[1]][3])
+knitr::kable(k_df)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+`r stringr::str_interp("${summ_list[[1]][1]} Sensor Summary")`
+```{r echo=FALSE}
+# print title 1
+k_df <- as.data.frame(summ_list[[1]][4])
+knitr::kable(k_df)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+
+`r stringr::str_interp("${summ_list[[4]][1]} Sensor Summary")`
+```{r echo=FALSE}
+# print title 1
+k_df <- as.data.frame(summ_list[[4]][2])
+knitr::kable(k_df)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+
+# Dataset Details
+
+## FREQUENCY OF CLASS LABEL
+```{r class_frequency, include=FALSE}
+sen_xtabs <- ftable(xtabs(~ State + Velocity + Acceleration, data = gather_axes))
+
+sen_prop_mar <- prop.table(addmargins(xtabs(~ State + Velocity + Acceleration, data = gather_axes)))
+
+sen_prop <- prop.table(table(gather_axes$State))
+
+```
+
+
+```{r plot_class_frequency, echo=FALSE}
+knitr::kable( sen_xtabs, caption = "XTabs")%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+
+knitr::kable( sen_prop_mar, caption = "prop.table margins")%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+
+knitr::kable( sen_prop, caption = "prop.table")%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+
+```
+
+
+```{r balance, include=FALSE}
+sen_dim <- dim(gather_axes)
+sen_smm <- summary(gather_axes)
+
+sen_des_by_state <- describeBy(gather_axes, gather_axes$State)
+sen_des <- describe(gather_axes)
+
+sen_hmisc_des <- Hmisc::describe(gather_axes)
+```
+
+
+```{r plot_balance, echo=FALSE}
+knitr::kable( as.data.frame(sen_dim, row.names = c("n", "variables")), caption = "Dimensions")%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+
+knitr::kable( as.data.frame(sen_smm), caption = "Sensor Summary")%>% 
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+
+
+```
+
+
+
+
+```{r summary}
+install_imports(c("tidyverse", "VIM", "kableExtra", "PerformanceAnalytics", "Hmisc", "outliers", "psych")) 
+dim(tidy_sensor_df)
+summary(tidy_sensor_df)
+
+describeBy(tidy_sensor_df, tidy_sensor_df$State)
+describe(tidy_sensor_df)
+
+Hmisc::describe(tidy_sensor_df)
+```
+
+```{r data, include=FALSE}
+acc_df <- sensor_data %>% dplyr::filter(Type == "ACC")
+mag_df <- sensor_data %>% dplyr::filter(Type == "MAG")
+
+mag_X_df <- mag_df %>% dplyr::select(contains("_X"))
+mag_Y_df <- mag_df %>% dplyr::select(contains("_Y"))
+mag_Z_df <- mag_df %>% dplyr::select(contains("_Z"))
+
+acc_X_df <- acc_df %>% dplyr::select(contains("_X"))
+acc_Y_df <- acc_df %>% dplyr::select(contains("_Y"))
+acc_Z_df <- acc_df %>% dplyr::select(contains("_Z"))
+```
+
+
+# UNIVARIATE (DISTRIBUTION, SUMMARY, DESCRIBE)
+
+## Histogram
+```{r histograms}
+hist(mag_X_df)
+hist(mag_Y_df)
+hist(mag_Z_df)
+hist(acc_X_df)
+hist(acc_Y_df)
+hist(acc_Z_df)
+```
+
+
+## Boxplots
+```{r}
+boxplot(mag_X_df, )
+boxplot(mag_Y_df)
+boxplot(mag_Z_df)
+boxplot(acc_X_df)
+boxplot(acc_Y_df)
+boxplot(acc_Z_df)
+```
+
+
+## CORRELATION
+```{r corrplot-mag-x, echo=FALSE}
+
+
+par(mar=c(6.1,5.1,2.1,1.1), oma=c(0,0,1,0), mfrow=c(1, 2))
+plot_object_acc_z <- chart.Correlation(acc_Z_df, histogram=TRUE, pch=19)  
+title(paste("Vibration Z Axis Data"), outer = TRUE) # 4 is the mag data
+dev.off()
+
+par(mar=c(6.1,5.1,2.1,1.1), oma=c(0,0,1,0), mfrow=c(1, 2))
+plot_object_acc_x <- chart.Correlation(acc_X_df, histogram=TRUE, pch=19)  
+title(paste("Vibration X Axis Data"), outer = TRUE) # 4 is the mag data
+dev.off()
+
+par(mar=c(6.1,5.1,2.1,1.1), oma=c(0,0,1,0), mfrow=c(1, 2))
+plot_object_x <- chart.Correlation(mag_X_df, histogram=TRUE, pch=19)  
+title(paste("Magnetometer X Axis Data"), outer = TRUE) # 4 is the mag data
+dev.off()
+
+par(mar=c(6.1,5.1,2.1,1.1), oma=c(0,0,1,0), mfrow=c(1, 2))
+plot_object_y <- chart.Correlation(mag_Y_df, histogram=TRUE, pch=19)  
+title(paste("Magnetometer X Axis Data"), outer = TRUE) # 4 is the mag data
+dev.off()
+
+par(mar=c(6.1,5.1,2.1,1.1), oma=c(0,0,1,0), mfrow=c(1, 2))
+plot_object_z <- chart.Correlation(mag_Z_df, histogram=TRUE, pch=19)  
+title(paste("Magnetometer X Axis Data"), outer = TRUE) # 4 is the mag data
+dev.off()
+```
+
+
+## OUTLIERS
+
+
+
+
+
+
+
+
+## ANOVA
+```{r}
+gathered_df <- mag_X_df %>% 
+  gather(key = "X_Sensor", value = "X_Value")
+
+gathered_df %>% group_by(X_Sensor) %>%
+  summarise(mean_reading = mean(X_Value, na.rm = TRUE), sd_reading = sd(X_Value, na.rm = TRUE))
+
+
+gathered_df$X_Sensor <- as.factor(gathered_df$X_Sensor)
+
+head(gathered_df)
+levels(gathered_df$X_Sensor)
+nlevels(gathered_df$X_Sensor)
+
+bwplot(X_Value~X_Sensor, data = gathered_df, pch="|")
+
+grubbs.test(gathered_df$X_Value[gathered_df$X_Sensor == "IMU1_X"])
+
+model_sensor <- aov(gathered_df$X_Value~gathered_df$X_Sensor)
+summary(model_sensor)
+summary.lm(model_sensor)
+
+contrasts(gathered_df$X_Sensor)
+contrasts(gathered_df$X_Sensor) <- contr.sum
+model_sensor <- aov(gathered_df$X_Value~gathered_df$X_Sensor)
+summary(model_sensor)
+summary.lm(model_sensor)
+
+plot.design(gathered_df$X_Value~gathered_df$X_Sensor)
+model.tables(model_sensor)
+
+contrasts(gathered_df$X_Sensor) <- NULL
+
+TukeyHSD(model_sensor)
+plot(TukeyHSD(model_sensor))
+
+plot(model_sensor)
+```
+
+
+
+
+

@@ -1,0 +1,313 @@
+---
+title: "LSM Random Forest - First Models"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:  
+  pdf_document: 
+    keep_tex: yes
+
+---
+
+```{r setup_chunk, include=FALSE}
+
+#https://stackoverflow.com/questions/16626462/figure-position-in-markdown-when-converting-to-pdf-with-knitr-and-pandoc
+
+# knitr::knit_hooks$set(plot = function(x, options)  {
+#   hook_plot_tex(x, options)
+# })
+
+knitr::opts_chunk$set(echo = TRUE, fig.pos='h')
+```
+
+```{r import_setup_chunk, include=FALSE}
+source("InstallImport.R")
+source("SensorDataPreparation.R")
+source("MulticlassROC.R")
+source("SensorFeatExtract.R")
+source("EDA.R")
+
+install_imports(c("tidyverse", "caret", "kableExtra", "ranger", "MLmetrics", "RANN", "pROC", "gtable", "grid", "gridExtra", "RColorBrewer")) 
+
+```
+
+
+
+
+```{r create_dfs_chunk, include=FALSE}
+
+cols <- c("Timestamp", "X_AXIS", "Y_AXIS", "Z_AXIS", "State")
+cols_type <- c(cols, "State")
+vel <- 0.2
+acc <- 1  
+
+imu8_acc_1_0_2 <- filter_sensor(tidy_sensor_df, "ACC", "IMU8", acc, vel, cols)
+imu11_acc_1_0_2 <- filter_sensor(tidy_sensor_df, "ACC", "IMU11", acc, vel, cols)
+imu12_acc_1_0_2 <- filter_sensor(tidy_sensor_df, "ACC", "IMU12", acc, vel, cols)
+
+imu8_mag_1_0_2 <- filter_sensor(tidy_sensor_df, "MAG", "IMU8", acc, vel, cols)
+imu11_mag_1_0_2 <- filter_sensor(tidy_sensor_df, "MAG", "IMU11", acc, vel, cols)
+imu12_mag_1_0_2 <- filter_sensor(tidy_sensor_df, "MAG", "IMU12", acc, vel, cols)
+
+imu8_mag_acc_1_0_2 <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU8", acc, vel, cols_type)
+imu11_mag_acc_1_0_2 <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU11", acc, vel, cols_type)
+imu12_mag_acc_1_0_2 <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU12", acc, vel, cols_type)
+
+```
+
+
+
+           
+           
+           
+           
+    
+## Re-usable Cross Validation
+
+```{r model_setup_chunk}
+# Set seed so that we can reproduce the results
+set.seed(42)
+
+# Create custom indices: myFolds
+myFolds <- createFolds(imu11_acc_1_0_2$State, k = 10)
+
+# Create reusable trainControl object: myControl
+myControl <- trainControl(
+  summaryFunction = multiClassSummary,
+  classProbs = TRUE,
+  verboseIter = TRUE,
+  savePredictions = TRUE,
+  index = myFolds)
+
+```
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+## Three Random Forest Models
+
+```{r acc_train_model_chunk, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide'}
+# Create Model
+model_rf_acc_imu11_1_0_2 <- train(State ~ ., imu11_acc_1_0_2,
+                  metric = "logLoss", 
+                  method = "ranger",
+                  preProcess = "knnImpute",
+                  na.action = na.pass,
+                  trControl = myControl)
+
+```
+    
+
+  
+```{r mag_train_model_chunk, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide'}
+model_rf_mag_imu11_1_0_2 <- train(State ~ ., imu11_mag_1_0_2,
+                  metric = "logLoss", 
+                  method = "ranger",
+                  preProcess = "knnImpute",
+                  na.action = na.pass,
+                  trControl = myControl)
+
+```
+    
+```{r acc_mag_train_model_chunk, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide'} 
+model_rf_mag_acc_imu11_1_0_2 <- train(State ~ ., imu11_mag_acc_1_0_2,
+                  metric = "logLoss", 
+                  method = "ranger",
+                  preProcess = "knnImpute",
+                  na.action = na.pass,
+                  trControl = myControl)
+
+```
+
+
+```{r acc_model_predictions_chunk, echo=FALSE,results='hide'}
+set.seed(42)
+imu8_acc_1_0_2_pred <- predict(model_rf_acc_imu11_1_0_2, newdata=imu8_acc_1_0_2, na.action = na.pass)
+imu8_acc_1_0_2_cm <- confusionMatrix(imu8_acc_1_0_2_pred, imu8_acc_1_0_2$State, mode='everything', positive="PATH_MOVING")
+
+imu12_acc_1_0_2_pred <- predict(model_rf_acc_imu11_1_0_2, newdata=imu12_acc_1_0_2, na.action = na.pass)
+imu12_acc_1_0_2_cm <- confusionMatrix(imu12_acc_1_0_2_pred, imu12_acc_1_0_2$State, mode='everything', positive="PATH_MOVING")
+
+```
+
+
+    
+```{r mag_model_predictions_chunk, echo=FALSE,results='hide'}
+set.seed(42)
+imu8_mag_1_0_2_pred <- predict(model_rf_mag_imu11_1_0_2, newdata=imu8_mag_1_0_2, na.action = na.pass)
+imu8_mag_1_0_2_cm <- confusionMatrix(imu8_mag_1_0_2_pred, imu8_mag_1_0_2$State, mode='everything', positive="PATH_MOVING")
+
+imu12_mag_1_0_2_pred <- predict(model_rf_mag_imu11_1_0_2, newdata=imu12_mag_1_0_2, na.action = na.pass)
+imu12_mag_1_0_2_cm <- confusionMatrix(imu12_mag_1_0_2_pred, imu12_mag_1_0_2$State, mode='everything', positive="PATH_MOVING")
+
+```
+    
+```{r acc_mag_model_predictions_chunk, echo=FALSE,results='hide'}
+set.seed(42)
+imu8_mag_acc_1_0_2_pred <- predict(model_rf_mag_acc_imu11_1_0_2, newdata=imu8_mag_acc_1_0_2, na.action = na.pass)
+imu8_mag_acc_1_0_2_cm <- confusionMatrix(imu8_mag_acc_1_0_2_pred, imu8_mag_acc_1_0_2$State, mode='everything', positive="PATH_MOVING")
+
+imu12_mag_acc_1_0_2_pred <- predict(model_rf_mag_acc_imu11_1_0_2, newdata=imu12_mag_acc_1_0_2, na.action = na.pass)
+imu12_mag_acc_1_0_2_cm <- confusionMatrix(imu12_mag_acc_1_0_2_pred, imu12_mag_acc_1_0_2$State, mode='everything', positive="PATH_MOVING")
+
+```
+   
+    
+    
+    
+        
+    
+    
+    
+
+# Model Performance Metrics
+
+```{r overall_accuracy_chunk, echo=FALSE}
+o_accuracy <- as.data.frame(imu12_acc_1_0_2_cm$overall)
+colnames(o_accuracy) <- c("IMU12_ACC")
+imu12mag_accuray <- as.data.frame(imu12_mag_1_0_2_cm$overall)
+o_accuracy["IMU12_MAG"] <- imu12mag_accuray[,1]
+imu12magacc_accuray <- as.data.frame(imu12_mag_acc_1_0_2_cm$overall)
+o_accuracy["IMU12_MAG_ACC"] <- imu12magacc_accuray[,1]
+
+knitr::kable(o_accuracy, caption = "Overall Statistics (IMU12, Acc 1, Vel 0.2)")%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+
+```{r statistics_chunk, echo=FALSE}
+knitr::kable( imu12_acc_1_0_2_cm$byClass , caption = "Acc Statistics by Class (IMU12, Acc 1, Vel 0.2)")%>%
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( imu12_mag_1_0_2_cm$byClass , caption = "Mag Statistics by Class (IMU12, Acc 1, Vel 0.2)")%>%
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( imu12_mag_acc_1_0_2_cm$byClass , caption = "Acc-Mag Statistics by Class (IMU12, Acc 1, Vel 0.2)")%>%
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+```
+
+```{r cm_chunk, echo=FALSE}
+knitr::kable( imu12_acc_1_0_2_cm$table, caption = "Acc Confusion Matrix (IMU12, Acc 1, Vel 0.2)")%>% 
+  kable_styling(latex_options=c("hold_position"))
+knitr::kable( imu12_mag_1_0_2_cm$table, caption = "Mag Confusion Matrix (IMU12, Acc 1, Vel 0.2)")%>% 
+  kable_styling(latex_options=c("hold_position"))
+knitr::kable( imu12_mag_acc_1_0_2_cm$table, caption = "Acc-Mag Confusion Matrix (IMU12, Acc 1, Vel 0.2)")%>%
+  kable_styling(latex_options=c("hold_position"))
+```
+    
+
+    
+    
+```{r get_roc_chunk, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide'}
+roc_res <-lsm_roc(levels(imu11_acc_1_0_2$State), model_rf_acc_imu11_1_0_2, imu12_acc_1_0_2)
+res_path_idle <- roc_res[[1]]
+auc_path_idle <- res_path_idle["lsm_auc"]
+res_path_moving <- roc_res[[2]]
+auc_path_moving <- res_path_moving["lsm_auc"]
+res_path_trans <- roc_res[[3]]
+auc_path_trans <- res_path_trans["lsm_auc"]
+res_shuttle <- roc_res[[4]]
+auc_shuttle <- res_shuttle["lsm_auc"]
+auc_df <- data.frame(c(auc_path_idle,
+                              auc_path_moving,
+                              auc_path_trans,
+                              auc_shuttle))
+colnames(auc_df) <- c(res_path_idle$POS_CLASS,
+                           res_path_moving$POS_CLASS,
+                           res_path_trans$POS_CLASS,
+                           res_shuttle$POS_CLASS)
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+```
+    
+    
+```{r show_auc_chunk, echo=FALSE}
+
+knitr::kable( auc_df , caption = "AUC Values for Acc Model (Validated with IMU12, Acc 1, Vel 0.2)")%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+```
+    
+    
+     
+     
+     
+     
+
+```{r plot_roc, echo=FALSE}
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state<-cols[imu11_acc_1_0_2$State]
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate',
+     xlab='False Positive Rate',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("right", 0, 1, legend=levels(imu11_acc_1_0_2$State), 
+       col=cols_t1, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+    
+    
+<!--    
+Learning Curve
+https://datascience.stackexchange.com/questions/11750/training-and-testing-error-curves-caret-package-in-r
+-->    
+    
+    
+```{r robustness_overall_chunk, echo=FALSE}
+r_accuracy <- as.data.frame(imu8_acc_1_0_2_cm$overall)
+colnames(r_accuracy) <- c("IMU8_ACC")
+imu8mag_accuray <- as.data.frame(imu8_mag_1_0_2_cm$overall)
+r_accuracy["IMU8_MAG"] <- imu8mag_accuray[,1]
+imu8magacc_accuray <- as.data.frame(imu8_mag_acc_1_0_2_cm$overall)
+r_accuracy["IMU8_MAG_ACC"] <- imu8magacc_accuray[,1]
+
+knitr::kable( r_accuracy, caption = "Overall Statistics (IMU8, Acc 1, Vel 0.2)")%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r robustness_stats_chunk, echo=FALSE}
+knitr::kable( imu8_acc_1_0_2_cm$byClass , caption = "Acc Statistics by Class (IMU8, Acc 1, Vel 0.2)")%>%
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( imu8_mag_1_0_2_cm$byClass , caption = "Mag Statistics by Class (IMU8, Acc 1, Vel 0.2)")%>%
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+knitr::kable( imu8_mag_acc_1_0_2_cm$byClass , caption = "Acc-Mag Statistics by Class (IMU8, Acc 1, Vel 0.2)")%>%
+  kable_styling(latex_options=c("scale_down", "hold_position"))
+```
+
+```{r robustness_cm_chunk, echo=FALSE}
+
+knitr::kable( imu8_acc_1_0_2_cm$table , caption = "Acc Confusion Matrix (IMU8, Acc 1, Vel 0.2)")%>% 
+  kable_styling(latex_options=c("hold_position"))
+knitr::kable( imu8_mag_1_0_2_cm$table , caption = "Mag Confusion Matrix (IMU8, Acc 1, Vel 0.2)")%>% 
+  kable_styling(latex_options=c("hold_position"))
+knitr::kable( imu8_mag_acc_1_0_2_cm$table , caption = "Acc-Mag Confusion Matrix (IMU8, Acc 1, Vel 0.2)")%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+    

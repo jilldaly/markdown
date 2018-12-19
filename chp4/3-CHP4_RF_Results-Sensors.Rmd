@@ -1,0 +1,170 @@
+---
+title: "Chp 4 Results - Random Forest"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:  
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)#, error=TRUE)
+```
+
+```{r import_setup_chunk, include=FALSE}
+source("SensorDataPreparation.R")
+source("Chp4-LSMRF.R")
+source("SensorFeatExtract.R")
+source("InstallImport.R")
+
+install_imports(c("tidyverse", "caret", "kableExtra", "ranger", "MLmetrics", "RANN", "pROC", "gtable", "grid", "gridExtra", "RColorBrewer"))
+
+```
+
+```{r data_sets, include=FALSE}
+cols <- c("Timestamp", "X_AXIS", "Y_AXIS", "State")
+vel <- 0.2
+acc <- 1  
+POS_CLASS <- "PATH_MOVING"
+LSM_LEVELS <- levels(tidy_sensor_df$State)
+
+# All except IMU12, as this is for unseen data/independent/validation/test
+ALL_SENSORS <- c("IMU1", "IMU3", "IMU7", "IMU8", "IMU9", "IMU11")
+
+# Sensor Effect Model Training & Test Datasets
+IMU1_mc <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU1", acc, vel, cols)
+IMU3_mc <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU3", acc, vel, cols)
+IMU7_mc <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU7", acc, vel, cols)
+IMU8_mc <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU8", acc, vel, cols)
+IMU9_mc <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU9", acc, vel, cols)
+IMU11_mc <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU11", acc, vel, cols)
+IMU_all_mc <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), ALL_SENSORS, acc, vel, cols)
+
+
+IMU12_mc <- filter_sensor(tidy_sensor_df, c("ACC", "MAG"), "IMU12", acc, vel, cols)
+
+```
+
+```{r build-models, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide', echo=FALSE}
+
+# Create custom indices: myFolds
+myFolds <- createFolds(IMU11_mc$State, k = 10)
+
+
+# Create reusable trainControl object: mc_myControl
+set.seed(42)
+mc_myControl <- trainControl(
+  summaryFunction = multiClassSummary, #mnLogLoss does not perform as well
+  classProbs = TRUE,
+  verboseIter = TRUE,
+  savePredictions = TRUE,
+  index = myFolds)
+
+
+```
+
+
+```{r get-results, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide', echo=FALSE}
+
+# imu1_sensor_rf_model <- model_for_knitr(IMU1_mc, mc_myControl, "IMU1", 42)
+# imu1_sensor_rf_results <- results_for_knitr(IMU12_mc, imu1_sensor_rf_model$mc_model_rf, "IMU1", 42)
+# 
+# imu3_sensor_rf_model <- model_for_knitr(IMU3_mc, mc_myControl, "IMU3", 42)
+# imu3_sensor_rf_results <- results_for_knitr(IMU12_mc, imu3_sensor_rf_model$mc_model_rf, "IMU3", 42)
+# 
+# imu7_sensor_rf_model <- model_for_knitr(IMU7_mc, mc_myControl, "IMU7", 42)
+# imu7_sensor_rf_results <- results_for_knitr(IMU12_mc, imu7_sensor_rf_model$mc_model_rf, "IMU7", 42)
+# 
+# imu8_sensor_rf_model <- model_for_knitr(IMU8_mc, mc_myControl, "IMU8", 42)
+# imu8_sensor_rf_results <- results_for_knitr(IMU12_mc, imu8_sensor_rf_model$mc_model_rf, "IMU8", 42)
+# 
+# imu9_sensor_rf_model <- model_for_knitr(IMU9_mc, mc_myControl, "IMU9", 42)
+# imu9_sensor_rf_results <- results_for_knitr(IMU12_mc, imu9_sensor_rf_model$mc_model_rf, "IMU9", 42)
+# 
+# imu11_sensor_rf_model <- model_for_knitr(IMU11_mc, mc_myControl, "IMU11", 42)
+# imu11_sensor_rf_results <- results_for_knitr(IMU12_mc, imu11_sensor_rf_model$mc_model_rf, "IMU11", 42)
+
+imu_all_sensor_rf_model <- model_for_knitr(IMU_all_mc, mc_myControl, "IMU - All", 42)
+imu_all_sensor_rf_results <- results_for_knitr(IMU12_mc, imu_all_sensor_rf_model$mc_model_rf, "IMU - All", 42)
+
+
+```
+
+<!--  X AXES Vibration MODEL RESULTS  -->
+
+```{r 3g-stacked-sensor-rf-plot, echo=FALSE, fig.cap="Stacked Sensor - RF Model"}
+plot(imu_all_sensor_rf_results$mc_model_rf)
+```
+
+```{r 3g-stacked-sensor-rf-params, echo=FALSE, fig.cap="Stacked Sensor - RF Model Parameters"}
+knitr::kable(imu_all_sensor_rf_results$mc_model_rf$results, caption = "Stacked Sensor - RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(imu_all_sensor_rf_results$mc_model_rf$modelInfo$parameters, caption = "Stacked Sensor - RF Model Tuning Params", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(imu_all_sensor_rf_results$mc_model_rf$bestTune, caption = "Stacked Sensor - RF Best Tuned Model from Caret", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(imu_all_sensor_rf_results$mc_model_rf$coefnames, caption = "Stacked Sensor - RF Model Coefficients", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+imu_all_sensor_rf_results$mc_model_rf$finalModel 
+imu_all_sensor_rf_results$mc_model_rf
+```
+
+```{r 3g-stacked-sensor-rf-results, echo=FALSE}
+knitr::kable(imu_all_sensor_rf_results$rf_accuracy, caption = "Stacked Sensor - RF - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(imu_all_sensor_rf_results$lsm_metrics, caption = "Stacked Sensor - RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(imu_all_sensor_rf_results$lsm_cm, caption = "Stacked Sensor - RFF Validation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(imu_all_sensor_rf_results$lsm_mlogloss, caption = "Stacked Sensor - RFF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+```{r 3g-stacked-sensor-rf-roc, echo=FALSE, fig.cap="Stacked Sensor - RF ROC - using 4 Binary ROC Curves"}
+res_path_idle <- imu_all_sensor_rf_results$roc_res[[1]]
+res_path_moving <- imu_all_sensor_rf_results$roc_res[[2]]
+res_path_trans <- imu_all_sensor_rf_results$roc_res[[3]]
+res_shuttle <- imu_all_sensor_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```

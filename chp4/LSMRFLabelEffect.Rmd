@@ -1,0 +1,119 @@
+---
+title: "Random Forest: Measuring the Effect of Labels"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:  
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r import_setup_chunk, include=FALSE}
+source("InstallImport.R")
+source("LSMLabelEffect.R")
+
+install_imports(c("tidyverse", "caret", "kableExtra", "ranger", "MLmetrics", "RANN", "pROC", "gtable", "grid", "gridExtra", "RColorBrewer"))
+
+```
+
+
+
+```{r overall_accuracy_chunk, echo=FALSE}
+
+knitr::kable(label_effect_overall, caption = "Overall Statistics (IMU12, Acc 1, Vel 0.2)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(label_effect_byClass, caption = "Statistics By Class (IMU12, Acc 1, Vel 0.2)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+```
+
+
+```{r bc_fourfold_plot, echo=FALSE, fig.cap="BC Confusion Matrix"}
+fourfoldplot(bc_rf_cm$table)
+
+```
+
+```{r mc_fourfold_plot, echo=FALSE, fig.cap="MC Confusion Matrix"}
+mc_rf_cm$table
+```
+
+  
+```{r plot_mc-roc, echo=FALSE, fig.cap="Multi-Class ROC using 4 Binary ROC Curves"}
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=levels(mc_imu12$State), 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
+    
+
+```{r get_bc_roc_chunk, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide', fig.cap="Binary-Class ROC Curve"}
+par(pty="s")
+bc_rocCurve = roc(response = bc_rf_metrics$State,
+               predictor = bc_rf_metrics$RFProb,
+               levels = rev(levels(bc_imu12_moving$State)))
+
+bc_auc <- auc(bc_rocCurve)
+bc_auc_ci <- ci.auc(bc_rocCurve)
+
+plot(bc_rocCurve, legacy.axes = TRUE,
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     print.thres = "best")
+
+legend("bottomright", 0, 1, legend="BC RF", 
+       lty=1:2, cex=0.8)
+
+
+```
+
+
+
+```{r mc_auc_chink, echo=FALSE}
+knitr::kable(auc_df, caption = "MC AUC (IMU12, Acc 1, Vel 0.2)", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+
+cat("BC AUC:")
+bc_auc
+
+cat("BC AUC CI:")
+bc_auc_ci
+
+```
+
+
+```{r cal_plots_mc_data, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide',fig.cap="Calibration PLot - MC Validation Data"}
+calCurve <- calibration(State ~ bc_rf_metrics$RFProb + mc_rf_metrics$RFProb, data = mc_imu12)
+calCurve
+xyplot(calCurve, auto.key = list(columns = 2))
+
+```
+
+
+```{r cal_plots_bc_data, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide',fig.cap="Calibration PLot - BC Validation Data"}
+calCurve <- calibration(State ~ bc_rf_metrics$RFProb + mc_rf_metrics$RFProb, data = bc_imu12_moving)
+calCurve
+xyplot(calCurve, auto.key = list(columns = 2))
+
+```

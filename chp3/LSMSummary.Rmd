@@ -1,0 +1,79 @@
+---
+title: "LSM Summary "
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:  
+  pdf_document: 
+    keep_tex: yes
+
+---
+
+```{r setup_chunk, include=FALSE}
+
+#https://stackoverflow.com/questions/16626462/figure-position-in-markdown-when-converting-to-pdf-with-knitr-and-pandoc
+
+# knitr::knit_hooks$set(plot = function(x, options)  {
+#   hook_plot_tex(x, options)
+# })
+
+knitr::opts_chunk$set(echo = TRUE, fig.pos='h')
+```
+
+```{r import_setup_chunk, include=FALSE}
+source("InstallImport.R")
+source("DataCleaning.R")
+source("MulticlassROC.R")
+source("SensorFeatExtract.R")
+source("EDA.R")
+
+install_imports(c("tidyverse", "caret", "kableExtra", "ranger", "MLmetrics", "RANN", "pROC", "gtable", "grid", "gridExtra")) 
+
+```
+
+
+# Vibration and Magnetometer - Data Summary
+
+    
+```{r imu8_acc_1_0_2_desc_chunk, echo=FALSE, fig.cap="Acc IMU8"}
+knitr::kable(sensor_hmisc_desc_axes(imu8_acc_1_0_2), caption = "Acc IMU8 (Acc 1, Vel 0.2)  Description")%>%
+  kable_styling(latex_options=c("hold_position")) %>%
+  add_header_above(c(" ", "Group 1[note]" = 3, "Group 2[note]" = 3))
+```
+    
+```{r imu11_acc_1_0_2_desc_chunk, echo=FALSE, fig.cap="Acc IMU11"}
+knitr::kable(sensor_hmisc_desc_axes(imu11_acc_1_0_2), caption = "Acc IMU11 (Acc 1, Vel 0.2) Description")%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+    
+```{r imu12_acc_1_0_2_desc_chunk, echo=FALSE, fig.cap="Acc IMU12"}
+knitr::kable(sensor_hmisc_desc_axes(imu12_acc_1_0_2), caption = "Acc IMU12 (Acc 1, Vel 0.2) Description")%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+    
+```{r imu8_mag_1_0_2_desc_chunk, echo=FALSE, fig.cap="Mag IMU8"}
+knitr::kable(sensor_hmisc_desc_axes(imu8_mag_1_0_2), caption = "Mag IMU8 (Acc 1, Vel 0.2) Description")%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+    
+```{r imu11_mag_1_0_2_desc_chunk, echo=FALSE, fig.cap="Mag IMU11"}
+knitr::kable(sensor_hmisc_desc_axes(imu11_mag_1_0_2), caption = "Mag IMU11 (Acc 1, Vel 0.2) Description")%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+    
+```{r imu12_mag_1_0_2_desc_chunk, echo=FALSE, fig.cap="Mag IMU12"}
+knitr::kable(sensor_hmisc_desc_axes(imu12_mag_1_0_2), caption = "Mag IMU12 (Acc 1, Vel 0.2) Description")%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+    
+        
+
+    
+```{r acc_1_0_2_prop_chunk, echo=FALSE}
+# Type/Setting have same Proportions, therefore only need single one
+acc_s <- as.data.frame(sensor_label_prop(imu11_acc_1_0_2$State))
+names(acc_s) <- c("Acc State", "Acc Freq")
+
+knitr::kable( acc_s, caption = "Proportions - (Acc 1, Vel 2)")%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+

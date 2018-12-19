@@ -1,0 +1,40 @@
+---
+title: "Test"
+author: "Jill Daly"
+date: "12/6/2018"
+output:  
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Assumes following modules have been executed in the Global environment:
+# SensorDataPreparation.R
+# r_env <- environment()
+# chp4_tidy_df <- r_env$tidy_sensor_df
+
+```
+
+
+```{r eval=FALSE}
+# Matlab Code
+[imu11_mag_x_150seq_av] = make_AV_complexity(imu11_mag_x, 150);
+
+[imu11_mag_x_av_matrixProfile,imu11_mag_x_av_profileIndex, 
+ imu11_mag_x_av_motifIndex, imu11_mag_x_av_discordIndex] 
+    = interactiveMatrixProfile(imu11_mag_x, 150, imu11_mag_x_150seq_av);
+
+
+# R Code for Generating Label 
+get_state <- function(df_index, df) {
+  profile_idx <- df$MP_INDEX[df_index]
+  mp_state <- df[profile_idx, "STATE"][[1]]
+  if (length(mp_state) == 0) {
+    mp_state <- "UNKOWN"
+  }
+  return(mp_state)
+}
+```
+

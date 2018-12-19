@@ -1,0 +1,223 @@
+---
+title: "Chp 4 Results - Random Forest"
+author: "Jill Daly"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:  
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r import_setup_chunk, include=FALSE}
+source("SensorDataPreparation.R")
+source("Chp4-LSMRF.R")
+source("SensorFeatExtract.R")
+source("InstallImport.R")
+
+install_imports(c("tidyverse", "caret", "kableExtra", "ranger", "MLmetrics", "RANN", "pROC", "gtable", "grid", "gridExtra", "RColorBrewer"))
+
+```
+
+
+```{r data_sets, include=FALSE}
+cols <- c("Timestamp", "X_AXIS", "Y_AXIS", "Z_AXIS", "State")
+vel <- 0.2
+acc <- 1  
+POS_CLASS <- "PATH_MOVING"
+LSM_LEVELS <- levels(tidy_sensor_df$State)
+
+# Baseline Model Training & Test Datasets
+baseline_mc_imu11 <- filter_sensor(tidy_sensor_df, "ACC", "IMU11", acc, vel, cols)
+# baseline_mc_imu11 <- baseline_mc_imu11[complete.cases(baseline_mc_imu11),]
+
+baseline_mc_imu12 <- filter_sensor(tidy_sensor_df, "ACC", "IMU12", acc, vel, cols)
+# baseline_mc_imu12 <- baseline_mc_imu12[complete.cases(baseline_mc_imu12),]
+
+
+# Type Model Training & Test Datasets
+# Acclelerometer -> already covered with baseline model!
+# mag_imu11 <- filter_sensor(tidy_sensor_df, "MAG", "IMU11", acc, vel, cols)
+# mag_imu12 <- filter_sensor(tidy_sensor_df, "MAG", "IMU12", acc, vel, cols)
+# combined_imu11 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU11", acc, vel, cols)
+# combined_imu12 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU12", acc, vel, cols)
+
+# Speed Model Training & Test Datasets
+# combined_imu11 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU11", acc, vel, cols)
+# combined_imu12 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU12", acc, vel, cols)
+
+
+# s11_a_1_v_0_2 and s12_a_1_v_0_2 is the same as combined_imu11 and combined_imu12
+
+# Not Good
+# s11_a_1_v_0_03 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU11", acc=1, vel=0.03, cols)
+# s12_a_1_v_0_03 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU12", acc=1, vel=0.03, cols)
+# s11_a_1_v_0_0135 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU11", acc=1, vel=0.0135, cols)
+# s12_a_1_v_0_0135 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU12", acc=1, vel=0.0135, cols)
+# s11_a_2_v_0_2 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU11", acc=2, vel=0.2, cols)
+# s12_a_2_v_0_2 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU12", acc=2, vel=0.2, cols)
+
+# Good
+# s11_a_1_v_0_4 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU11", acc=1, vel=0.4, cols)
+# s12_a_1_v_0_4 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU12", acc=1, vel=0.4, cols)
+# s11_a_1_v_0_06 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU11", acc=1, vel=0.06, cols)
+# s12_a_1_v_0_06 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU12", acc=1, vel=0.06, cols)
+# s11_a_2_v_0_4 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU11", acc=2, vel=0.4, cols)
+# s12_a_2_v_0_4 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU12", acc=2, vel=0.4, cols)
+# s11_a_2_v_0_06 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU11", acc=2, vel=0.06, cols)
+# s12_a_2_v_0_06 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU12", acc=2, vel=0.06, cols)
+# 
+# # IMU11, IMU12 - Al Speed
+# fft_imu11 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU11", cols)
+# fft_imu11 <- lsm_fft(fft_imu11)
+# fft_imu12 <- filter_sensor(tidy_sensor_df, c("MAG", "ACC"), "IMU12", cols)
+# fft_imu12 <- lsm_fft(fft_imu12)
+
+
+```
+
+
+```{r build-models, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide', echo=FALSE}
+
+# Create custom indices: myFolds
+myFolds <- createFolds(baseline_mc_imu11$State, k = 10)
+
+
+# Create reusable trainControl object: mc_myControl
+set.seed(42)
+mc_myControl <- trainControl(
+  summaryFunction = multiClassSummary, #mnLogLoss,
+  classProbs = TRUE,
+  verboseIter = TRUE,
+  savePredictions = TRUE,
+  index = myFolds)
+
+
+```
+
+
+
+```{r get-results, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='hide', echo=FALSE}
+
+# rf_accuracy, lsm_mc_roc_perf, lsm_mlogloss, lsm_cm, lsm_metrics, mc_model_rf
+
+# Baseline Model + Results
+baseline_rf_model <- model_for_knitr(baseline_mc_imu11, mc_myControl, "Baseline Vibration", 42)
+baseline_rf_results <- results_for_knitr(baseline_mc_imu12, baseline_rf_model$mc_model_rf, "Baseline", 42)
+
+# # Type Models + Results
+# mag_rf_model <- model_for_knitr(mag_imu11, mc_myControl, "Baseline Vibration", 42)
+# mag_rf_results <- results_for_knitr(mag_imu12, mag_rf_model$mc_model_rf, "Mag", 42)
+# combined_rf_model <- model_for_knitr(combined_imu11, mc_myControl, "Mag + Acc", 42)
+# combined_rf_results <- results_for_knitr(combined_imu12, combined_rf_model$mc_model_rf, "Mag + Acc", 42)
+# 
+# Speed Models + Results
+
+# TODO - Investigate problem with these speeds for the train/model (imbalance SHUTTLE issue)
+# s11_a_1_v_0_03_rf_model <- model_for_knitr(s11_a_1_v_0_03, mc_myControl, "a_1_v_0_03", 42)
+# s12_a_1_v_0_03_rf_results <- results_for_knitr(s12_a_1_v_0_03, s11_a_1_v_0_03_rf_model$mc_model_rf, "a_1_v_0_03", 42)
+# s11_a_1_v_0_0135_rf_model <- model_for_knitr(s11_a_1_v_0_0135, mc_myControl, "a_1_v_0_0135", 42)
+# s12_a_1_v_0_0135_rf_results <- results_for_knitr(s12_a_1_v_0_0135, s11_a_1_v_0_0135_rf_model$mc_model_rf, "a_1_v_0_0135", 42)
+# s11_a_2_v_0_2_rf_model <- model_for_knitr(s11_a_2_v_0_2, mc_myControl, "a_2_v_0_2", 42)
+# s12_a_2_v_0_2_rf_results <- results_for_knitr(s12_a_2_v_0_2, s11_a_2_v_0_2_rf_model$mc_model_rf, "a_2_v_0_2", 42)
+
+# s11_a_1_v_0_4_rf_model <- model_for_knitr(s11_a_1_v_0_4, mc_myControl, "a_1_v_0_4", 42)
+# s12_a_1_v_0_4_rf_results <- results_for_knitr(s12_a_1_v_0_4, s11_a_1_v_0_4_rf_model$mc_model_rf, "a_1_v_0_4", 42)
+# s11_a_1_v_0_06_rf_model <- model_for_knitr(s11_a_1_v_0_06, mc_myControl, "a_1_v_0_06", 42)
+# s12_a_1_v_0_06_rf_results <- results_for_knitr(s12_a_1_v_0_06, s11_a_1_v_0_06_rf_model$mc_model_rf, "a_1_v_0_06", 42)
+# s11_a_2_v_0_4_rf_model <- model_for_knitr(s11_a_2_v_0_4, mc_myControl, "a_2_v_0_4", 42)
+# s12_a_2_v_0_4_rf_results <- results_for_knitr(s12_a_2_v_0_4, s11_a_2_v_0_4_rf_model$mc_model_rf, "a_2_v_0_4", 42)
+# s11_a_2_v_0_06_rf_model <- model_for_knitr(s11_a_2_v_0_06, mc_myControl, "a_2_v_0_06", 42)
+# s12_a_2_v_0_06_rf_results <- results_for_knitr(s12_a_2_v_0_06, s11_a_2_v_0_06_rf_model$mc_model_rf, "a_2_v_0_06", 42)
+
+```
+
+
+<!--  BASELINE MODEL RESULTS  -->
+
+
+```{r firstmodel-dropNas-rf-plot, echo=FALSE, fig.cap="Baseline Vibration Model"}
+plot(baseline_rf_results$mc_model_rf)
+```
+
+```{r baseline-rf-params, echo=FALSE, fig.cap="Baseline Model Parameters"}
+knitr::kable(baseline_rf_results$mc_model_rf$method, caption = "Baseline Vibration RF Model Model Method", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(baseline_rf_results$mc_model_rf$modelInfo$parameters, caption = "Baseline Vibration RF Model Tuning Params", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(baseline_rf_results$mc_model_rf$bestTune, caption = "Baseline Vibration RF Best Tuned Model from Caret", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(baseline_rf_results$mc_model_rf$coefnames, caption = "Baseline Vibration RF Model Coefficients", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(baseline_rf_results$mc_model_rf$results, caption = "Baseline Vibration RF Training Model Results", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+# print screen
+baseline_rf_results$mc_model_rf$finalModel 
+baseline_rf_results$mc_model_rf
+```
+
+
+```{r baseline-rf-results, echo=FALSE}
+knitr::kable(baseline_rf_results$rf_accuracy, caption = "Baseline Vibration RF - Validation Accuracy", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(baseline_rf_results$lsm_metrics, caption = "Baseline Vibration RF Validation Metrics", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(baseline_rf_results$lsm_cm, caption = "Baseline Vibration RF Vaidation Confusion Matrix", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+
+knitr::kable(baseline_rf_results$lsm_mlogloss, caption = "Baseline Vibration RF Vaidation LogLoss", booktabs=TRUE)%>% 
+  kable_styling(latex_options=c("hold_position"))
+```
+
+
+  
+```{r plot_mc-firstmodel-dropNas-roc, echo=FALSE, fig.cap="First Model - Drop NAs - ROC using 4 Binary ROC Curves"}
+res_path_idle <- baseline_rf_results$roc_res[[1]]
+res_path_moving <- baseline_rf_results$roc_res[[2]]
+res_path_trans <- baseline_rf_results$roc_res[[3]]
+res_shuttle <- baseline_rf_results$roc_res[[4]]
+
+path_idle_roc.x <- unlist(res_path_idle$lsm_perf@x.values)
+path_idle_roc.y <- unlist(res_path_idle$lsm_perf@y.values)
+
+path_moving_roc.x <- unlist(res_path_moving$lsm_perf@x.values)
+path_moving_roc.y <- unlist(res_path_moving$lsm_perf@y.values)
+
+path_trans_roc.x <- unlist(res_path_trans$lsm_perf@x.values)
+path_trans_roc.y <- unlist(res_path_trans$lsm_perf@y.values)
+
+path_shuttle_roc.x <- unlist(res_shuttle$lsm_perf@x.values)
+path_shuttle_roc.y <- unlist(res_shuttle$lsm_perf@y.values)
+
+
+
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_state <- head(cols)
+
+plot(x=NA, y=NA, xlim=c(0,1), ylim=c(0,1),
+     ylab='True Positive Rate (Sensitivity)',
+     xlab='False Positive Rate (1 - Specificity)',
+     bty='n')
+
+lines(path_idle_roc.y ~ path_idle_roc.x, col=cols_state[1], lwd=2)
+lines(path_moving_roc.y ~ path_moving_roc.x, col=cols_state[2], lwd=2)
+lines(path_trans_roc.y ~ path_trans_roc.x, col=cols_state[3], lwd=2)
+lines(path_shuttle_roc.y ~ path_shuttle_roc.x, col=cols_state[4], lwd=2)
+
+legend("bottomright", 0, 1, legend=LSM_LEVELS, 
+       col=cols_state, lty=1:2, cex=0.8)
+
+lines(x=c(0,1), c(0,1))
+```
+
