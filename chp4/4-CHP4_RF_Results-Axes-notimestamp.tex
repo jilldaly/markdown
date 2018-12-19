@@ -1,0 +1,2014 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Chp 4 Results - Random Forest},
+            pdfauthor={Jill Daly},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Chp 4 Results - Random Forest}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Jill Daly}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{15 December, 2018}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+\begin{document}
+\maketitle
+
+\begin{verbatim}
+## Error in FUN(newX[, i], ...): cannot impute when all predictors are missing in the new data point
+\end{verbatim}
+
+\begin{verbatim}
+## Error in predict(lsm_model, te_df, na.action = na.pass): object 'x_vib_sensor_rf_model' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in FUN(newX[, i], ...): cannot impute when all predictors are missing in the new data point
+\end{verbatim}
+
+\begin{verbatim}
+## Error in predict(lsm_model, te_df, na.action = na.pass): object 'y_vib_sensor_rf_model' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error: Stopping
+\end{verbatim}
+
+\begin{verbatim}
+## Error in predict(lsm_model, te_df, na.action = na.pass): object 'z_vib_sensor_rf_model' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in FUN(newX[, i], ...): cannot impute when all predictors are missing in the new data point
+\end{verbatim}
+
+\begin{verbatim}
+## Error in predict(lsm_model, te_df, na.action = na.pass): object 'x_mag_sensor_rf_model' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error: Stopping
+\end{verbatim}
+
+\begin{verbatim}
+## Error in predict(lsm_model, te_df, na.action = na.pass): object 'y_mag_sensor_rf_model' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error: Stopping
+\end{verbatim}
+
+\begin{verbatim}
+## Error in predict(lsm_model, te_df, na.action = na.pass): object 'z_mag_sensor_rf_model' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in FUN(newX[, i], ...): cannot impute when all predictors are missing in the new data point
+\end{verbatim}
+
+\begin{verbatim}
+## Error in predict(lsm_model, te_df, na.action = na.pass): object 'x_combined_sensor_rf_model' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in FUN(newX[, i], ...): cannot impute when all predictors are missing in the new data point
+\end{verbatim}
+
+\begin{verbatim}
+## Error in predict(lsm_model, te_df, na.action = na.pass): object 'y_combined_sensor_rf_model' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error: Stopping
+\end{verbatim}
+
+\begin{verbatim}
+## Error in predict(lsm_model, te_df, na.action = na.pass): object 'z_combined_sensor_rf_model' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in plot(x_vib_sensor_rf_results$mc_model_rf): object 'x_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(x_vib_sensor_rf_results$mc_model_rf$results, caption = "Axes - X Vibration - RF Training Model Results", : object 'x_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(x_vib_sensor_rf_results$rf_accuracy, caption = "Axis - X Vibration - RF - Validation Accuracy", : object 'x_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(x_vib_sensor_rf_results$lsm_metrics, caption = "Axis - X Vibration - RF Validation Metrics", : object 'x_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(x_vib_sensor_rf_results$lsm_cm, caption = "Axis - X Vibration - RF Validation Confusion Matrix", : object 'x_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(x_vib_sensor_rf_results$lsm_mlogloss, caption = "Axis - X Vibration - RF Vaidation LogLoss", : object 'x_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_idle$lsm_perf@x.values): object 'res_path_idle' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_idle$lsm_perf@y.values): object 'res_path_idle' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_moving$lsm_perf@x.values): object 'res_path_moving' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_moving$lsm_perf@y.values): object 'res_path_moving' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_trans$lsm_perf@x.values): object 'res_path_trans' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_trans$lsm_perf@y.values): object 'res_path_trans' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_shuttle$lsm_perf@x.values): object 'res_shuttle' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_shuttle$lsm_perf@y.values): object 'res_shuttle' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(predvars, data, env): object 'path_idle_roc.y' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(predvars, data, env): object 'path_moving_roc.y' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(predvars, data, env): object 'path_trans_roc.y' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(predvars, data, env): object 'path_shuttle_roc.y' not found
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4a-axis-roc-x-vib-1.pdf}
+\caption{Axis - X Vibration ROC - using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{verbatim}
+## Error in plot(y_vib_sensor_rf_results$mc_model_rf): object 'y_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(y_vib_sensor_rf_results$mc_model_rf$results, caption = "Axes - Y Vibration - RF Training Model Results", : object 'y_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(y_vib_sensor_rf_results$rf_accuracy, caption = "Axis - Y Vibration - RF - Validation Accuracy", : object 'y_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(y_vib_sensor_rf_results$lsm_metrics, caption = "Axis - Y Vibration - RF Validation Metrics", : object 'y_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(y_vib_sensor_rf_results$lsm_cm, caption = "Axis - Y Vibration - RF Validation Confusion Matrix", : object 'y_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(y_vib_sensor_rf_results$lsm_mlogloss, caption = "Axis - Y Vibration - RF Vaidation LogLoss", : object 'y_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_idle$lsm_perf@x.values): object 'res_path_idle' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_idle$lsm_perf@y.values): object 'res_path_idle' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_moving$lsm_perf@x.values): object 'res_path_moving' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_moving$lsm_perf@y.values): object 'res_path_moving' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_trans$lsm_perf@x.values): object 'res_path_trans' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_trans$lsm_perf@y.values): object 'res_path_trans' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_shuttle$lsm_perf@x.values): object 'res_shuttle' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_shuttle$lsm_perf@y.values): object 'res_shuttle' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(predvars, data, env): object 'path_idle_roc.y' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(predvars, data, env): object 'path_moving_roc.y' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(predvars, data, env): object 'path_trans_roc.y' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(predvars, data, env): object 'path_shuttle_roc.y' not found
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4b-axis-roc-y-vib-1.pdf}
+\caption{Axis - Y Vibration ROC - using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{verbatim}
+## Error in plot(z_vib_sensor_rf_results$mc_model_rf): object 'z_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(z_vib_sensor_rf_results$mc_model_rf$results, caption = "Axes - Z Vibration - RF Training Model Results", : object 'z_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(z_vib_sensor_rf_results$rf_accuracy, caption = "Axis - Z Vibration - RF - Validation Accuracy", : object 'z_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(z_vib_sensor_rf_results$lsm_metrics, caption = "Axis - Z Vibration - RF Validation Metrics", : object 'z_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(z_vib_sensor_rf_results$lsm_cm, caption = "Axis - Z Vibration - RF Validation Confusion Matrix", : object 'z_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(z_vib_sensor_rf_results$lsm_mlogloss, caption = "Axis - Z Vibration - RF Vaidation LogLoss", : object 'z_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_vib_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_idle$lsm_perf@x.values): object 'res_path_idle' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_idle$lsm_perf@y.values): object 'res_path_idle' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_moving$lsm_perf@x.values): object 'res_path_moving' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_moving$lsm_perf@y.values): object 'res_path_moving' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_trans$lsm_perf@x.values): object 'res_path_trans' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_path_trans$lsm_perf@y.values): object 'res_path_trans' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_shuttle$lsm_perf@x.values): object 'res_shuttle' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in unlist(res_shuttle$lsm_perf@y.values): object 'res_shuttle' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(predvars, data, env): object 'path_idle_roc.y' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(predvars, data, env): object 'path_moving_roc.y' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(predvars, data, env): object 'path_trans_roc.y' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(predvars, data, env): object 'path_shuttle_roc.y' not found
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4c-axis-roc-z-vib-1.pdf}
+\caption{Axis - Z Vibration ROC - using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4d-axis-plot-xy-vib-1.pdf}
+\caption{Axes - XY Vibration - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-vib-rf-params}Axes - XY Vibration - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 1.674554 & 0.8428894 & 0.5375924 & 0.7604884 & 0.6135935 & 0.583086 & 0.5737535 & 0.9076778 & 0.6019949 & 0.9136661 & 0.6019949 & 0.5737535 & 0.1901221 & 0.7407157 & 0.1899354 & 0.0061861 & 0.0274715 & 0.0075558 & 0.0106866 & 0.0092627 & 0.0094394 & 0.0024533 & 0.0124137 & 0.0040803 & 0.0124137 & 0.0094394 & 0.0018890 & 0.0052962\\
+2 & 1 & extratrees & 1.169747 & 0.8543577 & 0.5986900 & 0.7764515 & 0.6350588 & 0.586666 & 0.5737901 & 0.9115840 & 0.6230765 & 0.9208342 & 0.6230765 & 0.5737901 & 0.1941129 & 0.7426870 & 0.1246491 & 0.0043243 & 0.0117998 & 0.0063890 & 0.0094396 & 0.0126400 & 0.0102763 & 0.0020733 & 0.0196362 & 0.0034438 & 0.0196362 & 0.0102763 & 0.0015972 & 0.0059823\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.1896992
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 495, 495, 493, 494, 493, 496, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss   AUC        prAUC      Accuracy   Kappa    
+##   gini        1.674554  0.8428894  0.5375924  0.7604884  0.6135935
+##   extratrees  1.169747  0.8543577  0.5986900  0.7764515  0.6350588
+##   Mean_F1   Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.583086  0.5737535         0.9076778         0.6019949          
+##   0.586666  0.5737901         0.9115840         0.6230765          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9136661            0.6019949       0.5737535    0.1901221          
+##   0.9208342            0.6230765       0.5737901    0.1941129          
+##   Mean_Balanced_Accuracy
+##   0.7407157             
+##   0.7426870             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-vib-rf-results}Axes - XY Vibration - RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.315257\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-vib-rf-results}Axes - XY Vibration - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.0000000 & 0.9973881 & 0.419682011032371\\
+PATH\_MOVING & 0.6293103 & 0.4215813 & 0.578056385064921\\
+PATH\_TRANSITION & 0.1439114 & 0.9454078 & 0.573862357120681\\
+SHUTTLE & 0.6347197 & 0.6953748 & 0.717585101995496\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-vib-rf-results}Axes - XY Vibration - RF Validation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 0 & 6 & 0 & 1\\
+PATH\_MOVING & 1451 & 1168 & 163 & 171\\
+PATH\_TRANSITION & 46 & 179 & 39 & 30\\
+SHUTTLE & 765 & 503 & 69 & 351\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-vib-rf-results}Axes - XY Vibration - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4d-axis-roc-xy-vib-1.pdf}
+\caption{Axes - XY Vibration ROC - using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4e-axis-plot-xz-vib-1.pdf}
+\caption{Axes - XZ Vibration - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-vib-rf-params}Axes - XZ Vibration - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 1.682038 & 0.8396008 & 0.5371869 & 0.7747418 & 0.6352687 & 0.5930502 & 0.5799465 & 0.9130613 & 0.6193916 & 0.9199261 & 0.6193916 & 0.5799465 & 0.1936855 & 0.7465039 & 0.1648738 & 0.0080870 & 0.0288320 & 0.0081218 & 0.0112630 & 0.0079405 & 0.0070132 & 0.0021563 & 0.0147244 & 0.0033982 & 0.0147244 & 0.0070132 & 0.0020305 & 0.0035675\\
+2 & 1 & extratrees & 1.118026 & 0.8529340 & 0.6009060 & 0.7878946 & 0.6526961 & 0.5967114 & 0.5801591 & 0.9157776 & 0.6436503 & 0.9258661 & 0.6436503 & 0.5801591 & 0.1969737 & 0.7479684 & 0.0852610 & 0.0063399 & 0.0125134 & 0.0065368 & 0.0094738 & 0.0096888 & 0.0093593 & 0.0018678 & 0.0161292 & 0.0026498 & 0.0161292 & 0.0093593 & 0.0016342 & 0.0048728\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.1796074
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 495, 495, 493, 494, 493, 496, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss   AUC        prAUC      Accuracy   Kappa    
+##   gini        1.682038  0.8396008  0.5371869  0.7747418  0.6352687
+##   extratrees  1.118026  0.8529340  0.6009060  0.7878946  0.6526961
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.5930502  0.5799465         0.9130613         0.6193916          
+##   0.5967114  0.5801591         0.9157776         0.6436503          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9199261            0.6193916       0.5799465    0.1936855          
+##   0.9258661            0.6436503       0.5801591    0.1969737          
+##   Mean_Balanced_Accuracy
+##   0.7465039             
+##   0.7479684             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-vib-rf-results}Axes - XZ Vibration - RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.3704978\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-vib-rf-results}Axes - XZ Vibration - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.0004421 & 0.9511194 & 0.411157574197976\\
+PATH\_MOVING & 0.8453664 & 0.1163318 & 0.448958344972847\\
+PATH\_TRANSITION & 0.1070111 & 0.9638193 & 0.636069616958212\\
+SHUTTLE & 0.4195298 & 0.9808612 & 0.708529502286045\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-vib-rf-results}Axes - XZ Vibration - RF Validation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 1 & 117 & 8 & 6\\
+PATH\_MOVING & 2232 & 1569 & 207 & 288\\
+PATH\_TRANSITION & 14 & 128 & 29 & 27\\
+SHUTTLE & 15 & 42 & 27 & 232\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-vib-rf-results}Axes - XZ Vibration - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4e-axis-roc-xz-vib-1.pdf}
+\caption{Axes - XZ Vibration ROC - using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4f-axis-plot-yz-vib-1.pdf}
+\caption{Axes - YZ Vibration - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-vib-rf-params}Axes - YZ Vibration - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 1.580903 & 0.7733861 & 0.4788212 & 0.6559188 & 0.4411806 & 0.4757124 & 0.4701619 & 0.8638578 & 0.4918955 & 0.8695718 & 0.4918955 & 0.4701619 & 0.1639797 & 0.6670098 & 0.0803924 & 0.0068665 & 0.0091847 & 0.0097568 & 0.0120936 & 0.0120949 & 0.0116969 & 0.0028488 & 0.0123780 & 0.0047075 & 0.0123780 & 0.0116969 & 0.0024392 & 0.006036\\
+2 & 1 & extratrees & 1.255473 & 0.7842322 & 0.5011782 & 0.6712297 & 0.4600886 & 0.4809974 & 0.4744035 & 0.8675130 & 0.5076125 & 0.8762951 & 0.5076125 & 0.4744035 & 0.1678074 & 0.6709583 & 0.0641333 & 0.0061330 & 0.0080583 & 0.0083185 & 0.0109343 & 0.0112880 & 0.0107462 & 0.0026280 & 0.0119233 & 0.0043803 & 0.0119233 & 0.0107462 & 0.0020796 & 0.005746\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.271056
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 495, 495, 493, 494, 493, 496, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss   AUC        prAUC      Accuracy   Kappa    
+##   gini        1.580903  0.7733861  0.4788212  0.6559188  0.4411806
+##   extratrees  1.255473  0.7842322  0.5011782  0.6712297  0.4600886
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.4757124  0.4701619         0.8638578         0.4918955          
+##   0.4809974  0.4744035         0.8675130         0.5076125          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.8695718            0.4918955       0.4701619    0.1639797          
+##   0.8762951            0.5076125       0.4744035    0.1678074          
+##   Mean_Balanced_Accuracy
+##   0.6670098             
+##   0.6709583             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-vib-rf-results}Axes - YZ Vibration - RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.3077701\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-vib-rf-results}Axes - YZ Vibration - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.0008842 & 0.9921642 & 0.6214893701255\\
+PATH\_MOVING & 0.6589440 & 0.2841866 & 0.44096845877936\\
+PATH\_TRANSITION & 0.0627306 & 0.9638193 & 0.481138626415166\\
+SHUTTLE & 0.5045208 & 0.7671451 & 0.685932116169101\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-vib-rf-results}Axes - YZ Vibration - RF Validation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 2 & 15 & 2 & 4\\
+PATH\_MOVING & 1784 & 1223 & 177 & 248\\
+PATH\_TRANSITION & 40 & 107 & 17 & 22\\
+SHUTTLE & 436 & 511 & 75 & 279\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-vib-rf-results}Axes - YZ Vibration - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4f-axis-roc-yz-vib-1.pdf}
+\caption{Axes - YZ Vibration ROC - using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{verbatim}
+## Error in plot(x_mag_sensor_rf_results$mc_model_rf): object 'x_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(x_mag_sensor_rf_results$mc_model_rf$results, caption = "Axis - X Magnetometer - RF Training Model Results", : object 'x_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(x_mag_sensor_rf_results$rf_accuracy, caption = "Axis - X Magnetometer - Validation Accuracy", : object 'x_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(x_mag_sensor_rf_results$lsm_metrics, caption = "Axis - X Magnetometer - RF Validation Metrics", : object 'x_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(x_mag_sensor_rf_results$lsm_cm, caption = "Axis - X Magnetometer - RF Vaidation Confusion Matrix", : object 'x_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(x_mag_sensor_rf_results$lsm_mlogloss, caption = "Axis - X Magnetometer - RF Vaidation LogLoss", : object 'x_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4g-axis-roc-x-mag-1.pdf}
+\caption{Axis - X Magnetometer - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{verbatim}
+## Error in plot(y_mag_sensor_rf_results$mc_model_rf): object 'y_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(y_mag_sensor_rf_results$mc_model_rf$results, caption = "Axis - Y Magnetometer - RF Training Model Results", : object 'y_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(y_mag_sensor_rf_results$rf_accuracy, caption = "Axis - Y Magnetometer - Validation Accuracy", : object 'y_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(y_mag_sensor_rf_results$lsm_metrics, caption = "Axis - Y Magnetometer - RF Validation Metrics", : object 'y_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(y_mag_sensor_rf_results$lsm_cm, caption = "Axis - Y Magnetometer - RF Vaidation Confusion Matrix", : object 'y_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(y_mag_sensor_rf_results$lsm_mlogloss, caption = "Axis - Y Magnetometer - RF Vaidation LogLoss", : object 'y_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4h-axis-roc-y-mag-1.pdf}
+\caption{Axis - Y Magnetometer - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{verbatim}
+## Error in plot(z_mag_sensor_rf_results$mc_model_rf): object 'z_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(z_mag_sensor_rf_results$mc_model_rf$results, caption = "Axis - Z Magnetometer - RF Training Model Results", : object 'z_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(z_mag_sensor_rf_results$rf_accuracy, caption = "Axis - Z Magnetometer - Validation Accuracy", : object 'z_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(z_mag_sensor_rf_results$lsm_metrics, caption = "Axis - Z Magnetometer - RF Validation Metrics", : object 'z_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(z_mag_sensor_rf_results$lsm_cm, caption = "Axis - Z Magnetometer - RF Vaidation Confusion Matrix", : object 'z_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(z_mag_sensor_rf_results$lsm_mlogloss, caption = "Axis - Z Magnetometer - RF Vaidation LogLoss", : object 'z_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_mag_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4i-axis-roc-z-mag-1.pdf}
+\caption{Axis - Z Magnetometer - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4j-axis-plot-xy-mag-1.pdf}
+\caption{Axes - XY Magnetometer - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-mag-rf-params}Axes - XY Magnetometer - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 1.0674594 & 0.8944660 & 0.5616517 & 0.7996300 & 0.6773252 & 0.6511859 & 0.6393416 & 0.9244899 & 0.6730991 & 0.9306012 & 0.6730991 & 0.6393416 & 0.1999075 & 0.7819158 & 0.1089775 & 0.0062270 & 0.0226959 & 0.0099918 & 0.0153268 & 0.0175449 & 0.0196394 & 0.0033663 & 0.0208419 & 0.0040776 & 0.0208419 & 0.0196394 & 0.0024979 & 0.0109399\\
+2 & 1 & extratrees & 0.7427303 & 0.9066722 & 0.6429718 & 0.8188084 & 0.7053620 & 0.6658255 & 0.6484253 & 0.9301350 & 0.7046162 & 0.9395847 & 0.7046162 & 0.6484253 & 0.2047021 & 0.7892802 & 0.0390926 & 0.0054646 & 0.0243146 & 0.0063365 & 0.0099489 & 0.0150109 & 0.0179961 & 0.0022361 & 0.0158050 & 0.0028075 & 0.0158050 & 0.0179961 & 0.0015841 & 0.0095305\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.1322253
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 495, 495, 493, 494, 493, 496, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   gini        1.0674594  0.8944660  0.5616517  0.7996300  0.6773252
+##   extratrees  0.7427303  0.9066722  0.6429718  0.8188084  0.7053620
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.6511859  0.6393416         0.9244899         0.6730991          
+##   0.6658255  0.6484253         0.9301350         0.7046162          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9306012            0.6730991       0.6393416    0.1999075          
+##   0.9395847            0.7046162       0.6484253    0.2047021          
+##   Mean_Balanced_Accuracy
+##   0.7819158             
+##   0.7892802             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-mag-rf-results}Axes - XY Magnetometer - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.1531769\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-mag-rf-results}Axes - XY Magnetometer - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.0000000 & 0.9996269 & 0.557658408883962\\
+PATH\_MOVING & 0.2133621 & 0.6834089 & 0.438110812596375\\
+PATH\_TRANSITION & 0.5129151 & 0.5812460 & 0.510177423546875\\
+SHUTTLE & 0.4014467 & 0.7149692 & 0.605183021667271\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-mag-rf-results}Axes - XY Magnetometer - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 0 & 0 & 1 & 0\\
+PATH\_MOVING & 912 & 396 & 23 & 42\\
+PATH\_TRANSITION & 661 & 1006 & 139 & 289\\
+SHUTTLE & 689 & 454 & 108 & 222\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-mag-rf-results}Axes - XY Magnetometer - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4j-axis-roc-xy-mag-1.pdf}
+\caption{Axes - XY Magnetometer - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4k-axis-plot-xz-mag-1.pdf}
+\caption{Axes - XZ Magnetometer - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-mag-rf-params}Axes - XZ Magnetometer - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.9153495 & 0.9366048 & 0.6183699 & 0.8564457 & 0.7704462 & 0.7679592 & 0.7553289 & 0.9452246 & 0.7860549 & 0.9497390 & 0.7860549 & 0.7553289 & 0.2141114 & 0.8502767 & 0.1330133 & 0.0063749 & 0.0341187 & 0.0069221 & 0.0106786 & 0.0110322 & 0.0113674 & 0.0025195 & 0.0138127 & 0.0032681 & 0.0138127 & 0.0113674 & 0.0017305 & 0.0062490\\
+2 & 1 & extratrees & 0.6067307 & 0.9493906 & 0.7580567 & 0.8771300 & 0.8026322 & 0.7899342 & 0.7709060 & 0.9524334 & 0.8179179 & 0.9585507 & 0.8179179 & 0.7709060 & 0.2192825 & 0.8616697 & 0.0546678 & 0.0033016 & 0.0213084 & 0.0042810 & 0.0065216 & 0.0092606 & 0.0092775 & 0.0013725 & 0.0149105 & 0.0018930 & 0.0149105 & 0.0092775 & 0.0010703 & 0.0050851\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.08463933
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 495, 495, 493, 494, 493, 496, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   gini        0.9153495  0.9366048  0.6183699  0.8564457  0.7704462
+##   extratrees  0.6067307  0.9493906  0.7580567  0.8771300  0.8026322
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.7679592  0.7553289         0.9452246         0.7860549          
+##   0.7899342  0.7709060         0.9524334         0.8179179          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9497390            0.7860549       0.7553289    0.2141114          
+##   0.9585507            0.8179179       0.7709060    0.2192825          
+##   Mean_Balanced_Accuracy
+##   0.8502767             
+##   0.8616697             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-mag-rf-results}Axes - XZ Magnetometer - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.0813436\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-mag-rf-results}Axes - XZ Magnetometer - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.0000000 & 1.0000000 & 0.492910447761194\\
+PATH\_MOVING & 0.0840517 & 0.9290343 & 0.524038971886384\\
+PATH\_TRANSITION & 0.2952030 & 0.2564761 & 0.279747614431828\\
+SHUTTLE & 0.3001808 & 0.8067897 & 0.677924879599953\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-mag-rf-results}Axes - XZ Magnetometer - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 0 & 0 & 0 & 0\\
+PATH\_MOVING & 0 & 156 & 17 & 202\\
+PATH\_TRANSITION & 2118 & 1170 & 80 & 185\\
+SHUTTLE & 144 & 530 & 174 & 166\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-mag-rf-results}Axes - XZ Magnetometer - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4k-axis-roc-xz-mag-1.pdf}
+\caption{Axes - XZ Magnetometer - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4l-axis-plot-yz-mag-1.pdf}
+\caption{Axes - YZ Magnetometer - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-mag-rf-params}Axes - YZ Magnetometer - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.9937614 & 0.9296341 & 0.6384563 & 0.8322982 & 0.7321354 & 0.7503455 & 0.7369076 & 0.9355162 & 0.7684506 & 0.9392421 & 0.7684506 & 0.7369076 & 0.2080745 & 0.8362119 & 0.1293086 & 0.0073612 & 0.0388419 & 0.0095898 & 0.0151461 & 0.0131387 & 0.0162770 & 0.0037645 & 0.0129271 & 0.0044856 & 0.0129271 & 0.0162770 & 0.0023974 & 0.0093172\\
+2 & 1 & extratrees & 0.6973457 & 0.9395348 & 0.7502951 & 0.8492289 & 0.7574752 & 0.7655527 & 0.7438089 & 0.9409124 & 0.7974112 & 0.9471410 & 0.7974112 & 0.7438089 & 0.2123072 & 0.8423607 & 0.0864438 & 0.0058515 & 0.0272248 & 0.0039399 & 0.0061416 & 0.0115807 & 0.0147977 & 0.0013857 & 0.0116232 & 0.0021417 & 0.0116232 & 0.0147977 & 0.0009850 & 0.0077777\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.1048027
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 495, 495, 493, 494, 493, 496, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   gini        0.9937614  0.9296341  0.6384563  0.8322982  0.7321354
+##   extratrees  0.6973457  0.9395348  0.7502951  0.8492289  0.7574752
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.7503455  0.7369076         0.9355162         0.7684506          
+##   0.7655527  0.7438089         0.9409124         0.7974112          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9392421            0.7684506       0.7369076    0.2080745          
+##   0.9471410            0.7974112       0.7438089    0.2123072          
+##   Mean_Balanced_Accuracy
+##   0.8362119             
+##   0.8423607             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-mag-rf-results}Axes - YZ Magnetometer - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.2397815\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-mag-rf-results}Axes - YZ Magnetometer - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.0000000 & 0.9992537 & 0.506709489686844\\
+PATH\_MOVING & 0.4784483 & 0.3742709 & 0.456516201505129\\
+PATH\_TRANSITION & 0.4833948 & 0.8858917 & 0.851595500540747\\
+SHUTTLE & 0.3001808 & 0.7058555 & 0.610838084855407\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-mag-rf-results}Axes - YZ Magnetometer - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 0 & 1 & 1 & 0\\
+PATH\_MOVING & 1591 & 888 & 16 & 324\\
+PATH\_TRANSITION & 108 & 362 & 131 & 63\\
+SHUTTLE & 563 & 605 & 123 & 166\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-mag-rf-results}Axes - YZ Magnetometer - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4l-axis-roc-yz-mag-1.pdf}
+\caption{Axes - YZ Magnetometer - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{verbatim}
+## Error in plot(x_combined_sensor_rf_results$mc_model_rf): object 'x_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(x_combined_sensor_rf_results$mc_model_rf$results, : object 'x_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(x_combined_sensor_rf_results$rf_accuracy, caption = "Axis - X Combined - Validation Accuracy", : object 'x_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(x_combined_sensor_rf_results$lsm_metrics, caption = "Axis - X Combined - RF Validation Metrics", : object 'x_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(x_combined_sensor_rf_results$lsm_cm, caption = "Axis - X Combined - RF Vaidation Confusion Matrix", : object 'x_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(x_combined_sensor_rf_results$lsm_mlogloss, caption = "Axis - X Combined - RF Vaidation LogLoss", : object 'x_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'x_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4m-axis-roc-x-combined-1.pdf}
+\caption{Axis - X Combined - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{verbatim}
+## Error in plot(y_combined_sensor_rf_results$mc_model_rf): object 'y_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(y_combined_sensor_rf_results$mc_model_rf$results, : object 'y_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(y_combined_sensor_rf_results$rf_accuracy, caption = "Axis - Y Combined - Validation Accuracy", : object 'y_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(y_combined_sensor_rf_results$lsm_metrics, caption = "Axis - Y Combined - RF Validation Metrics", : object 'y_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(y_combined_sensor_rf_results$lsm_cm, caption = "Axis - Y Combined - RF Vaidation Confusion Matrix", : object 'y_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(y_combined_sensor_rf_results$lsm_mlogloss, caption = "Axis - Y Combined - RF Vaidation LogLoss", : object 'y_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'y_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4n-axis-roc-y-combined-1.pdf}
+\caption{Axis - Y Combined - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{verbatim}
+## Error in plot(z_combined_sensor_rf_results$mc_model_rf): object 'z_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(z_combined_sensor_rf_results$mc_model_rf$results, : object 'z_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(z_combined_sensor_rf_results$rf_accuracy, caption = "Axis - Z Combined - Validation Accuracy", : object 'z_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(z_combined_sensor_rf_results$lsm_metrics, caption = "Axis - Z Combined - RF Validation Metrics", : object 'z_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(z_combined_sensor_rf_results$lsm_cm, caption = "Axis - Z Combined - RF Vaidation Confusion Matrix", : object 'z_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in knitr::kable(z_combined_sensor_rf_results$lsm_mlogloss, caption = "Axis - Z Combined - RF Vaidation LogLoss", : object 'z_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{verbatim}
+## Error in eval(expr, envir, enclos): object 'z_combined_sensor_rf_results' not found
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4o-axis-roc-z-combined-1.pdf}
+\caption{Axis - Z Combined - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4p-axis-plot-xy-combined-1.pdf}
+\caption{Axes - XY Combined - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-combined-rf-params}Axes - XY Combined - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 9.460741 & 0.6643605 & 0.3987340 & 0.5172210 & 0.2688083 & 0.4110430 & 0.4102231 & 0.8225693 & 0.4821045 & 0.8237138 & 0.4821045 & 0.4102231 & 0.1293053 & 0.6163962 & 0.5872196 & 0.0241255 & 0.0172140 & 0.0466171 & 0.0323338 & 0.0234996 & 0.0243076 & 0.0060673 & 0.0307768 & 0.0127481 & 0.0307768 & 0.0243076 & 0.0116543 & 0.0143934\\
+2 & 1 & extratrees & 8.247631 & 0.6704015 & 0.4248197 & 0.5378498 & 0.2836110 & 0.4136469 & 0.4102098 & 0.8252321 & 0.4978902 & 0.8308083 & 0.4978902 & 0.4102098 & 0.1344624 & 0.6177209 & 1.4831852 & 0.0224068 & 0.0182541 & 0.0346460 & 0.0264005 & 0.0179673 & 0.0188566 & 0.0050283 & 0.0340925 & 0.0122873 & 0.0340925 & 0.0188566 & 0.0086615 & 0.0109787\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      9884 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.1679384
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 9884 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 495, 495, 493, 494, 493, 496, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss   AUC        prAUC      Accuracy   Kappa    
+##   gini        9.460741  0.6643605  0.3987340  0.5172210  0.2688083
+##   extratrees  8.247631  0.6704015  0.4248197  0.5378498  0.2836110
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.4110430  0.4102231         0.8225693         0.4821045          
+##   0.4136469  0.4102098         0.8252321         0.4978902          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.8237138            0.4821045       0.4102231    0.1293053          
+##   0.8308083            0.4978902       0.4102098    0.1344624          
+##   Mean_Balanced_Accuracy
+##   0.6163962             
+##   0.6177209             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-combined-rf-results}Axes - XY Combined - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.2339134\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-combined-rf-results}Axes - XY Combined - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.0000000 & 0.9985075 & 0.514836893945392\\
+PATH\_MOVING & 0.4199892 & 0.4635450 & 0.474240111418084\\
+PATH\_TRANSITION & 0.1291513 & 0.8097838 & 0.404502322961572\\
+SHUTTLE & 0.6175407 & 0.7179312 & 0.718873564809607\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-combined-rf-results}Axes - XY Combined - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 0 & 5 & 1 & 2\\
+PATH\_MOVING & 2830 & 1559 & 219 & 262\\
+PATH\_TRANSITION & 655 & 963 & 70 & 159\\
+SHUTTLE & 1039 & 1185 & 252 & 683\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-combined-rf-results}Axes - XY Combined - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4p-axis-roc-xy-combined-1.pdf}
+\caption{Axes - XY Combined - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4q-axis-plot-xz-combined-1.pdf}
+\caption{Axes - XZ Combined - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-combined-rf-params}Axes - XZ Combined - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 9.658712 & 0.6776894 & 0.4118549 & 0.4831322 & 0.2662344 & 0.3909273 & 0.4165986 & 0.8272062 & 0.4785648 & 0.8205784 & 0.4785648 & 0.4165986 & 0.1207830 & 0.6219024 & 0.1944388 & 0.0163661 & 0.0159694 & 0.0477420 & 0.0124820 & 0.0188526 & 0.0098062 & 0.0034505 & 0.0194252 & 0.0050287 & 0.0194252 & 0.0098062 & 0.0119355 & 0.0060968\\
+2 & 1 & extratrees & 9.300426 & 0.6822417 & 0.4368907 & 0.4668166 & 0.2644316 & 0.3729185 & 0.4110305 & 0.8291042 & 0.4920377 & 0.8199463 & 0.4920377 & 0.4110305 & 0.1167041 & 0.6200673 & 0.1126689 & 0.0143755 & 0.0085388 & 0.0472648 & 0.0183126 & 0.0256557 & 0.0073178 & 0.0024875 & 0.0234420 & 0.0062543 & 0.0234420 & 0.0073178 & 0.0118162 & 0.0034544\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      9884 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.1326869
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 9884 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 495, 495, 493, 494, 493, 496, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss   AUC        prAUC      Accuracy   Kappa    
+##   gini        9.658712  0.6776894  0.4118549  0.4831322  0.2662344
+##   extratrees  9.300426  0.6822417  0.4368907  0.4668166  0.2644316
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.3909273  0.4165986         0.8272062         0.4785648          
+##   0.3729185  0.4110305         0.8291042         0.4920377          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.8205784            0.4785648       0.4165986    0.1207830          
+##   0.8199463            0.4920377       0.4110305    0.1167041          
+##   Mean_Balanced_Accuracy
+##   0.6219024             
+##   0.6200673             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-combined-rf-results}Axes - XZ Combined - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.2264265\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-combined-rf-results}Axes - XZ Combined - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.0002210 & 0.9755597 & 0.465168974424957\\
+PATH\_MOVING & 0.4614763 & 0.5244653 & 0.507922777120533\\
+PATH\_TRANSITION & 0.1900369 & 0.6173196 & 0.456350363118275\\
+SHUTTLE & 0.3806510 & 0.8855092 & 0.70426528675791\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-combined-rf-results}Axes - XZ Combined - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 1 & 117 & 8 & 6\\
+PATH\_MOVING & 2229 & 1713 & 224 & 482\\
+PATH\_TRANSITION & 2134 & 1244 & 103 & 197\\
+SHUTTLE & 160 & 638 & 207 & 421\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-combined-rf-results}Axes - XZ Combined - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4q-axis-roc-xz-combined-1.pdf}
+\caption{Axes - XZ Combined - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4r-axis-plot-yz-combined-1.pdf}
+\caption{Axes - YZ Combined - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-combined-rf-params}Axes - YZ Combined - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 10.10370 & 0.5885672 & 0.3390070 & 0.3814251 & 0.1767838 & 0.3027627 & 0.3540801 & 0.8052725 & 0.4001980 & 0.7972036 & 0.4001980 & 0.3540801 & 0.0953563 & 0.5796763 & 1.4286849 & 0.0294886 & 0.0171872 & 0.0461335 & 0.0328362 & 0.0253652 & 0.0248492 & 0.0063419 & 0.0149771 & 0.0103991 & 0.0149771 & 0.0248492 & 0.0115334 & 0.0152902\\
+2 & 1 & extratrees & 9.45642 & 0.5941438 & 0.3461539 & 0.3768449 & 0.1755540 & 0.2987195 & 0.3562938 & 0.8056640 & 0.4049185 & 0.7965520 & 0.4049185 & 0.3562938 & 0.0942112 & 0.5809789 & 0.7795805 & 0.0295109 & 0.0143188 & 0.0039585 & 0.0039080 & 0.0036260 & 0.0051204 & 0.0012437 & 0.0105179 & 0.0010441 & 0.0105179 & 0.0051204 & 0.0009896 & 0.0027367\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      9884 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.1889414
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 9884 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 495, 495, 493, 494, 493, 496, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss   AUC        prAUC      Accuracy   Kappa    
+##   gini        10.10369  0.5885672  0.3390070  0.3814251  0.1767838
+##   extratrees   9.45642  0.5941438  0.3461539  0.3768449  0.1755540
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.3027627  0.3540801         0.8052725         0.4001980          
+##   0.2987195  0.3562938         0.8056640         0.4049185          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.7972036            0.4001980       0.3540801    0.09535627         
+##   0.7965520            0.4049185       0.3562938    0.09421122         
+##   Mean_Balanced_Accuracy
+##   0.5796763             
+##   0.5809789             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-combined-rf-results}Axes - YZ Combined - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.2730676\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-combined-rf-results}Axes - YZ Combined - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.0002210 & 0.9957090 & 0.573283182067118\\
+PATH\_MOVING & 0.5670797 & 0.3071938 & 0.437100706471942\\
+PATH\_TRANSITION & 0.2693727 & 0.9214301 & 0.683201523730074\\
+SHUTTLE & 0.4041591 & 0.7548416 & 0.642208894338427\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-combined-rf-results}Axes - YX Combined - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 1 & 16 & 3 & 4\\
+PATH\_MOVING & 3518 & 2105 & 189 & 569\\
+PATH\_TRANSITION & 165 & 483 & 146 & 86\\
+SHUTTLE & 840 & 1108 & 204 & 447\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-combined-rf-results}Axes - YZ Combined - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4r-axis-roc-yz-combined-1.pdf}
+\caption{Axes - YZ Combined - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+
+\end{document}

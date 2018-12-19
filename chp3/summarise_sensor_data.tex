@@ -1,0 +1,1126 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={SummariseSensorData},
+            pdfauthor={Jill Daly},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+  \title{SummariseSensorData}
+  \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \author{Jill Daly}
+  \preauthor{\centering\large\emph}
+  \postauthor{\par}
+  \predate{\centering\large\emph}
+  \postdate{\par}
+  \date{03 December, 2018}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+\begin{document}
+\maketitle
+
+\newpage 
+\tableofcontents 
+\listoffigures
+\listoftables
+\newpage
+
+\newpage
+
+\newpage
+
+\hypertarget{sensor-summary}{%
+\section{Sensor Summary}\label{sensor-summary}}
+
+\newpage
+
+\begin{table}[!h]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_1\_v\_0\_2\_acc & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & -26.637758 & 58.43080 & -822.265625 & 370.8496\\
+\hline
+IMU11\_X & -21.522108 & 58.30771 & -448.974609 & 465.3320\\
+\hline
+IMU12\_X & 14.598873 & 57.99032 & -397.827148 & 489.0137\\
+\hline
+IMU3\_X & -24.437720 & 62.20369 & -860.595703 & 538.2080\\
+\hline
+IMU7\_X & 8.057234 & 57.28327 & -481.567383 & 449.3408\\
+\hline
+IMU8\_X & 205.432504 & 61.46296 & -731.445312 & 647.9492\\
+\hline
+IMU9\_X & 62.809970 & 58.05233 & -567.749023 & 518.5547\\
+\hline
+IMU1\_Y & 18.789855 & 55.69453 & -2647.949219 & 1317.0166\\
+\hline
+IMU11\_Y & 13.441581 & 42.88379 & -1480.224609 & 637.8174\\
+\hline
+IMU12\_Y & -24.435779 & 40.46987 & -1218.261719 & 524.6582\\
+\hline
+IMU3\_Y & -19.363144 & 53.63549 & -1757.080078 & 926.5137\\
+\hline
+IMU7\_Y & 73.054488 & 35.70061 & -357.788086 & 1152.9541\\
+\hline
+IMU8\_Y & 33.272438 & 37.07584 & -623.901367 & 754.7607\\
+\hline
+IMU9\_Y & -41.076253 & 49.37018 & -993.530273 & 945.0684\\
+\hline
+IMU1\_Z & 1044.557492 & 50.41367 & -725.830078 & 2072.1436\\
+\hline
+IMU11\_Z & 996.841585 & 53.62945 & -508.056641 & 2265.1367\\
+\hline
+IMU12\_Z & 996.126799 & 63.55264 & -1.953125 & 3259.6436\\
+\hline
+IMU3\_Z & 1034.154666 & 90.77265 & -341.430664 & 3091.7969\\
+\hline
+IMU7\_Z & 1014.665925 & 46.30972 & -577.148438 & 2276.0010\\
+\hline
+IMU8\_Z & 977.054511 & 65.35107 & -432.373047 & 2216.4307\\
+\hline
+IMU9\_Z & 994.740578 & 77.37151 & 14.038086 & 3130.3711\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_1\_v\_0\_03\_acc & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & -27.324085 & 26.34679 & -1058.5938 & 452.1484\\
+\hline
+IMU11\_X & -21.499465 & 26.08602 & -450.1953 & 900.5127\\
+\hline
+IMU12\_X & 15.341286 & 24.16798 & -326.6602 & 373.0469\\
+\hline
+IMU3\_X & -20.783907 & 25.24886 & -642.4561 & 417.6025\\
+\hline
+IMU7\_X & 8.745688 & 26.25695 & -353.6377 & 997.6807\\
+\hline
+IMU8\_X & 205.421088 & 26.00901 & -323.7305 & 1152.3438\\
+\hline
+IMU9\_X & 62.177190 & 26.05236 & -371.8262 & 996.5820\\
+\hline
+IMU1\_Y & 17.659438 & 31.54741 & -2320.4346 & 1621.3379\\
+\hline
+IMU11\_Y & 15.128653 & 25.87258 & -898.0713 & 2278.9307\\
+\hline
+IMU12\_Y & -22.130018 & 16.87682 & -697.3877 & 558.2275\\
+\hline
+IMU3\_Y & -21.424552 & 19.71061 & -637.4512 & 1790.4053\\
+\hline
+IMU7\_Y & 74.355135 & 24.35996 & -945.3125 & 1671.5088\\
+\hline
+IMU8\_Y & 34.242678 & 20.93650 & -883.4229 & 1111.8164\\
+\hline
+IMU9\_Y & -40.645503 & 38.15292 & -2340.8203 & 3164.7949\\
+\hline
+IMU1\_Z & 1045.202338 & 25.08643 & -814.2090 & 2063.4766\\
+\hline
+IMU11\_Z & 996.287000 & 24.83286 & -326.4160 & 2296.3867\\
+\hline
+IMU12\_Z & 995.195389 & 23.83931 & -181.1523 & 2310.1807\\
+\hline
+IMU3\_Z & 1033.770019 & 42.57972 & -998.2910 & 2766.6016\\
+\hline
+IMU7\_Z & 1014.121106 & 22.73670 & 259.5215 & 2562.5000\\
+\hline
+IMU8\_Z & 977.588116 & 22.43044 & 206.5430 & 2019.6533\\
+\hline
+IMU9\_Z & 992.130151 & 42.18053 & -1898.5596 & 2031.0059\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_1\_v\_0\_4\_acc & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & -27.228833 & 68.51801 & -1122.5586 & 473.9990\\
+\hline
+IMU11\_X & -21.313477 & 69.00470 & -540.6494 & 1039.5508\\
+\hline
+IMU12\_X & 14.608283 & 68.76575 & -511.1084 & 798.4619\\
+\hline
+IMU3\_X & -25.353469 & 71.87850 & -478.3936 & 482.1777\\
+\hline
+IMU7\_X & 9.093084 & 69.58155 & -479.2480 & 1059.5703\\
+\hline
+IMU8\_X & 205.637295 & 67.42428 & -617.1875 & 1012.3291\\
+\hline
+IMU9\_X & 63.105914 & 68.20818 & -427.8564 & 734.2529\\
+\hline
+IMU1\_Y & 16.816536 & 52.41333 & -1535.2783 & 1308.5938\\
+\hline
+IMU11\_Y & 16.876717 & 54.47848 & -1040.4053 & 1923.8281\\
+\hline
+IMU12\_Y & -21.271482 & 56.90962 & -1346.0693 & 1923.0957\\
+\hline
+IMU3\_Y & -16.798131 & 47.80644 & -1278.9307 & 987.5488\\
+\hline
+IMU7\_Y & 75.234416 & 47.14887 & -665.1611 & 1107.0557\\
+\hline
+IMU8\_Y & 35.975969 & 42.86803 & -338.5010 & 999.6338\\
+\hline
+IMU9\_Y & -38.480265 & 88.55034 & -2299.1943 & 3638.9160\\
+\hline
+IMU1\_Z & 1042.087426 & 58.77719 & -376.2207 & 1700.1953\\
+\hline
+IMU11\_Z & 996.611812 & 67.50840 & -327.1484 & 2276.0010\\
+\hline
+IMU12\_Z & 996.897294 & 57.83999 & -156.4941 & 2618.2861\\
+\hline
+IMU3\_Z & 1033.460433 & 94.53322 & -896.3623 & 2929.0771\\
+\hline
+IMU7\_Z & 1013.767318 & 57.71115 & -360.4736 & 2155.2734\\
+\hline
+IMU8\_Z & 976.933353 & 65.04727 & -399.4141 & 2308.9600\\
+\hline
+IMU9\_Z & 992.032379 & 80.53462 & -534.1797 & 2451.1719\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_1\_v\_0\_06\_acc & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & -25.821196 & 38.06858 & -543.5791 & 458.1299\\
+\hline
+IMU11\_X & -22.684311 & 38.92846 & -509.3994 & 499.7559\\
+\hline
+IMU12\_X & 14.082104 & 38.98567 & -493.7744 & 592.5293\\
+\hline
+IMU3\_X & -24.013228 & 44.07112 & -1895.6299 & 504.8828\\
+\hline
+IMU7\_X & 7.609501 & 39.47470 & -472.7783 & 938.4766\\
+\hline
+IMU8\_X & 204.674848 & 38.65316 & -354.9805 & 796.5088\\
+\hline
+IMU9\_X & 61.751177 & 39.28983 & -439.0869 & 697.2656\\
+\hline
+IMU1\_Y & 17.673234 & 27.59936 & -795.4102 & 606.3232\\
+\hline
+IMU11\_Y & 15.353250 & 30.71838 & -1078.8574 & 1560.9131\\
+\hline
+IMU12\_Y & -22.260548 & 38.43564 & -1346.4355 & 2191.5283\\
+\hline
+IMU3\_Y & -19.519498 & 32.39250 & -1222.7783 & 1755.6152\\
+\hline
+IMU7\_Y & 74.331670 & 32.76577 & -874.0234 & 1611.0840\\
+\hline
+IMU8\_Y & 34.244712 & 29.78952 & -746.5820 & 1062.1338\\
+\hline
+IMU9\_Y & -40.199793 & 37.12124 & -1725.2197 & 1875.1221\\
+\hline
+IMU1\_Z & 1044.877452 & 35.40354 & -1489.0137 & 2358.0322\\
+\hline
+IMU11\_Z & 996.837750 & 52.06834 & -865.1123 & 3294.0674\\
+\hline
+IMU12\_Z & 996.163123 & 35.98031 & -342.5293 & 2435.9131\\
+\hline
+IMU3\_Z & 1033.543816 & 60.61177 & -547.1191 & 2827.1484\\
+\hline
+IMU7\_Z & 1014.397014 & 34.09726 & -763.6719 & 2452.1484\\
+\hline
+IMU8\_Z & 977.221507 & 34.78561 & -814.8193 & 2469.7266\\
+\hline
+IMU9\_Z & 993.028599 & 54.99540 & -1265.0146 & 2520.9961\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_1\_v\_0\_0135\_acc & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & -27.085166 & 17.53070 & -1161.01074 & 501.5869\\
+\hline
+IMU11\_X & -20.746924 & 16.58929 & -422.36328 & 420.4102\\
+\hline
+IMU12\_X & 15.668147 & 16.69569 & -603.14941 & 490.8447\\
+\hline
+IMU3\_X & -16.021878 & 18.24855 & -1215.08789 & 671.8750\\
+\hline
+IMU7\_X & 9.307857 & 16.78049 & -502.07520 & 456.1768\\
+\hline
+IMU8\_X & 205.017643 & 17.27644 & -273.07129 & 926.7578\\
+\hline
+IMU9\_X & 60.716247 & 17.40197 & -470.45898 & 987.6709\\
+\hline
+IMU1\_Y & 17.696773 & 16.29782 & -1545.89844 & 627.4414\\
+\hline
+IMU11\_Y & 14.472658 & 15.13701 & -750.00000 & 673.3398\\
+\hline
+IMU12\_Y & -21.651757 & 14.84756 & -692.13867 & 776.6113\\
+\hline
+IMU3\_Y & -25.224842 & 19.17233 & -794.55566 & 2255.6152\\
+\hline
+IMU7\_Y & 74.466797 & 15.01585 & -464.47754 & 1042.1143\\
+\hline
+IMU8\_Y & 33.778684 & 16.83903 & -715.82031 & 1269.0430\\
+\hline
+IMU9\_Y & -41.784916 & 21.62057 & -1028.68652 & 2971.9238\\
+\hline
+IMU1\_Z & 1046.401570 & 13.38193 & -273.07129 & 2042.6025\\
+\hline
+IMU11\_Z & 996.810237 & 15.50577 & -346.19141 & 1776.2451\\
+\hline
+IMU12\_Z & 993.638148 & 13.14817 & -234.37500 & 1400.8789\\
+\hline
+IMU3\_Z & 1033.569897 & 25.49779 & -481.32324 & 3607.2998\\
+\hline
+IMU7\_Z & 1013.659312 & 13.36660 & -438.72070 & 1839.8438\\
+\hline
+IMU8\_Z & 977.564957 & 18.71559 & 15.38086 & 2264.2822\\
+\hline
+IMU9\_Z & 993.122385 & 22.52547 & -988.40332 & 2148.8037\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_2\_v\_0\_2\_acc & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & -28.396928 & 36.31150 & -803.71094 & 342.6514\\
+\hline
+IMU11\_X & -20.379334 & 35.68375 & -410.52246 & 422.1191\\
+\hline
+IMU12\_X & 15.960813 & 36.35043 & -322.63184 & 452.1484\\
+\hline
+IMU3\_X & -25.994029 & 52.24152 & -3911.86523 & 749.0234\\
+\hline
+IMU7\_X & 9.447844 & 35.34824 & -442.26074 & 419.4336\\
+\hline
+IMU8\_X & 208.150236 & 36.30337 & -281.98242 & 736.3281\\
+\hline
+IMU9\_X & 65.455370 & 36.61717 & -305.78613 & 859.1309\\
+\hline
+IMU1\_Y & 18.677923 & 35.91424 & -2413.57422 & 1628.2959\\
+\hline
+IMU11\_Y & 15.334961 & 24.04812 & -552.00195 & 637.5732\\
+\hline
+IMU12\_Y & -23.035594 & 31.82224 & -1330.81055 & 2038.0859\\
+\hline
+IMU3\_Y & -16.444253 & 35.16599 & -1518.55469 & 2427.8564\\
+\hline
+IMU7\_Y & 73.155906 & 23.91782 & -446.28906 & 862.4268\\
+\hline
+IMU8\_Y & 34.317976 & 25.89242 & -791.01562 & 1151.2451\\
+\hline
+IMU9\_Y & -39.292986 & 42.04548 & -1966.30859 & 2844.2383\\
+\hline
+IMU1\_Z & 1043.761822 & 30.79043 & -506.46973 & 2056.0303\\
+\hline
+IMU11\_Z & 996.803566 & 33.35872 & 26.48926 & 2629.5166\\
+\hline
+IMU12\_Z & 997.558002 & 38.57053 & 211.79199 & 3257.4463\\
+\hline
+IMU3\_Z & 1034.336231 & 48.78824 & -1031.98242 & 2438.1104\\
+\hline
+IMU7\_Z & 1014.480647 & 31.28766 & -695.67871 & 1752.5635\\
+\hline
+IMU8\_Z & 978.005245 & 34.34350 & -826.41602 & 1997.9248\\
+\hline
+IMU9\_Z & 992.035495 & 55.75191 & -1756.10352 & 2342.6514\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_2\_v\_0\_4\_acc & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & -25.578796 & 75.00888 & -606.20117 & 344.1162\\
+\hline
+IMU11\_X & -23.943405 & 73.97775 & -454.71191 & 411.3770\\
+\hline
+IMU12\_X & 12.955352 & 75.46097 & -422.24121 & 833.4961\\
+\hline
+IMU3\_X & -29.772604 & 79.38805 & -678.83301 & 441.0400\\
+\hline
+IMU7\_X & 6.868033 & 73.50797 & -343.01758 & 448.6084\\
+\hline
+IMU8\_X & 205.540091 & 75.62242 & -275.39062 & 1119.0186\\
+\hline
+IMU9\_X & 63.160828 & 74.66609 & -289.67285 & 494.7510\\
+\hline
+IMU1\_Y & 16.325402 & 52.00630 & -2120.11719 & 507.5684\\
+\hline
+IMU11\_Y & 16.660954 & 34.86715 & -1026.36719 & 374.5117\\
+\hline
+IMU12\_Y & -21.424431 & 46.76138 & -1070.19043 & 1790.1611\\
+\hline
+IMU3\_Y & -15.051539 & 41.62464 & -1219.23828 & 779.1748\\
+\hline
+IMU7\_Y & 74.697873 & 35.01802 & -457.88574 & 726.6846\\
+\hline
+IMU8\_Y & 35.740139 & 35.80209 & -449.21875 & 540.8936\\
+\hline
+IMU9\_Y & -38.817551 & 41.22915 & -634.15527 & 346.8018\\
+\hline
+IMU1\_Z & 1045.022020 & 51.85555 & 238.28125 & 2597.5342\\
+\hline
+IMU11\_Z & 996.934263 & 65.87586 & -227.05078 & 3405.2734\\
+\hline
+IMU12\_Z & 995.849421 & 46.25811 & -228.88184 & 1683.8379\\
+\hline
+IMU3\_Z & 1034.992861 & 80.47388 & -238.40332 & 2781.6162\\
+\hline
+IMU7\_Z & 1014.274496 & 39.20948 & 224.12109 & 1725.7080\\
+\hline
+IMU8\_Z & 978.993886 & 55.96555 & 13.67188 & 2245.6055\\
+\hline
+IMU9\_Z & 994.489840 & 71.91058 & 57.73926 & 2292.8467\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_2\_v\_0\_06\_acc & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & -27.459162 & 41.58357 & -703.9795 & 463.1348\\
+\hline
+IMU11\_X & -21.931742 & 41.59158 & -539.3066 & 444.3359\\
+\hline
+IMU12\_X & 15.203337 & 41.07841 & -484.8633 & 472.7783\\
+\hline
+IMU3\_X & -26.028244 & 48.01590 & -2188.9648 & 521.2402\\
+\hline
+IMU7\_X & 8.544004 & 41.95512 & -457.2754 & 1115.6006\\
+\hline
+IMU8\_X & 206.657277 & 42.69725 & -353.0273 & 1019.1650\\
+\hline
+IMU9\_X & 64.071800 & 41.65353 & -440.0635 & 483.2764\\
+\hline
+IMU1\_Y & 18.478963 & 37.67897 & -2374.1455 & 1471.4355\\
+\hline
+IMU11\_Y & 15.542838 & 26.57645 & -545.7764 & 723.6328\\
+\hline
+IMU12\_Y & -22.953447 & 34.45129 & -1276.6113 & 2023.9258\\
+\hline
+IMU3\_Y & -17.430355 & 28.33456 & -616.3330 & 814.4531\\
+\hline
+IMU7\_Y & 73.268040 & 34.24418 & -936.8896 & 1830.5664\\
+\hline
+IMU8\_Y & 33.940070 & 29.87822 & -485.1074 & 1054.1992\\
+\hline
+IMU9\_Y & -40.009936 & 43.43647 & -1759.0332 & 2771.1182\\
+\hline
+IMU1\_Z & 1044.384002 & 35.48595 & 493.6523 & 3304.6875\\
+\hline
+IMU11\_Z & 995.227373 & 41.21538 & -1630.9814 & 2118.7744\\
+\hline
+IMU12\_Z & 996.555758 & 40.73956 & 244.9951 & 3687.7441\\
+\hline
+IMU3\_Z & 1033.817000 & 61.13483 & -692.1387 & 2582.3975\\
+\hline
+IMU7\_Z & 1014.901182 & 31.15533 & 290.6494 & 2737.0605\\
+\hline
+IMU8\_Z & 977.944537 & 37.13934 & -545.4102 & 2512.8174\\
+\hline
+IMU9\_Z & 992.871571 & 59.72073 & -333.1299 & 4000.0000\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_1\_v\_0\_2\_mag & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & 470.85943 & 56.25798 & -60.57534 & 763.48913\\
+\hline
+IMU11\_X & 23.19159 & 41.39770 & -222.50940 & 280.83565\\
+\hline
+IMU12\_X & 159.85741 & 55.04452 & -137.34408 & 582.51282\\
+\hline
+IMU3\_X & 10.62836 & 20.11241 & -92.06252 & 127.59805\\
+\hline
+IMU7\_X & -489.22464 & 70.30430 & -808.17094 & -201.06813\\
+\hline
+IMU8\_X & -1822.53327 & 211.30629 & -3431.05299 & -796.17582\\
+\hline
+IMU9\_X & -621.45308 & 199.77241 & -1440.31355 & 694.21734\\
+\hline
+IMU1\_Y & -555.95230 & 110.93912 & -1399.83004 & -41.83297\\
+\hline
+IMU11\_Y & 50.75722 & 15.81470 & -20.99145 & 131.19658\\
+\hline
+IMU12\_Y & 85.39672 & 26.90290 & -53.52821 & 236.45372\\
+\hline
+IMU3\_Y & 1.25510 & 16.42011 & -58.47619 & 96.71062\\
+\hline
+IMU7\_Y & 253.08420 & 41.91610 & 58.32625 & 524.63639\\
+\hline
+IMU8\_Y & -82.34548 & 119.56507 & -464.51087 & 183.97509\\
+\hline
+IMU9\_Y & -100.53863 & 164.46275 & -487.30159 & 850.45372\\
+\hline
+IMU1\_Z & -1584.22682 & 188.69425 & -2994.88059 & -532.73309\\
+\hline
+IMU11\_Z & -786.27433 & 103.93065 & -1455.30745 & -307.97460\\
+\hline
+IMU12\_Z & -932.52819 & 132.73430 & -1747.53846 & -208.26520\\
+\hline
+IMU3\_Z & -55.05918 & 15.13278 & -91.01294 & 46.03126\\
+\hline
+IMU7\_Z & -887.13774 & 111.14344 & -1874.98657 & -303.47643\\
+\hline
+IMU8\_Z & 1998.85796 & 410.25820 & 857.65079 & 2880.32723\\
+\hline
+IMU9\_Z & 362.14601 & 219.39956 & -544.12845 & 1113.44664\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_1\_v\_0\_03\_mag & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & 470.011605 & 60.41604 & -56.67692 & 772.63541\\
+\hline
+IMU11\_X & 23.164841 & 45.46544 & -222.95922 & 273.18877\\
+\hline
+IMU12\_X & 158.223582 & 60.35987 & -150.23883 & 588.51038\\
+\hline
+IMU3\_X & 9.901381 & 16.83319 & -88.91380 & 88.91380\\
+\hline
+IMU7\_X & -491.692881 & 72.70623 & -812.36923 & -195.82027\\
+\hline
+IMU8\_X & -1836.755127 & 220.80897 & -3340.93968 & -793.02711\\
+\hline
+IMU9\_X & -620.843453 & 181.57536 & -1452.15873 & 382.64420\\
+\hline
+IMU1\_Y & -569.381643 & 122.76876 & -1395.48181 & -29.53797\\
+\hline
+IMU11\_Y & 55.599553 & 15.31054 & -18.29255 & 142.29206\\
+\hline
+IMU12\_Y & 90.478738 & 31.15674 & -64.02393 & 241.70159\\
+\hline
+IMU3\_Y & 7.621625 & 16.86894 & -56.97680 & 91.01294\\
+\hline
+IMU7\_Y & 259.695348 & 47.93301 & 51.12918 & 538.13089\\
+\hline
+IMU8\_Y & -81.408431 & 126.30397 & -469.90867 & 194.32088\\
+\hline
+IMU9\_Y & -114.255038 & 159.92638 & -1098.60269 & 796.17582\\
+\hline
+IMU1\_Z & -1599.135216 & 200.21316 & -3000.72821 & -493.89890\\
+\hline
+IMU11\_Z & -797.025298 & 122.05860 & -1449.45983 & -299.87790\\
+\hline
+IMU12\_Z & -946.145606 & 155.48963 & -1733.89402 & -196.71990\\
+\hline
+IMU3\_Z & -61.957995 & 10.48025 & -88.61392 & 31.03736\\
+\hline
+IMU7\_Z & -898.445492 & 131.42293 & -1872.88742 & -312.32283\\
+\hline
+IMU8\_Z & 1994.242749 & 402.08675 & 891.83687 & 3009.57460\\
+\hline
+IMU9\_Z & 349.208008 & 232.71895 & -923.92381 & 1370.44200\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_1\_v\_0\_4\_mag & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & 473.001514 & 48.52372 & -59.07595 & 766.63785\\
+\hline
+IMU11\_X & 23.462504 & 34.91486 & -228.65690 & 276.93724\\
+\hline
+IMU12\_X & 161.578638 & 49.81121 & -146.04054 & 584.61197\\
+\hline
+IMU3\_X & 7.793152 & 19.64877 & -88.76386 & 126.84835\\
+\hline
+IMU7\_X & -483.497061 & 64.43461 & -807.12137 & -210.66422\\
+\hline
+IMU8\_X & -1807.360875 & 205.16248 & -3366.72918 & -767.53748\\
+\hline
+IMU9\_X & -602.973803 & 210.96394 & -1440.91331 & 597.95653\\
+\hline
+IMU1\_Y & -560.512355 & 96.32913 & -1390.68376 & -103.30794\\
+\hline
+IMU11\_Y & 53.213803 & 14.27417 & -19.34212 & 135.24493\\
+\hline
+IMU12\_Y & 88.573969 & 23.40292 & -42.58266 & 224.00879\\
+\hline
+IMU3\_Y & 1.770752 & 14.18248 & -65.22344 & 97.61026\\
+\hline
+IMU7\_Y & 255.148611 & 34.89957 & 48.73016 & 489.55067\\
+\hline
+IMU8\_Y & -94.159867 & 121.82996 & -435.72259 & 139.14335\\
+\hline
+IMU9\_Y & -122.043206 & 171.51499 & -662.28034 & 839.80806\\
+\hline
+IMU1\_Z & -1572.127678 & 171.25703 & -2983.78510 & -557.17314\\
+\hline
+IMU11\_Z & -781.411446 & 83.52778 & -1447.51062 & -372.74823\\
+\hline
+IMU12\_Z & -926.635011 & 109.53478 & -1749.78755 & -298.37851\\
+\hline
+IMU3\_Z & -52.885092 & 15.50605 & -101.35873 & 32.38681\\
+\hline
+IMU7\_Z & -882.852228 & 95.30726 & -1768.97973 & -298.22857\\
+\hline
+IMU8\_Z & 1944.307531 & 419.14219 & 830.66178 & 2946.90012\\
+\hline
+IMU9\_Z & 335.509111 & 220.84493 & -602.45470 & 1348.10110\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_1\_v\_0\_06\_mag & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & 470.222677 & 61.37407 & -55.92723 & 768.88694\\
+\hline
+IMU11\_X & 25.440554 & 46.32181 & -228.80684 & 279.93602\\
+\hline
+IMU12\_X & 159.055513 & 61.88837 & -152.78779 & 576.81514\\
+\hline
+IMU3\_X & 11.624489 & 17.82956 & -83.66593 & 127.44811\\
+\hline
+IMU7\_X & -487.532848 & 74.51284 & -790.62808 & -185.32454\\
+\hline
+IMU8\_X & -1821.911266 & 217.91241 & -3270.01856 & -781.33187\\
+\hline
+IMU9\_X & -625.183727 & 188.44786 & -1417.52283 & 371.99853\\
+\hline
+IMU1\_Y & -559.838359 & 120.78444 & -1390.08400 & -44.38193\\
+\hline
+IMU11\_Y & 53.879359 & 15.83713 & -20.84151 & 128.49768\\
+\hline
+IMU12\_Y & 87.205899 & 30.42754 & -56.82686 & 236.90354\\
+\hline
+IMU3\_Y & 5.909285 & 16.71655 & -58.17631 & 93.41197\\
+\hline
+IMU7\_Y & 256.655619 & 46.15791 & 53.82808 & 534.38242\\
+\hline
+IMU8\_Y & -76.320119 & 123.75443 & -449.66691 & 193.12137\\
+\hline
+IMU9\_Y & -110.482291 & 160.70895 & -756.14212 & 834.56020\\
+\hline
+IMU1\_Z & -1590.951535 & 197.02298 & -2963.69328 & -500.94603\\
+\hline
+IMU11\_Z & -787.205052 & 117.91890 & -1448.56020 & -306.62515\\
+\hline
+IMU12\_Z & -934.455394 & 150.54322 & -1728.34628 & -203.91697\\
+\hline
+IMU3\_Z & -61.200501 & 12.76523 & -86.81465 & 41.83297\\
+\hline
+IMU7\_Z & -887.715783 & 125.24734 & -1861.64200 & -291.33138\\
+\hline
+IMU8\_Z & 2010.529617 & 404.38324 & 825.11404 & 2989.63272\\
+\hline
+IMU9\_Z & 370.618471 & 227.53866 & -607.10281 & 1326.35995\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_1\_v\_0\_0135\_mag & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & 468.718275 & 67.171094 & -59.97558 & 722.40586\\
+\hline
+IMU11\_X & 24.369595 & 51.442847 & -195.52039 & 280.98559\\
+\hline
+IMU12\_X & 156.746029 & 67.477009 & -95.51111 & 565.41978\\
+\hline
+IMU3\_X & 11.925170 & 17.990087 & -70.77118 & 127.89792\\
+\hline
+IMU7\_X & -497.722916 & 77.811738 & -802.92308 & -194.32088\\
+\hline
+IMU8\_X & -1855.967384 & 223.447227 & -2848.98999 & -841.90720\\
+\hline
+IMU9\_X & -637.564194 & 182.448839 & -1273.73138 & 731.85201\\
+\hline
+IMU1\_Y & -568.257577 & 136.268998 & -1375.98974 & -34.93578\\
+\hline
+IMU11\_Y & 54.233062 & 16.392304 & -15.59365 & 134.49524\\
+\hline
+IMU12\_Y & 88.260155 & 33.420984 & -64.17387 & 240.65201\\
+\hline
+IMU3\_Y & 8.136971 & 18.121287 & -62.52454 & 90.56313\\
+\hline
+IMU7\_Y & 260.289727 & 50.556171 & 64.17387 & 533.63272\\
+\hline
+IMU8\_Y & -67.389034 & 120.990340 & -440.52063 & 185.62442\\
+\hline
+IMU9\_Y & -94.080725 & 155.187768 & -456.11429 & 825.41392\\
+\hline
+IMU1\_Z & -1614.936436 & 210.010549 & -3000.57827 & -492.09963\\
+\hline
+IMU11\_Z & -801.377850 & 132.687732 & -1374.94017 & -297.92869\\
+\hline
+IMU12\_Z & -952.890579 & 167.623870 & -1728.94603 & -197.01978\\
+\hline
+IMU3\_Z & -63.758491 & 8.360176 & -86.66471 & 33.58632\\
+\hline
+IMU7\_Z & -902.583509 & 138.491520 & -1762.38242 & -312.62271\\
+\hline
+IMU8\_Z & 2048.692298 & 386.937260 & 913.27814 & 3060.55385\\
+\hline
+IMU9\_Z & 373.999052 & 229.855772 & -546.22759 & 908.48010\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_2\_v\_0\_2\_mag & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & 481.070488 & 36.36782 & -52.02882 & 756.89182\\
+\hline
+IMU11\_X & 19.276642 & 25.82848 & -185.92430 & 280.83565\\
+\hline
+IMU12\_X & 154.551465 & 36.13457 & -131.79634 & 574.26618\\
+\hline
+IMU3\_X & 2.267599 & 13.56215 & -86.06496 & 126.99829\\
+\hline
+IMU7\_X & -507.094313 & 54.90277 & -813.26886 & -199.86862\\
+\hline
+IMU8\_X & -1863.019717 & 161.79669 & -3431.35287 & -785.53016\\
+\hline
+IMU9\_X & -688.604114 & 172.12252 & -1450.50940 & 1954.15433\\
+\hline
+IMU1\_Y & -530.600522 & 74.77272 & -1395.63175 & -34.03614\\
+\hline
+IMU11\_Y & 43.321300 & 12.21741 & -18.29255 & 134.49524\\
+\hline
+IMU12\_Y & 76.695342 & 19.00459 & -51.87888 & 233.15507\\
+\hline
+IMU3\_Y & -3.225160 & 10.71156 & -56.37705 & 96.41074\\
+\hline
+IMU7\_Y & 252.908231 & 27.82164 & 50.67937 & 525.08620\\
+\hline
+IMU8\_Y & -44.346139 & 96.53915 & -472.45763 & 144.69109\\
+\hline
+IMU9\_Y & -59.444270 & 129.09955 & -850.90354 & 805.02222\\
+\hline
+IMU1\_Z & -1581.674038 & 140.09310 & -2986.78388 & -528.53480\\
+\hline
+IMU11\_Z & -776.518080 & 69.58421 & -1452.75849 & -306.02540\\
+\hline
+IMU12\_Z & -927.080029 & 90.21657 & -1744.83956 & -211.26398\\
+\hline
+IMU3\_Z & -51.798471 & 14.70551 & -89.66349 & 39.28400\\
+\hline
+IMU7\_Z & -885.723954 & 74.40867 & -1849.94676 & -296.87912\\
+\hline
+IMU8\_Z & 2115.740178 & 338.91602 & 869.94579 & 2917.66203\\
+\hline
+IMU9\_Z & 427.724767 & 178.13572 & -1121.99316 & 1350.20024\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_2\_v\_0\_4\_mag & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & 465.89257 & 50.73213 & -58.02637 & 707.86178\\
+\hline
+IMU11\_X & 26.65069 & 36.86350 & -184.87473 & 272.28913\\
+\hline
+IMU12\_X & 166.26049 & 46.85185 & -100.75897 & 538.13089\\
+\hline
+IMU3\_X & 13.95071 & 23.27771 & -87.56435 & 127.14823\\
+\hline
+IMU7\_X & -466.24747 & 68.89982 & -810.27009 & -208.86496\\
+\hline
+IMU8\_X & -1755.17565 & 211.55878 & -2862.63443 & -798.87473\\
+\hline
+IMU9\_X & -539.04121 & 236.42636 & -1462.05470 & 1347.05153\\
+\hline
+IMU1\_Y & -567.06114 & 95.71065 & -1367.89304 & -77.21856\\
+\hline
+IMU11\_Y & 54.58400 & 14.92603 & -29.08816 & 140.64273\\
+\hline
+IMU12\_Y & 92.29917 & 23.99896 & -43.78217 & 228.35702\\
+\hline
+IMU3\_Y & 1.08898 & 13.96851 & -56.22711 & 95.36117\\
+\hline
+IMU7\_Y & 248.96119 & 35.34525 & 66.57289 & 513.69084\\
+\hline
+IMU8\_Y & -125.32060 & 120.25015 & -440.97045 & 177.37778\\
+\hline
+IMU9\_Y & -158.98228 & 171.80929 & -691.66838 & 797.22540\\
+\hline
+IMU1\_Z & -1554.87025 & 166.76359 & -2978.98706 & -518.18901\\
+\hline
+IMU11\_Z & -778.36359 & 84.48428 & -1418.12259 & -346.65885\\
+\hline
+IMU12\_Z & -919.90712 & 110.23448 & -1652.32723 & -289.68205\\
+\hline
+IMU3\_Z & -49.68700 & 16.17618 & -102.10842 & 41.83297\\
+\hline
+IMU7\_Z & -872.04268 & 95.58909 & -1757.43443 & -303.62637\\
+\hline
+IMU8\_Z & 1839.88487 & 411.44050 & 878.49231 & 2843.14237\\
+\hline
+IMU9\_Z & 283.96008 & 234.92265 & -990.49670 & 1248.84151\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_2\_v\_0\_06\_mag & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & 469.827440 & 63.94586 & -60.87521 & 758.09133\\
+\hline
+IMU11\_X & 23.304418 & 46.67916 & -214.11282 & 286.83321\\
+\hline
+IMU12\_X & 158.377673 & 61.93898 & -138.69353 & 596.75702\\
+\hline
+IMU3\_X & 11.058604 & 19.06210 & -86.96459 & 128.34774\\
+\hline
+IMU7\_X & -489.242719 & 75.20976 & -809.37045 & -195.37045\\
+\hline
+IMU8\_X & -1820.506472 & 221.17244 & -3360.13187 & -787.92918\\
+\hline
+IMU9\_X & -619.215113 & 199.39143 & -1449.15995 & 823.31477\\
+\hline
+IMU1\_Y & -560.155109 & 120.38681 & -1366.69353 & -49.92967\\
+\hline
+IMU11\_Y & 53.250912 & 16.33260 & -17.69280 & 133.29573\\
+\hline
+IMU12\_Y & 87.317437 & 31.43593 & -58.02637 & 243.65079\\
+\hline
+IMU3\_Y & 5.665608 & 16.88681 & -59.22589 & 96.26081\\
+\hline
+IMU7\_Y & 255.748035 & 46.81891 & 62.97436 & 528.83468\\
+\hline
+IMU8\_Y & -82.522279 & 121.90510 & -464.06105 & 180.37656\\
+\hline
+IMU9\_Y & -108.478038 & 164.45094 & -749.54481 & 830.21197\\
+\hline
+IMU1\_Z & -1587.877393 & 192.85071 & -2983.93504 & -497.19756\\
+\hline
+IMU11\_Z & -788.215456 & 118.15393 & -1462.80440 & -298.67839\\
+\hline
+IMU12\_Z & -936.129688 & 150.53690 & -1766.13089 & -198.36923\\
+\hline
+IMU3\_Z & -59.611300 & 14.45119 & -88.01416 & 42.13284\\
+\hline
+IMU7\_Z & -888.015679 & 126.16511 & -1891.47985 & -300.02784\\
+\hline
+IMU8\_Z & 1996.155082 & 412.95566 & 827.36313 & 2974.63883\\
+\hline
+IMU9\_Z & 353.645129 & 227.34825 & -594.35800 & 1371.94139\\
+\hline
+\end{tabular}}
+\end{table}
+
+\hypertarget{histogram}{%
+\subsection{Histogram}\label{histogram}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(mag_X_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{summarise_sensor_data_files/figure-latex/histograms-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(mag_Y_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{summarise_sensor_data_files/figure-latex/histograms-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(mag_Z_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{summarise_sensor_data_files/figure-latex/histograms-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(acc_X_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{summarise_sensor_data_files/figure-latex/histograms-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(acc_Y_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{summarise_sensor_data_files/figure-latex/histograms-5.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(acc_Z_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{summarise_sensor_data_files/figure-latex/histograms-6.pdf}
+
+\hypertarget{boxplots}{%
+\subsection{Boxplots}\label{boxplots}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(mag_X_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{summarise_sensor_data_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(mag_Y_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{summarise_sensor_data_files/figure-latex/unnamed-chunk-1-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(mag_Z_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{summarise_sensor_data_files/figure-latex/unnamed-chunk-1-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(acc_X_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{summarise_sensor_data_files/figure-latex/unnamed-chunk-1-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(acc_Y_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{summarise_sensor_data_files/figure-latex/unnamed-chunk-1-5.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(acc_Z_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{summarise_sensor_data_files/figure-latex/unnamed-chunk-1-6.pdf}
+
+\includegraphics{summarise_sensor_data_files/figure-latex/corrplot-1.pdf}
+
+\begin{verbatim}
+## null device 
+##           1
+\end{verbatim}
+
+\begin{verbatim}
+## null device 
+##           1
+\end{verbatim}
+
+\begin{verbatim}
+## null device 
+##           1
+\end{verbatim}
+
+\begin{verbatim}
+## null device 
+##           1
+\end{verbatim}
+
+\begin{verbatim}
+## null device 
+##           1
+\end{verbatim}
+
+\begin{verbatim}
+## null device 
+##           1
+\end{verbatim}
+
+
+\end{document}

@@ -1,0 +1,315 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Chp 4 Results - Random Forest},
+            pdfauthor={Jill Daly},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Chp 4 Results - Random Forest}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Jill Daly}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{09 December, 2018}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+\begin{document}
+\maketitle
+
+\begin{figure}
+\centering
+\includegraphics{6a-CHP4_RF_Results-FirstModel_files/figure-latex/firstmodel-dropNas-rf-plot-1.pdf}
+\caption{Baseline Vibration Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline Vibration RF Model Model Method}
+\centering
+\begin{tabular}[t]{l}
+\toprule
+x\\
+\midrule
+ranger\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline Vibration RF Model Tuning Params}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+parameter & class & label\\
+\midrule
+mtry & numeric & \#Randomly Selected Predictors\\
+splitrule & character & Splitting Rule\\
+min.node.size & numeric & Minimal Node Size\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline Vibration RF Best Tuned Model from Caret}
+\centering
+\begin{tabular}[t]{lrlr}
+\toprule
+  & mtry & splitrule & min.node.size\\
+\midrule
+4 & 3 & extratrees & 1\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline Vibration RF Model Coefficients}
+\centering
+\begin{tabular}[t]{l}
+\toprule
+x\\
+\midrule
+Timestamp\\
+X\_AXIS\\
+Y\_AXIS\\
+Z\_AXIS\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline Vibration RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.4397555 & 0.9383088 & 0.7300828 & 0.8543324 & 0.7624438 & 0.6854551 & 0.6634178 & 0.9419614 & 0.7564898 & 0.9509289 & 0.7564898 & 0.6634178 & 0.2135831 & 0.8026896 & 0.0233031 & 0.0054143 & 0.0188945 & 0.0100077 & 0.0170220 & 0.0224426 & 0.0202612 & 0.0044634 & 0.0229986 & 0.0038402 & 0.0229986 & 0.0202612 & 0.0025019 & 0.0122545\\
+2 & 1 & extratrees & 0.3573410 & 0.9604634 & 0.7978511 & 0.8891138 & 0.8177400 & 0.6982990 & 0.6788268 & 0.9543113 & 0.8282640 & 0.9664057 & 0.8282640 & 0.6788268 & 0.2222785 & 0.8165690 & 0.0136215 & 0.0042271 & 0.0119726 & 0.0032073 & 0.0055202 & 0.0136850 & 0.0099272 & 0.0015440 & 0.0272906 & 0.0011714 & 0.0272906 & 0.0099272 & 0.0008018 & 0.0054890\\
+3 & 1 & gini & 0.4938385 & 0.9317149 & 0.6989291 & 0.8444174 & 0.7476024 & 0.6851757 & 0.6638965 & 0.9391261 & 0.7348074 & 0.9467165 & 0.7348074 & 0.6638965 & 0.2111043 & 0.8015113 & 0.0301925 & 0.0056347 & 0.0246852 & 0.0089893 & 0.0149962 & 0.0184697 & 0.0176571 & 0.0038703 & 0.0202507 & 0.0035206 & 0.0202507 & 0.0176571 & 0.0022473 & 0.0105549\\
+3 & 1 & extratrees & 0.3479690 & 0.9616175 & 0.7983634 & 0.8891137 & 0.8180970 & 0.7099057 & 0.6866337 & 0.9544841 & 0.8264833 & 0.9659696 & 0.8264833 & 0.6866337 & 0.2222784 & 0.8205589 & 0.0134528 & 0.0050125 & 0.0115673 & 0.0062693 & 0.0105782 & 0.0162614 & 0.0136033 & 0.0027894 & 0.0263851 & 0.0022912 & 0.0263851 & 0.0136033 & 0.0015673 & 0.0079719\\
+4 & 1 & gini & 0.6753987 & 0.9191926 & 0.6505367 & 0.8326810 & 0.7296343 & 0.6756910 & 0.6569696 & 0.9354746 & 0.7119427 & 0.9419553 & 0.7119427 & 0.6569696 & 0.2081702 & 0.7962221 & 0.1024671 & 0.0072069 & 0.0342707 & 0.0091549 & 0.0150811 & 0.0181141 & 0.0166682 & 0.0039598 & 0.0236468 & 0.0036484 & 0.0236468 & 0.0166682 & 0.0022887 & 0.0099284\\
+4 & 1 & extratrees & 0.3492677 & 0.9609873 & 0.7953598 & 0.8847968 & 0.8111351 & 0.7110749 & 0.6860219 & 0.9528284 & 0.8203144 & 0.9640661 & 0.8203144 & 0.6860219 & 0.2211992 & 0.8194251 & 0.0148151 & 0.0052227 & 0.0120706 & 0.0084919 & 0.0144042 & 0.0177702 & 0.0160863 & 0.0038797 & 0.0208059 & 0.0030707 & 0.0208059 & 0.0160863 & 0.0021230 & 0.0097299\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  4 
+## Mtry:                             3 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.0243982
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    4 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (4), centered (4), scaled (4) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 495, 494, 494, 494, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        0.4397555  0.9383088  0.7300828  0.8543324  0.7624438
+##   2     extratrees  0.3573410  0.9604634  0.7978511  0.8891138  0.8177400
+##   3     gini        0.4938385  0.9317149  0.6989291  0.8444174  0.7476024
+##   3     extratrees  0.3479690  0.9616175  0.7983634  0.8891137  0.8180970
+##   4     gini        0.6753987  0.9191926  0.6505367  0.8326810  0.7296343
+##   4     extratrees  0.3492677  0.9609873  0.7953598  0.8847968  0.8111351
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.6854551  0.6634178         0.9419614         0.7564898          
+##   0.6982990  0.6788268         0.9543113         0.8282640          
+##   0.6851757  0.6638965         0.9391261         0.7348074          
+##   0.7099057  0.6866337         0.9544841         0.8264833          
+##   0.6756910  0.6569696         0.9354746         0.7119427          
+##   0.7110749  0.6860219         0.9528284         0.8203144          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9509289            0.7564898       0.6634178    0.2135831          
+##   0.9664057            0.8282640       0.6788268    0.2222785          
+##   0.9467165            0.7348074       0.6638965    0.2111043          
+##   0.9659696            0.8264833       0.6866337    0.2222784          
+##   0.9419553            0.7119427       0.6569696    0.2081702          
+##   0.9640661            0.8203144       0.6860219    0.2211992          
+##   Mean_Balanced_Accuracy
+##   0.8026896             
+##   0.8165690             
+##   0.8015113             
+##   0.8205589             
+##   0.7962221             
+##   0.8194251             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 3, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-results}Baseline Vibration RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.6157426\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-results}Baseline Vibration RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.2046861 & 1.0000000 & 0.998426798368898\\
+PATH\_MOVING & 0.9811422 & 0.6386909 & 0.984004863454533\\
+PATH\_TRANSITION & 0.7601476 & 0.9925070 & 0.991583856108311\\
+SHUTTLE & 1.0000000 & 0.8293461 & 0.999448110659684\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-results}Baseline Vibration RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 463 & 0 & 0 & 0\\
+PATH\_MOVING & 1050 & 1821 & 65 & 0\\
+PATH\_TRANSITION & 0 & 35 & 206 & 0\\
+SHUTTLE & 749 & 0 & 0 & 553\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-results}Baseline Vibration RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{6a-CHP4_RF_Results-FirstModel_files/figure-latex/plot_mc-firstmodel-dropNas-roc-1.pdf}
+\caption{First Model - Drop NAs - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+
+\end{document}

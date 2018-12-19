@@ -1,0 +1,1087 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Chp 4 Results - Random Forest},
+            pdfauthor={Jill Daly},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Chp 4 Results - Random Forest}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Jill Daly}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{06 December, 2018}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+\begin{document}
+\maketitle
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/baseline-rf-plot-1.pdf}
+\caption{Baseline Vibration Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline Vibration RF Model Model Method}
+\centering
+\begin{tabular}[t]{l}
+\toprule
+x\\
+\midrule
+ranger\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline Vibration RF Model Tuning Params}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+parameter & class & label\\
+\midrule
+mtry & numeric & \#Randomly Selected Predictors\\
+splitrule & character & Splitting Rule\\
+min.node.size & numeric & Minimal Node Size\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline Vibration RF Best Tuned Model from Caret}
+\centering
+\begin{tabular}[t]{lrlr}
+\toprule
+  & mtry & splitrule & min.node.size\\
+\midrule
+4 & 3 & extratrees & 1\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline Vibration RF Model Coefficients}
+\centering
+\begin{tabular}[t]{l}
+\toprule
+x\\
+\midrule
+Timestamp\\
+X\_AXIS\\
+Y\_AXIS\\
+Z\_AXIS\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline Vibration RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.4433853 & 0.9374793 & 0.7286611 & 0.8532085 & 0.7607128 & 0.6796990 & 0.6604552 & 0.9415075 & 0.7566155 & 0.9503836 & 0.7566155 & 0.6604552 & 0.2133021 & 0.8009814 & 0.0179265 & 0.0060734 & 0.0206030 & 0.0077270 & 0.0119521 & 0.0135106 & 0.0131264 & 0.0028676 & 0.0258422 & 0.0037686 & 0.0258422 & 0.0131264 & 0.0019317 & 0.0075727\\
+2 & 1 & extratrees & 0.3520731 & 0.9615298 & 0.7991617 & 0.8909355 & 0.8208749 & 0.7005945 & 0.6817494 & 0.9551405 & 0.8356030 & 0.9670264 & 0.8356030 & 0.6817494 & 0.2227339 & 0.8184449 & 0.0096308 & 0.0039239 & 0.0164787 & 0.0055137 & 0.0088014 & 0.0120088 & 0.0097596 & 0.0018963 & 0.0341750 & 0.0022318 & 0.0341750 & 0.0097596 & 0.0013784 & 0.0054483\\
+3 & 1 & gini & 0.5066879 & 0.9295863 & 0.6978828 & 0.8442154 & 0.7473694 & 0.6849951 & 0.6642982 & 0.9389676 & 0.7409963 & 0.9465367 & 0.7409963 & 0.6642982 & 0.2110538 & 0.8016329 & 0.0217993 & 0.0055780 & 0.0284001 & 0.0074013 & 0.0109582 & 0.0102292 & 0.0131178 & 0.0026230 & 0.0245576 & 0.0037372 & 0.0245576 & 0.0131178 & 0.0018503 & 0.0072270\\
+3 & 1 & extratrees & 0.3449271 & 0.9622210 & 0.7989239 & 0.8901265 & 0.8198382 & 0.7089691 & 0.6867933 & 0.9549998 & 0.8336812 & 0.9663822 & 0.8336812 & 0.6867933 & 0.2225316 & 0.8208965 & 0.0166834 & 0.0047194 & 0.0185429 & 0.0082105 & 0.0132059 & 0.0134992 & 0.0118547 & 0.0029472 & 0.0372611 & 0.0032639 & 0.0372611 & 0.0118547 & 0.0020526 & 0.0070513\\
+4 & 1 & gini & 0.7054421 & 0.9175293 & 0.6537718 & 0.8340079 & 0.7317878 & 0.6804407 & 0.6608958 & 0.9357579 & 0.7225328 & 0.9423788 & 0.7225328 & 0.6608958 & 0.2085020 & 0.7983269 & 0.1190629 & 0.0068543 & 0.0403678 & 0.0089635 & 0.0134780 & 0.0114054 & 0.0117757 & 0.0031523 & 0.0264630 & 0.0041064 & 0.0264630 & 0.0117757 & 0.0022409 & 0.0067370\\
+4 & 1 & extratrees & 0.3457071 & 0.9615256 & 0.7953543 & 0.8874515 & 0.8156293 & 0.7121970 & 0.6880500 & 0.9540523 & 0.8239966 & 0.9650830 & 0.8239966 & 0.6880500 & 0.2218629 & 0.8210511 & 0.0202640 & 0.0053192 & 0.0215226 & 0.0099189 & 0.0161242 & 0.0126814 & 0.0129318 & 0.0038337 & 0.0296407 & 0.0039248 & 0.0296407 & 0.0129318 & 0.0024797 & 0.0080495\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  4 
+## Mtry:                             3 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.0243982
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    4 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (4), centered (4), scaled (4) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 494, 493, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        0.4433853  0.9374793  0.7286611  0.8532085  0.7607128
+##   2     extratrees  0.3520731  0.9615298  0.7991617  0.8909355  0.8208749
+##   3     gini        0.5066879  0.9295863  0.6978828  0.8442154  0.7473694
+##   3     extratrees  0.3449271  0.9622210  0.7989239  0.8901265  0.8198382
+##   4     gini        0.7054421  0.9175293  0.6537718  0.8340079  0.7317878
+##   4     extratrees  0.3457071  0.9615256  0.7953543  0.8874515  0.8156293
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.6796990  0.6604552         0.9415075         0.7566155          
+##   0.7005945  0.6817494         0.9551405         0.8356030          
+##   0.6849951  0.6642982         0.9389676         0.7409963          
+##   0.7089691  0.6867933         0.9549998         0.8336812          
+##   0.6804407  0.6608958         0.9357579         0.7225328          
+##   0.7121970  0.6880500         0.9540523         0.8239966          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9503836            0.7566155       0.6604552    0.2133021          
+##   0.9670264            0.8356030       0.6817494    0.2227339          
+##   0.9465367            0.7409963       0.6642982    0.2110538          
+##   0.9663822            0.8336812       0.6867933    0.2225316          
+##   0.9423788            0.7225328       0.6608958    0.2085020          
+##   0.9650830            0.8239966       0.6880500    0.2218629          
+##   Mean_Balanced_Accuracy
+##   0.8009814             
+##   0.8184449             
+##   0.8016329             
+##   0.8208965             
+##   0.7983269             
+##   0.8210511             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 3, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-results}Baseline Vibration RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.6157426\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-results}Baseline Vibration RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.2046861 & 1.0000000 & 0.998426798368898\\
+PATH\_MOVING & 0.9811422 & 0.6386909 & 0.984004863454533\\
+PATH\_TRANSITION & 0.7601476 & 0.9925070 & 0.991583856108311\\
+SHUTTLE & 1.0000000 & 0.8293461 & 0.999448110659684\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-results}Baseline Vibration RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 463 & 0 & 0 & 0\\
+PATH\_MOVING & 1050 & 1821 & 65 & 0\\
+PATH\_TRANSITION & 0 & 35 & 206 & 0\\
+SHUTTLE & 749 & 0 & 0 & 553\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-results}Baseline Vibration RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/plot_mc-roc-1.pdf}
+\caption{Baseline Vibration ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/mag-rf-plot-1.pdf}
+\caption{Mag Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mag-rf-params}Mag RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.2077551 & 0.9892409 & 0.8322256 & 0.9394087 & 0.9029882 & 0.8774148 & 0.8522359 & 0.9764953 & 0.9110261 & 0.9810816 & 0.9110261 & 0.8522359 & 0.2348522 & 0.9143656 & 0.0196437 & 0.0019797 & 0.0177146 & 0.0059313 & 0.0095939 & 0.0125535 & 0.0141004 & 0.0023372 & 0.0117966 & 0.0018932 & 0.0117966 & 0.0141004 & 0.0014828 & 0.0079570\\
+2 & 1 & extratrees & 0.2099307 & 0.9906255 & 0.8917852 & 0.9371831 & 0.8989775 & 0.8734055 & 0.8417667 & 0.9747930 & 0.9176263 & 0.9808468 & 0.9176263 & 0.8417667 & 0.2342958 & 0.9082798 & 0.0072199 & 0.0012016 & 0.0094627 & 0.0044773 & 0.0073472 & 0.0101022 & 0.0130688 & 0.0018949 & 0.0062775 & 0.0013969 & 0.0062775 & 0.0130688 & 0.0011193 & 0.0073500\\
+3 & 1 & gini & 0.2239977 & 0.9871414 & 0.8026680 & 0.9345072 & 0.8952475 & 0.8704915 & 0.8475589 & 0.9748066 & 0.9009782 & 0.9790988 & 0.9009782 & 0.8475589 & 0.2336268 & 0.9111827 & 0.0266745 & 0.0026500 & 0.0228530 & 0.0058956 & 0.0095991 & 0.0113435 & 0.0141271 & 0.0024070 & 0.0094369 & 0.0018414 & 0.0094369 & 0.0141271 & 0.0014739 & 0.0081075\\
+3 & 1 & extratrees & 0.2036405 & 0.9908056 & 0.8831183 & 0.9388467 & 0.9017466 & 0.8766938 & 0.8463944 & 0.9755490 & 0.9185531 & 0.9813129 & 0.9185531 & 0.8463944 & 0.2347117 & 0.9109717 & 0.0088239 & 0.0013884 & 0.0106753 & 0.0041306 & 0.0067621 & 0.0082168 & 0.0107936 & 0.0018158 & 0.0057629 & 0.0013641 & 0.0057629 & 0.0107936 & 0.0010327 & 0.0061399\\
+4 & 1 & gini & 0.2486300 & 0.9853309 & 0.7722440 & 0.9311347 & 0.8898840 & 0.8669436 & 0.8448315 & 0.9734677 & 0.8963778 & 0.9776493 & 0.8963778 & 0.8448315 & 0.2327837 & 0.9091496 & 0.0539880 & 0.0044269 & 0.0265346 & 0.0095041 & 0.0154377 & 0.0165324 & 0.0189908 & 0.0038018 & 0.0142269 & 0.0030944 & 0.0142269 & 0.0189908 & 0.0023760 & 0.0113213\\
+4 & 1 & extratrees & 0.2008688 & 0.9906319 & 0.8771059 & 0.9403982 & 0.9043482 & 0.8786178 & 0.8497779 & 0.9763267 & 0.9179185 & 0.9817258 & 0.9179185 & 0.8497779 & 0.2350995 & 0.9130523 & 0.0100744 & 0.0014536 & 0.0110721 & 0.0048850 & 0.0079721 & 0.0101721 & 0.0127373 & 0.0021047 & 0.0071122 & 0.0015904 & 0.0071122 & 0.0127373 & 0.0012212 & 0.0071726\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  4 
+## Mtry:                             4 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.01622868
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    4 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (4), centered (4), scaled (4) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 494, 493, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        0.2077551  0.9892409  0.8322256  0.9394087  0.9029882
+##   2     extratrees  0.2099307  0.9906255  0.8917852  0.9371831  0.8989775
+##   3     gini        0.2239977  0.9871414  0.8026680  0.9345072  0.8952475
+##   3     extratrees  0.2036405  0.9908056  0.8831183  0.9388467  0.9017466
+##   4     gini        0.2486300  0.9853309  0.7722440  0.9311347  0.8898840
+##   4     extratrees  0.2008688  0.9906319  0.8771059  0.9403982  0.9043482
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.8774148  0.8522359         0.9764953         0.9110261          
+##   0.8734055  0.8417667         0.9747930         0.9176263          
+##   0.8704915  0.8475589         0.9748066         0.9009782          
+##   0.8766938  0.8463944         0.9755490         0.9185531          
+##   0.8669436  0.8448315         0.9734677         0.8963778          
+##   0.8786178  0.8497779         0.9763267         0.9179185          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9810816            0.9110261       0.8522359    0.2348522          
+##   0.9808468            0.9176263       0.8417667    0.2342958          
+##   0.9790988            0.9009782       0.8475589    0.2336268          
+##   0.9813129            0.9185531       0.8463944    0.2347117          
+##   0.9776493            0.8963778       0.8448315    0.2327837          
+##   0.9817258            0.9179185       0.8497779    0.2350995          
+##   Mean_Balanced_Accuracy
+##   0.9143656             
+##   0.9082798             
+##   0.9111827             
+##   0.9109717             
+##   0.9091496             
+##   0.9130523             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 4, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mag-rf-results}Mag RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.4196682\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mag-rf-results}Mag RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.0000000 & 1.0000000 & 0.992485599192367\\
+PATH\_MOVING & 0.7052802 & 0.5194426 & 0.725379459796187\\
+PATH\_TRANSITION & 0.8929889 & 0.9154357 & 0.942341889700207\\
+SHUTTLE & 0.9457505 & 0.7744361 & 0.978250121440375\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mag-rf-results}Mag RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 0 & 0 & 0 & 0\\
+PATH\_MOVING & 1438 & 1309 & 20 & 25\\
+PATH\_TRANSITION & 4 & 386 & 242 & 5\\
+SHUTTLE & 820 & 161 & 9 & 523\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mag-rf-results}Mag RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/plot_mag-roc-1.pdf}
+\caption{Mag ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/combined-rf-plot-1.pdf}
+\caption{Vibration + Magnetometer Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:combined-rf-params}Vibration + Magnetometer RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 1.5700448 & 0.8248007 & 0.5882862 & 0.5736947 & 0.3929634 & 0.4676827 & 0.5139814 & 0.8591192 & 0.5771027 & 0.8584484 & 0.5771027 & 0.5139814 & 0.1434237 & 0.6865503 & 0.4194519 & 0.0330624 & 0.0297536 & 0.0731992 & 0.0690785 & 0.0550791 & 0.0533504 & 0.0141464 & 0.0345324 & 0.0206558 & 0.0345324 & 0.0533504 & 0.0182998 & 0.0335019\\
+2 & 1 & extratrees & 1.0945954 & 0.8744283 & 0.6560332 & 0.5692309 & 0.4000839 & 0.4488647 & 0.5091885 & 0.8642227 & 0.6171019 & 0.8595925 & 0.6171019 & 0.5091885 & 0.1423077 & 0.6867056 & 0.0775983 & 0.0155230 & 0.0209814 & 0.0735433 & 0.0708424 & 0.0422213 & 0.0392346 & 0.0140944 & 0.0430974 & 0.0220705 & 0.0430974 & 0.0392346 & 0.0183858 & 0.0265622\\
+3 & 1 & gini & 2.3068473 & 0.8069475 & 0.5606594 & 0.5727366 & 0.3744220 & 0.4785355 & 0.5074525 & 0.8516676 & 0.5530830 & 0.8531719 & 0.5530830 & 0.5074525 & 0.1431842 & 0.6795601 & 0.8757718 & 0.0282408 & 0.0243175 & 0.0497734 & 0.0390554 & 0.0371832 & 0.0320938 & 0.0068548 & 0.0351837 & 0.0141050 & 0.0351837 & 0.0320938 & 0.0124434 & 0.0189268\\
+3 & 1 & extratrees & 1.0202617 & 0.8870018 & 0.6781122 & 0.6069328 & 0.4377832 & 0.4843644 & 0.5394240 & 0.8711835 & 0.6098306 & 0.8703320 & 0.6098306 & 0.5394240 & 0.1517332 & 0.7053038 & 0.0935907 & 0.0182464 & 0.0306128 & 0.0565992 & 0.0530566 & 0.0397343 & 0.0365638 & 0.0100018 & 0.0518241 & 0.0178657 & 0.0518241 & 0.0365638 & 0.0141498 & 0.0228057\\
+4 & 1 & gini & 5.3543077 & 0.7693364 & 0.5129427 & 0.5642073 & 0.3562554 & 0.4745993 & 0.4992649 & 0.8463081 & 0.5438777 & 0.8469933 & 0.5438777 & 0.4992649 & 0.1410518 & 0.6727865 & 1.6998307 & 0.0304136 & 0.0250356 & 0.0405073 & 0.0352509 & 0.0313595 & 0.0302666 & 0.0089464 & 0.0481639 & 0.0122128 & 0.0481639 & 0.0302666 & 0.0101268 & 0.0190007\\
+4 & 1 & extratrees & 0.9776226 & 0.8917162 & 0.6826624 & 0.6312918 & 0.4596098 & 0.5077870 & 0.5553128 & 0.8740175 & 0.6145404 & 0.8779833 & 0.6145404 & 0.5553128 & 0.1578230 & 0.7146651 & 0.0990668 & 0.0196101 & 0.0347501 & 0.0481283 & 0.0497595 & 0.0398901 & 0.0399700 & 0.0111322 & 0.0450069 & 0.0155188 & 0.0450069 & 0.0399700 & 0.0120321 & 0.0249168\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      9884 
+## Number of independent variables:  4 
+## Mtry:                             4 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.008035631
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 9884 samples
+##    4 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (4), centered (4), scaled (4) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 494, 493, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        1.5700448  0.8248007  0.5882862  0.5736947  0.3929634
+##   2     extratrees  1.0945954  0.8744283  0.6560332  0.5692309  0.4000839
+##   3     gini        2.3068473  0.8069475  0.5606594  0.5727366  0.3744220
+##   3     extratrees  1.0202617  0.8870018  0.6781122  0.6069328  0.4377832
+##   4     gini        5.3543077  0.7693364  0.5129427  0.5642073  0.3562554
+##   4     extratrees  0.9776226  0.8917162  0.6826624  0.6312918  0.4596098
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.4676827  0.5139814         0.8591192         0.5771027          
+##   0.4488647  0.5091885         0.8642227         0.6171019          
+##   0.4785355  0.5074525         0.8516676         0.5530830          
+##   0.4843644  0.5394240         0.8711835         0.6098306          
+##   0.4745993  0.4992649         0.8463081         0.5438777          
+##   0.5077870  0.5553128         0.8740175         0.6145404          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.8584484            0.5771027       0.5139814    0.1434237          
+##   0.8595925            0.6171019       0.5091885    0.1423077          
+##   0.8531719            0.5530830       0.5074525    0.1431842          
+##   0.8703320            0.6098306       0.5394240    0.1517332          
+##   0.8469933            0.5438777       0.4992649    0.1410518          
+##   0.8779833            0.6145404       0.5553128    0.1578230          
+##   Mean_Balanced_Accuracy
+##   0.6865503             
+##   0.6867056             
+##   0.6795601             
+##   0.7053038             
+##   0.6727865             
+##   0.7146651             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 4, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:combined-rf-results}Vibration + Magnetometer RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.8954877\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:combined-rf-results}Vibration + Magnetometer RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.8231653 & 1.0000000 & 0.999839826068596\\
+PATH\_MOVING & 0.9399246 & 0.9536617 & 0.99632325211746\\
+PATH\_TRANSITION & 0.9815498 & 0.9728110 & 0.997001301901266\\
+SHUTTLE & 1.0000000 & 0.9438369 & 0.999961579932076\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:combined-rf-results}Vibration + Magnetometer RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 3724 & 0 & 0 & 0\\
+PATH\_MOVING & 276 & 3489 & 10 & 0\\
+PATH\_TRANSITION & 31 & 223 & 532 & 0\\
+SHUTTLE & 493 & 0 & 0 & 1106\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:combined-rf-results}Vibration + Magnetometer RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/plot_combined-roc-1.pdf}
+\caption{Vibration + Magnetometer ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/a1v004-rf-plot-1.pdf}
+\caption{Acc 1 Vel 0.04 Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:a1v004-rf-params}Acc 1 Vel 0.04 RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.7571039 & 0.8632030 & 0.5447890 & 0.6931667 & 0.4921122 & 0.5022985 & 0.5240070 & 0.8917859 & 0.5765624 & 0.8773410 & 0.5765624 & 0.5240070 & 0.1732917 & 0.7078965 & 0.0929756 & 0.0198941 & 0.0205946 & 0.0225407 & 0.0369514 & 0.0217988 & 0.0255297 & 0.0097322 & 0.0418110 & 0.0081652 & 0.0418110 & 0.0255297 & 0.0056352 & 0.0173902\\
+2 & 1 & extratrees & 0.6329482 & 0.8866021 & 0.6318089 & 0.7134013 & 0.5194975 & 0.5163653 & 0.5409225 & 0.8953364 & 0.6383135 & 0.8834049 & 0.6383135 & 0.5409225 & 0.1783503 & 0.7181295 & 0.0287138 & 0.0125602 & 0.0206412 & 0.0125722 & 0.0163647 & 0.0122355 & 0.0137689 & 0.0039188 & 0.0591051 & 0.0038962 & 0.0591051 & 0.0137689 & 0.0031431 & 0.0084967\\
+3 & 1 & gini & 0.8167506 & 0.8596899 & 0.5230039 & 0.6871294 & 0.4844528 & 0.5052170 & 0.5249652 & 0.8904789 & 0.5630339 & 0.8747782 & 0.5630339 & 0.5249652 & 0.1717824 & 0.7077220 & 0.1143938 & 0.0220860 & 0.0239890 & 0.0220378 & 0.0328554 & 0.0229249 & 0.0242183 & 0.0081316 & 0.0314099 & 0.0082098 & 0.0314099 & 0.0242183 & 0.0055095 & 0.0156701\\
+3 & 1 & extratrees & 0.6356189 & 0.8845081 & 0.6226157 & 0.7081907 & 0.5082478 & 0.5160840 & 0.5330158 & 0.8923206 & 0.6519915 & 0.8814081 & 0.6519915 & 0.5330158 & 0.1770477 & 0.7126682 & 0.0294161 & 0.0118034 & 0.0203684 & 0.0142349 & 0.0208921 & 0.0106393 & 0.0189792 & 0.0054909 & 0.0592015 & 0.0046037 & 0.0592015 & 0.0189792 & 0.0035587 & 0.0121463\\
+4 & 1 & gini & 0.9538229 & 0.8510570 & 0.4924155 & 0.6881721 & 0.4856704 & 0.5117426 & 0.5282089 & 0.8909879 & 0.5601310 & 0.8744185 & 0.5601310 & 0.5282089 & 0.1720430 & 0.7095984 & 0.1843917 & 0.0253229 & 0.0309038 & 0.0279583 & 0.0391931 & 0.0268262 & 0.0253088 & 0.0090737 & 0.0399448 & 0.0100691 & 0.0399448 & 0.0253088 & 0.0069896 & 0.0166195\\
+4 & 1 & extratrees & 0.6435842 & 0.8810173 & 0.6119568 & 0.7017581 & 0.4942138 & 0.5146346 & 0.5202623 & 0.8887257 & 0.6769086 & 0.8788201 & 0.6769086 & 0.5202623 & 0.1754395 & 0.7044940 & 0.0368907 & 0.0153691 & 0.0288588 & 0.0254343 & 0.0404041 & 0.0276311 & 0.0261499 & 0.0094488 & 0.0675812 & 0.0088496 & 0.0675812 & 0.0261499 & 0.0063586 & 0.0177051\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      8362 
+## Number of independent variables:  4 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.01891785
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 8362 samples
+##    4 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (4), centered (4), scaled (4) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 494, 493, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        0.7571039  0.8632030  0.5447890  0.6931667  0.4921122
+##   2     extratrees  0.6329482  0.8866021  0.6318089  0.7134013  0.5194975
+##   3     gini        0.8167506  0.8596899  0.5230039  0.6871294  0.4844528
+##   3     extratrees  0.6356189  0.8845081  0.6226157  0.7081907  0.5082478
+##   4     gini        0.9538229  0.8510570  0.4924155  0.6881721  0.4856704
+##   4     extratrees  0.6435842  0.8810173  0.6119568  0.7017581  0.4942138
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.5022985  0.5240070         0.8917859         0.5765624          
+##   0.5163653  0.5409225         0.8953364         0.6383135          
+##   0.5052170  0.5249652         0.8904789         0.5630339          
+##   0.5160840  0.5330158         0.8923206         0.6519915          
+##   0.5117426  0.5282089         0.8909879         0.5601310          
+##   0.5146346  0.5202623         0.8887257         0.6769086          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.8773410            0.5765624       0.5240070    0.1732917          
+##   0.8834049            0.6383135       0.5409225    0.1783503          
+##   0.8747782            0.5630339       0.5249652    0.1717824          
+##   0.8814081            0.6519915       0.5330158    0.1770477          
+##   0.8744185            0.5601310       0.5282089    0.1720430          
+##   0.8788201            0.6769086       0.5202623    0.1754395          
+##   Mean_Balanced_Accuracy
+##   0.7078965             
+##   0.7181295             
+##   0.7077220             
+##   0.7126682             
+##   0.7095984             
+##   0.7044940             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:a1v004-rf-params}Acc 1 Vel 0.04 RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.4234633\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:a1v004-rf-params}Acc 1 Vel 0.04 RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.1483001 & 1.0000000 & 0.992861230809854\\
+PATH\_MOVING & 0.8274379 & 0.5992026 & 0.875140887591829\\
+PATH\_TRANSITION & 0.5960000 & 0.9452663 & 0.941996794871795\\
+SHUTTLE & 1.0000000 & 0.7501340 & 0.996246648793566\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/a1v006-rf-plot-1.pdf}
+\caption{Acc 1 Vel 0.06 Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:a1v006-rf-params}Acc 1 Vel 0.06 RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 1.575867 & 0.7588098 & 0.5343857 & 0.6494435 & 0.3469451 & 0.4859876 & 0.4832299 & 0.8359533 & 0.6623568 & 0.8634860 & 0.6623568 & 0.4832299 & 0.1623609 & 0.6595916 & 0.6207959 & 0.0211153 & 0.0312930 & 0.1029709 & 0.0839745 & 0.0557628 & 0.0205923 & 0.0088892 & 0.0578418 & 0.0500352 & 0.0578418 & 0.0205923 & 0.0257427 & 0.0138128\\
+2 & 1 & extratrees & 1.885023 & 0.7449570 & 0.5443856 & 0.6519434 & 0.3063581 & 0.4469315 & 0.4516478 & 0.8240386 & 0.6611800 & 0.8628892 & 0.6611800 & 0.4516478 & 0.1629859 & 0.6378432 & 0.7742228 & 0.0144955 & 0.0173526 & 0.0933797 & 0.0568931 & 0.0418389 & 0.0150094 & 0.0081318 & 0.0228662 & 0.0368909 & 0.0228662 & 0.0150094 & 0.0233449 & 0.0096603\\
+3 & 1 & gini & 2.595145 & 0.7427674 & 0.4988112 & 0.7463756 & 0.4241870 & 0.5310309 & 0.4890432 & 0.8416711 & 0.6858220 & 0.9107310 & 0.6858220 & 0.4890432 & 0.1865939 & 0.6653572 & 0.7466997 & 0.0187328 & 0.0249161 & 0.0111772 & 0.0189297 & 0.0127875 & 0.0098154 & 0.0037144 & 0.0346376 & 0.0143265 & 0.0346376 & 0.0098154 & 0.0027943 & 0.0065178\\
+3 & 1 & extratrees & 1.876515 & 0.7497075 & 0.5597626 & 0.7083664 & 0.3618648 & 0.5024631 & 0.4736010 & 0.8281301 & 0.7166805 & 0.9008786 & 0.7166805 & 0.4736010 & 0.1770916 & 0.6508656 & 0.7096594 & 0.0141762 & 0.0176822 & 0.0839393 & 0.0685833 & 0.0500129 & 0.0202568 & 0.0098225 & 0.0572960 & 0.0357296 & 0.0572960 & 0.0202568 & 0.0209848 & 0.0147896\\
+4 & 1 & gini & 6.662573 & 0.6888916 & 0.3888139 & 0.7429079 & 0.4159193 & 0.5222060 & 0.4809306 & 0.8399209 & 0.6763365 & 0.9083227 & 0.6763365 & 0.4809306 & 0.1857270 & 0.6604258 & 0.3999676 & 0.0202152 & 0.0409040 & 0.0124026 & 0.0203263 & 0.0124887 & 0.0073401 & 0.0038503 & 0.0408543 & 0.0161591 & 0.0408543 & 0.0073401 & 0.0031006 & 0.0053598\\
+4 & 1 & extratrees & 2.307416 & 0.7411693 & 0.5546471 & 0.7458976 & 0.4245849 & 0.5449534 & 0.4971004 & 0.8405552 & 0.7456633 & 0.9149616 & 0.7456633 & 0.4971004 & 0.1864744 & 0.6688278 & 0.7389956 & 0.0135535 & 0.0167469 & 0.0393530 & 0.0529475 & 0.0456566 & 0.0188576 & 0.0077160 & 0.0720947 & 0.0257054 & 0.0720947 & 0.0188576 & 0.0098383 & 0.0127786\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      23132 
+## Number of independent variables:  4 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        gini 
+## OOB prediction error (Brier s.):  0.009390752
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 23132 samples
+##     4 predictor
+##     4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (4), centered (4), scaled (4) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 494, 493, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss   AUC        prAUC      Accuracy   Kappa    
+##   2     gini        1.575867  0.7588098  0.5343857  0.6494435  0.3469451
+##   2     extratrees  1.885023  0.7449570  0.5443856  0.6519434  0.3063581
+##   3     gini        2.595145  0.7427674  0.4988112  0.7463756  0.4241870
+##   3     extratrees  1.876515  0.7497075  0.5597626  0.7083664  0.3618648
+##   4     gini        6.662573  0.6888916  0.3888139  0.7429079  0.4159193
+##   4     extratrees  2.307417  0.7411693  0.5546471  0.7458976  0.4245849
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.4859876  0.4832299         0.8359533         0.6623568          
+##   0.4469315  0.4516478         0.8240386         0.6611800          
+##   0.5310309  0.4890432         0.8416711         0.6858220          
+##   0.5024631  0.4736010         0.8281301         0.7166805          
+##   0.5222060  0.4809306         0.8399209         0.6763365          
+##   0.5449534  0.4971004         0.8405552         0.7456633          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.8634860            0.6623568       0.4832299    0.1623609          
+##   0.8628892            0.6611800       0.4516478    0.1629859          
+##   0.9107310            0.6858220       0.4890432    0.1865939          
+##   0.9008786            0.7166805       0.4736010    0.1770916          
+##   0.9083227            0.6763365       0.4809306    0.1857270          
+##   0.9149616            0.7456633       0.4971004    0.1864744          
+##   Mean_Balanced_Accuracy
+##   0.6595916             
+##   0.6378432             
+##   0.6653572             
+##   0.6508656             
+##   0.6604258             
+##   0.6688278             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule = gini
+##  and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:a1v006-rf-params}Acc 1 Vel 0.06 RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.6490144\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:a1v006-rf-params}Acc 1 Vel 0.06 RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.3987805 & 0.9996705 & 0.990792075804571\\
+PATH\_MOVING & 0.6923801 & 0.7665455 & 0.857084596808021\\
+PATH\_TRANSITION & 0.8141862 & 0.7436402 & 0.903621924829476\\
+SHUTTLE & 0.8488372 & 0.9617195 & 0.98469590743274\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/a2v04-rf-plot-1.pdf}
+\caption{Acc 2 Vel 0.4 Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:a2v04-rf-params}Acc 2 Vel 0.4 - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.7646612 & 0.8292955 & 0.5151533 & 0.6994673 & 0.4814978 & 0.4858671 & 0.4872219 & 0.8796211 & 0.5593541 & 0.8806161 & 0.5593541 & 0.4872219 & 0.1748668 & 0.6834215 & 0.0503584 & 0.0253236 & 0.0231557 & 0.0439074 & 0.0598734 & 0.0374224 & 0.0297364 & 0.0137721 & 0.0679110 & 0.0177397 & 0.0679110 & 0.0297364 & 0.0109768 & 0.0206271\\
+2 & 1 & extratrees & 0.6555895 & 0.8717541 & 0.5910482 & 0.7361073 & 0.4725821 & 0.4768194 & 0.4519945 & 0.8618340 & 0.6274271 & 0.9113366 & 0.6274271 & 0.4519945 & 0.1840268 & 0.6569142 & 0.0222379 & 0.0152655 & 0.0173179 & 0.0250825 & 0.0714424 & 0.0505158 & 0.0519836 & 0.0231405 & 0.0658065 & 0.0146717 & 0.0658065 & 0.0519836 & 0.0062706 & 0.0373496\\
+3 & 1 & gini & 0.8470899 & 0.8204135 & 0.4914665 & 0.6851164 & 0.4662088 & 0.4841690 & 0.4905499 & 0.8775964 & 0.5386274 & 0.8736897 & 0.5386274 & 0.4905499 & 0.1712791 & 0.6840731 & 0.0643795 & 0.0260701 & 0.0205485 & 0.0425263 & 0.0598825 & 0.0299037 & 0.0309895 & 0.0147091 & 0.0571777 & 0.0157819 & 0.0571777 & 0.0309895 & 0.0106316 & 0.0218273\\
+3 & 1 & extratrees & 0.6417422 & 0.8744897 & 0.5927533 & 0.7430268 & 0.4911827 & 0.4881237 & 0.4636975 & 0.8672440 & 0.6443930 & 0.9144832 & 0.6443930 & 0.4636975 & 0.1857567 & 0.6654708 & 0.0243582 & 0.0176664 & 0.0236427 & 0.0200078 & 0.0626518 & 0.0431520 & 0.0516144 & 0.0221652 & 0.0411632 & 0.0128174 & 0.0411632 & 0.0516144 & 0.0050020 & 0.0365975\\
+4 & 1 & gini & 1.0848977 & 0.8110526 & 0.4752520 & 0.6797143 & 0.4657764 & 0.4832672 & 0.4930006 & 0.8793330 & 0.5253379 & 0.8729097 & 0.5253379 & 0.4930006 & 0.1699286 & 0.6861668 & 0.5757876 & 0.0220419 & 0.0201134 & 0.0483844 & 0.0610579 & 0.0280161 & 0.0318391 & 0.0140108 & 0.0461607 & 0.0163017 & 0.0461607 & 0.0318391 & 0.0120961 & 0.0216102\\
+4 & 1 & extratrees & 0.6490053 & 0.8718527 & 0.5862468 & 0.7481746 & 0.5076944 & 0.4925916 & 0.4734992 & 0.8722388 & 0.6504833 & 0.9160088 & 0.6504833 & 0.4734992 & 0.1870436 & 0.6728690 & 0.0324854 & 0.0202991 & 0.0303065 & 0.0205312 & 0.0534518 & 0.0380731 & 0.0474596 & 0.0191659 & 0.0502973 & 0.0134571 & 0.0502973 & 0.0474596 & 0.0051328 & 0.0329741\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      9064 
+## Number of independent variables:  4 
+## Mtry:                             3 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.01977015
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 9064 samples
+##    4 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (4), centered (4), scaled (4) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 494, 493, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        0.7646612  0.8292955  0.5151533  0.6994673  0.4814978
+##   2     extratrees  0.6555895  0.8717541  0.5910482  0.7361073  0.4725821
+##   3     gini        0.8470899  0.8204135  0.4914665  0.6851164  0.4662088
+##   3     extratrees  0.6417422  0.8744897  0.5927533  0.7430268  0.4911827
+##   4     gini        1.0848977  0.8110526  0.4752520  0.6797143  0.4657764
+##   4     extratrees  0.6490053  0.8718527  0.5862468  0.7481746  0.5076944
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.4858671  0.4872219         0.8796211         0.5593541          
+##   0.4768194  0.4519945         0.8618340         0.6274271          
+##   0.4841690  0.4905499         0.8775964         0.5386274          
+##   0.4881237  0.4636975         0.8672440         0.6443930          
+##   0.4832672  0.4930006         0.8793330         0.5253379          
+##   0.4925916  0.4734992         0.8722388         0.6504833          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.8806161            0.5593541       0.4872219    0.1748668          
+##   0.9113366            0.6274271       0.4519945    0.1840268          
+##   0.8736897            0.5386274       0.4905499    0.1712791          
+##   0.9144832            0.6443930       0.4636975    0.1857567          
+##   0.8729097            0.5253379       0.4930006    0.1699286          
+##   0.9160088            0.6504833       0.4734992    0.1870436          
+##   Mean_Balanced_Accuracy
+##   0.6834215             
+##   0.6569142             
+##   0.6840731             
+##   0.6654708             
+##   0.6861668             
+##   0.6728690             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 3, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:a2v04-rf-params}Acc 2 Vel 0.4 - RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.515887\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:a2v04-rf-params}Acc 2 Vel 0.4 - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.2748220 & 0.9994632 & 0.991272154779222\\
+PATH\_MOVING & 0.8101105 & 0.7670641 & 0.928282866972157\\
+PATH\_TRANSITION & 0.7604167 & 0.8931176 & 0.9486139993543\\
+SHUTTLE & 0.9990775 & 0.7637845 & 0.997380674934569\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/a2v006-rf-plot-1.pdf}
+\caption{Acc 2 Vel 0.06 Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:a2v006-rf-params}Acc 2 Vel 0.06 RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 1.610765 & 0.7423761 & 0.5105231 & 0.6393445 & 0.3014288 & 0.4382302 & 0.4489206 & 0.8205784 & 0.5757961 & 0.8664636 & 0.5757961 & 0.4489206 & 0.1598361 & 0.6347495 & 0.2896893 & 0.0164279 & 0.0212167 & 0.0247904 & 0.0277343 & 0.0205577 & 0.0132908 & 0.0054490 & 0.0635399 & 0.0227080 & 0.0635399 & 0.0132908 & 0.0061976 & 0.0089216\\
+2 & 1 & extratrees & 1.710348 & 0.7396395 & 0.5267177 & 0.6310741 & 0.3003058 & 0.4299009 & 0.4541482 & 0.8217773 & 0.6163987 & 0.8649763 & 0.6163987 & 0.4541482 & 0.1577685 & 0.6379628 & 0.7241744 & 0.0126652 & 0.0125032 & 0.0402262 & 0.0259965 & 0.0263226 & 0.0135128 & 0.0030159 & 0.0590714 & 0.0233727 & 0.0590714 & 0.0135128 & 0.0100565 & 0.0074636\\
+3 & 1 & gini & 3.987089 & 0.7334556 & 0.4852852 & 0.6588007 & 0.3356740 & 0.4673861 & 0.4633535 & 0.8272353 & 0.6024966 & 0.8753956 & 0.6024966 & 0.4633535 & 0.1647002 & 0.6452944 & 1.1554574 & 0.0180874 & 0.0273150 & 0.0395629 & 0.0585014 & 0.0510314 & 0.0257005 & 0.0105022 & 0.0808550 & 0.0255274 & 0.0808550 & 0.0257005 & 0.0098907 & 0.0179789\\
+3 & 1 & extratrees & 2.258063 & 0.7353359 & 0.5443993 & 0.6685201 & 0.3386766 & 0.4812880 & 0.4759014 & 0.8257941 & 0.6451412 & 0.8855553 & 0.6451412 & 0.4759014 & 0.1671300 & 0.6508477 & 1.0499347 & 0.0134231 & 0.0139019 & 0.0209180 & 0.0271738 & 0.0303352 & 0.0156626 & 0.0048215 & 0.0602863 & 0.0176892 & 0.0602863 & 0.0156626 & 0.0052295 & 0.0096545\\
+4 & 1 & gini & 7.472317 & 0.6980277 & 0.4059621 & 0.6541831 & 0.3302305 & 0.4608835 & 0.4587314 & 0.8263804 & 0.5838221 & 0.8698473 & 0.5838221 & 0.4587314 & 0.1635458 & 0.6425559 & 0.7432262 & 0.0242454 & 0.0344818 & 0.0347076 & 0.0499955 & 0.0363111 & 0.0159590 & 0.0094283 & 0.0441245 & 0.0213938 & 0.0441245 & 0.0159590 & 0.0086769 & 0.0125079\\
+4 & 1 & extratrees & 2.747734 & 0.7367832 & 0.5501369 & 0.6969512 & 0.3899821 & 0.5294976 & 0.4982281 & 0.8354274 & 0.6948513 & 0.8981845 & 0.6948513 & 0.4982281 & 0.1742378 & 0.6668277 & 1.0777576 & 0.0131717 & 0.0154847 & 0.0244956 & 0.0387827 & 0.0389439 & 0.0205992 & 0.0068664 & 0.0706910 & 0.0175742 & 0.0706910 & 0.0205992 & 0.0061239 & 0.0135273\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      23212 
+## Number of independent variables:  4 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        gini 
+## OOB prediction error (Brier s.):  0.01137825
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 23212 samples
+##     4 predictor
+##     4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (4), centered (4), scaled (4) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 494, 493, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss   AUC        prAUC      Accuracy   Kappa    
+##   2     gini        1.610765  0.7423761  0.5105231  0.6393445  0.3014288
+##   2     extratrees  1.710348  0.7396395  0.5267177  0.6310741  0.3003058
+##   3     gini        3.987089  0.7334556  0.4852852  0.6588007  0.3356740
+##   3     extratrees  2.258063  0.7353359  0.5443993  0.6685201  0.3386766
+##   4     gini        7.472317  0.6980277  0.4059621  0.6541831  0.3302305
+##   4     extratrees  2.747734  0.7367832  0.5501369  0.6969512  0.3899821
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.4382302  0.4489206         0.8205784         0.5757961          
+##   0.4299009  0.4541482         0.8217773         0.6163987          
+##   0.4673861  0.4633535         0.8272353         0.6024966          
+##   0.4812880  0.4759014         0.8257941         0.6451412          
+##   0.4608835  0.4587314         0.8263804         0.5838221          
+##   0.5294976  0.4982281         0.8354274         0.6948513          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.8664636            0.5757961       0.4489206    0.1598361          
+##   0.8649763            0.6163987       0.4541482    0.1577685          
+##   0.8753956            0.6024966       0.4633535    0.1647002          
+##   0.8855553            0.6451412       0.4759014    0.1671300          
+##   0.8698473            0.5838221       0.4587314    0.1635458          
+##   0.8981845            0.6948513       0.4982281    0.1742378          
+##   Mean_Balanced_Accuracy
+##   0.6347495             
+##   0.6379628             
+##   0.6452944             
+##   0.6508477             
+##   0.6425559             
+##   0.6668277             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule = gini
+##  and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:a2v006-rf-params}Acc 2 Vel 0.06 RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.5919352\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:a2v006-rf-params}Acc 2 Vel 0.06 RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.2007185 & 1.0000000 & 0.984209950935544\\
+PATH\_MOVING & 0.7004468 & 0.7957473 & 0.874805727632302\\
+PATH\_TRANSITION & 0.8956401 & 0.7610657 & 0.934289570950652\\
+SHUTTLE & 0.9125817 & 0.8888939 & 0.965505248852315\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\end{document}

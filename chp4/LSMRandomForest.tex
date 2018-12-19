@@ -1,0 +1,507 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={LSM Random Forest - First Models},
+            pdfauthor={Jill Daly},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+  \title{LSM Random Forest - First Models}
+  \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \author{Jill Daly}
+  \preauthor{\centering\large\emph}
+  \postauthor{\par}
+  \predate{\centering\large\emph}
+  \postdate{\par}
+  \date{12 November, 2018}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+\begin{document}
+\maketitle
+
+\hypertarget{re-usable-cross-validation}{%
+\subsection{Re-usable Cross
+Validation}\label{re-usable-cross-validation}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Set seed so that we can reproduce the results}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{42}\NormalTok{)}
+
+\CommentTok{# Create custom indices: myFolds}
+\NormalTok{myFolds <-}\StringTok{ }\KeywordTok{createFolds}\NormalTok{(imu11_acc_}\DecValTok{1}\NormalTok{_}\DecValTok{0}\NormalTok{_}\DecValTok{2}\OperatorTok{$}\NormalTok{State, }\DataTypeTok{k =} \DecValTok{10}\NormalTok{)}
+
+\CommentTok{# Create reusable trainControl object: myControl}
+\NormalTok{myControl <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}
+  \DataTypeTok{summaryFunction =}\NormalTok{ multiClassSummary,}
+  \DataTypeTok{classProbs =} \OtherTok{TRUE}\NormalTok{,}
+  \DataTypeTok{verboseIter =} \OtherTok{TRUE}\NormalTok{,}
+  \DataTypeTok{savePredictions =} \OtherTok{TRUE}\NormalTok{,}
+  \DataTypeTok{index =}\NormalTok{ myFolds)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{three-random-forest-models}{%
+\subsection{Three Random Forest
+Models}\label{three-random-forest-models}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create Model}
+\NormalTok{model_rf_acc_imu11_}\DecValTok{1}\NormalTok{_}\DecValTok{0}\NormalTok{_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{train}\NormalTok{(State }\OperatorTok{~}\StringTok{ }\NormalTok{., imu11_acc_}\DecValTok{1}\NormalTok{_}\DecValTok{0}\NormalTok{_}\DecValTok{2}\NormalTok{,}
+                  \DataTypeTok{metric =} \StringTok{"logLoss"}\NormalTok{, }
+                  \DataTypeTok{method =} \StringTok{"ranger"}\NormalTok{,}
+                  \DataTypeTok{preProcess =} \StringTok{"knnImpute"}\NormalTok{,}
+                  \DataTypeTok{na.action =}\NormalTok{ na.pass,}
+                  \DataTypeTok{trControl =}\NormalTok{ myControl)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model_rf_mag_imu11_}\DecValTok{1}\NormalTok{_}\DecValTok{0}\NormalTok{_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{train}\NormalTok{(State }\OperatorTok{~}\StringTok{ }\NormalTok{., imu11_mag_}\DecValTok{1}\NormalTok{_}\DecValTok{0}\NormalTok{_}\DecValTok{2}\NormalTok{,}
+                  \DataTypeTok{metric =} \StringTok{"logLoss"}\NormalTok{, }
+                  \DataTypeTok{method =} \StringTok{"ranger"}\NormalTok{,}
+                  \DataTypeTok{preProcess =} \StringTok{"knnImpute"}\NormalTok{,}
+                  \DataTypeTok{na.action =}\NormalTok{ na.pass,}
+                  \DataTypeTok{trControl =}\NormalTok{ myControl)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model_rf_mag_acc_imu11_}\DecValTok{1}\NormalTok{_}\DecValTok{0}\NormalTok{_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{train}\NormalTok{(State }\OperatorTok{~}\StringTok{ }\NormalTok{., imu11_mag_acc_}\DecValTok{1}\NormalTok{_}\DecValTok{0}\NormalTok{_}\DecValTok{2}\NormalTok{,}
+                  \DataTypeTok{metric =} \StringTok{"logLoss"}\NormalTok{, }
+                  \DataTypeTok{method =} \StringTok{"ranger"}\NormalTok{,}
+                  \DataTypeTok{preProcess =} \StringTok{"knnImpute"}\NormalTok{,}
+                  \DataTypeTok{na.action =}\NormalTok{ na.pass,}
+                  \DataTypeTok{trControl =}\NormalTok{ myControl)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{model-performance-metrics}{%
+\section{Model Performance Metrics}\label{model-performance-metrics}}
+
+\begin{table}[!h]
+
+\caption{\label{tab:overall_accuracy_chunk}Overall Statistics (IMU12, Acc 1, Vel 0.2)}
+\centering
+\begin{tabular}[t]{l|r|r|r}
+\hline
+  & IMU12\_ACC & IMU12\_MAG & IMU12\_MAG\_ACC\\
+\hline
+Accuracy & 0.7695265 & 0.5327803 & 0.9266491\\
+\hline
+Kappa & 0.6605762 & 0.3464590 & 0.8899470\\
+\hline
+AccuracyLower & 0.7575267 & 0.5187530 & 0.9213320\\
+\hline
+AccuracyUpper & 0.7812072 & 0.5467687 & 0.9317132\\
+\hline
+AccuracyNull & 0.4285714 & 0.4285714 & 0.4285714\\
+\hline
+AccuracyPValue & 0.0000000 & 0.0000000 & 0.0000000\\
+\hline
+McnemarPValue & NaN & NaN & NaN\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:statistics_chunk}Acc Statistics by Class (IMU12, Acc 1, Vel 0.2)}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{l|r|r|r|r|r|r|r|r|r|r|r}
+\hline
+  & Sensitivity & Specificity & Pos Pred Value & Neg Pred Value & Precision & Recall & F1 & Prevalence & Detection Rate & Detection Prevalence & Balanced Accuracy\\
+\hline
+Class: PATH\_IDLE & 0.4796978 & 1.0000000 & 1.0000000 & 0.7193072 & 1.0000000 & 0.4796978 & 0.6483727 & 0.4285714 & 0.2055848 & 0.2055848 & 0.7398489\\
+\hline
+Class: PATH\_MOVING & 0.9930518 & 0.7561055 & 0.7126966 & 0.9944325 & 0.7126966 & 0.9930518 & 0.8298347 & 0.3785917 & 0.3759611 & 0.5275192 & 0.8745787\\
+\hline
+Class: PATH\_TRANSITION & 0.9179688 & 0.9972258 & 0.9475806 & 0.9955262 & 0.9475806 & 0.9179688 & 0.9325397 & 0.0518009 & 0.0475516 & 0.0501821 & 0.9575973\\
+\hline
+Class: SHUTTLE & 0.9956958 & 0.9111896 & 0.6479925 & 0.9992250 & 0.6479925 & 0.9956958 & 0.7850679 & 0.1410360 & 0.1404290 & 0.2167139 & 0.9534427\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:statistics_chunk}Mag Statistics by Class (IMU12, Acc 1, Vel 0.2)}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{l|r|r|r|r|r|r|r|r|r|r|r}
+\hline
+  & Sensitivity & Specificity & Pos Pred Value & Neg Pred Value & Precision & Recall & F1 & Prevalence & Detection Rate & Detection Prevalence & Balanced Accuracy\\
+\hline
+Class: PATH\_IDLE & 0.0358829 & 1.0000000 & 1.0000000 & 0.5803535 & 1.0000000 & 0.0358829 & 0.0692799 & 0.4285714 & 0.0153784 & 0.0153784 & 0.5179415\\
+\hline
+Class: PATH\_MOVING & 0.8722608 & 0.5275155 & 0.5293545 & 0.8714363 & 0.5293545 & 0.8722608 & 0.6588615 & 0.3785917 & 0.3302307 & 0.6238365 & 0.6998881\\
+\hline
+Class: PATH\_TRANSITION & 0.9257812 & 0.9494238 & 0.5000000 & 0.9957475 & 0.5000000 & 0.9257812 & 0.6493151 & 0.0518009 & 0.0479563 & 0.0959126 & 0.9376025\\
+\hline
+Class: SHUTTLE & 0.9870875 & 0.8537102 & 0.5255921 & 0.9975227 & 0.5255921 & 0.9870875 & 0.6859422 & 0.1410360 & 0.1392149 & 0.2648725 & 0.9203989\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:statistics_chunk}Acc-Mag Statistics by Class (IMU12, Acc 1, Vel 0.2)}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{l|r|r|r|r|r|r|r|r|r|r|r}
+\hline
+  & Sensitivity & Specificity & Pos Pred Value & Neg Pred Value & Precision & Recall & F1 & Prevalence & Detection Rate & Detection Prevalence & Balanced Accuracy\\
+\hline
+Class: PATH\_IDLE & 0.8512748 & 1.0000000 & 1.0000000 & 0.8996496 & 1.0000000 & 0.8512748 & 0.9196634 & 0.4285714 & 0.3648321 & 0.3648321 & 0.9256374\\
+\hline
+Class: PATH\_MOVING & 0.9756815 & 0.9646695 & 0.9438987 & 0.9848737 & 0.9438987 & 0.9756815 & 0.9595269 & 0.3785917 & 0.3693849 & 0.3913395 & 0.9701755\\
+\hline
+Class: PATH\_TRANSITION & 0.9921875 & 0.9902902 & 0.8480801 & 0.9995692 & 0.8480801 & 0.9921875 & 0.9144914 & 0.0518009 & 0.0513962 & 0.0606030 & 0.9912389\\
+\hline
+Class: SHUTTLE & 1.0000000 & 0.9508834 & 0.7697405 & 1.0000000 & 0.7697405 & 1.0000000 & 0.8698908 & 0.1410360 & 0.1410360 & 0.1832254 & 0.9754417\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:cm_chunk}Acc Confusion Matrix (IMU12, Acc 1, Vel 0.2)}
+\centering
+\begin{tabular}[t]{l|r|r|r|r}
+\hline
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\hline
+PATH\_IDLE & 1016 & 0 & 0 & 0\\
+\hline
+PATH\_MOVING & 725 & 1858 & 21 & 3\\
+\hline
+PATH\_TRANSITION & 0 & 13 & 235 & 0\\
+\hline
+SHUTTLE & 377 & 0 & 0 & 694\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:cm_chunk}Mag Confusion Matrix (IMU12, Acc 1, Vel 0.2)}
+\centering
+\begin{tabular}[t]{l|r|r|r|r}
+\hline
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\hline
+PATH\_IDLE & 76 & 0 & 0 & 0\\
+\hline
+PATH\_MOVING & 1428 & 1632 & 17 & 6\\
+\hline
+PATH\_TRANSITION & 0 & 234 & 237 & 3\\
+\hline
+SHUTTLE & 614 & 5 & 2 & 688\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:cm_chunk}Acc-Mag Confusion Matrix (IMU12, Acc 1, Vel 0.2)}
+\centering
+\begin{tabular}[t]{l|r|r|r|r}
+\hline
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\hline
+PATH\_IDLE & 3606 & 0 & 0 & 0\\
+\hline
+PATH\_MOVING & 213 & 3651 & 4 & 0\\
+\hline
+PATH\_TRANSITION & 0 & 91 & 508 & 0\\
+\hline
+SHUTTLE & 417 & 0 & 0 & 1394\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:show_auc_chunk}AUC Values for Acc Model (Validated with IMU12, Acc 1, Vel 0.2)}
+\centering
+\begin{tabular}[t]{r|r|r|r}
+\hline
+PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\hline
+0.9993304 & 0.9949105 & 0.9978568 & 0.9990905\\
+\hline
+\end{tabular}
+\end{table}
+
+\includegraphics{LSMRandomForest_files/figure-latex/plot_roc-1.pdf}
+
+\begin{table}[!h]
+
+\caption{\label{tab:robustness_overall_chunk}Overall Statistics (IMU8, Acc 1, Vel 0.2)}
+\centering
+\begin{tabular}[t]{l|r|r|r}
+\hline
+  & IMU8\_ACC & IMU8\_MAG & IMU8\_MAG\_ACC\\
+\hline
+Accuracy & 0.4633752 & 0.1017807 & 0.7617361\\
+\hline
+Kappa & 0.3184644 & 0.0379835 & 0.6648877\\
+\hline
+AccuracyLower & 0.4493964 & 0.0934867 & 0.7532104\\
+\hline
+AccuracyUpper & 0.4773972 & 0.1105483 & 0.7701074\\
+\hline
+AccuracyNull & 0.4285714 & 0.4285714 & 0.4285714\\
+\hline
+AccuracyPValue & 0.0000004 & 1.0000000 & 0.0000000\\
+\hline
+McnemarPValue & NaN & NaN & NaN\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:robustness_stats_chunk}Acc Statistics by Class (IMU8, Acc 1, Vel 0.2)}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{l|r|r|r|r|r|r|r|r|r|r|r}
+\hline
+  & Sensitivity & Specificity & Pos Pred Value & Neg Pred Value & Precision & Recall & F1 & Prevalence & Detection Rate & Detection Prevalence & Balanced Accuracy\\
+\hline
+Class: PATH\_IDLE & 0.0000000 & 1.0000000 & NaN & 0.5714286 & NA & 0.0000000 & NA & 0.4285714 & 0.0000000 & 0.0000000 & 0.5000000\\
+\hline
+Class: PATH\_MOVING & 0.7247461 & 0.8668186 & 0.7682720 & 0.8378974 & 0.7682720 & 0.7247461 & 0.7458746 & 0.3785917 & 0.2743828 & 0.3571429 & 0.7957824\\
+\hline
+Class: PATH\_TRANSITION & 0.9257812 & 0.8939394 & 0.3228883 & 0.9954848 & 0.3228883 & 0.9257812 & 0.4787879 & 0.0518009 & 0.0479563 & 0.1485229 & 0.9098603\\
+\hline
+Class: SHUTTLE & 1.0000000 & 0.5886926 & 0.2853050 & 1.0000000 & 0.2853050 & 1.0000000 & 0.4439490 & 0.1410360 & 0.1410360 & 0.4943343 & 0.7943463\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:robustness_stats_chunk}Mag Statistics by Class (IMU8, Acc 1, Vel 0.2)}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{l|r|r|r|r|r|r|r|r|r|r|r}
+\hline
+  & Sensitivity & Specificity & Pos Pred Value & Neg Pred Value & Precision & Recall & F1 & Prevalence & Detection Rate & Detection Prevalence & Balanced Accuracy\\
+\hline
+Class: PATH\_IDLE & 0.0000000 & 1.0000000 & NaN & 0.5714286 & NA & 0.0000000 & NA & 0.4285714 & 0.0000000 & 0.0000000 & 0.5000000\\
+\hline
+Class: PATH\_MOVING & 0.0128274 & 0.9990231 & 0.8888889 & 0.6242116 & 0.8888889 & 0.0128274 & 0.0252898 & 0.3785917 & 0.0048563 & 0.0054634 & 0.5059252\\
+\hline
+Class: PATH\_TRANSITION & 0.9882812 & 0.1555698 & 0.0600950 & 0.9959016 & 0.0600950 & 0.9882812 & 0.1133005 & 0.0518009 & 0.0511938 & 0.8518818 & 0.5719255\\
+\hline
+Class: SHUTTLE & 0.3242468 & 0.8871614 & 0.3205674 & 0.8888364 & 0.3205674 & 0.3242468 & 0.3223966 & 0.1410360 & 0.0457305 & 0.1426548 & 0.6057041\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:robustness_stats_chunk}Acc-Mag Statistics by Class (IMU8, Acc 1, Vel 0.2)}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{l|r|r|r|r|r|r|r|r|r|r|r}
+\hline
+  & Sensitivity & Specificity & Pos Pred Value & Neg Pred Value & Precision & Recall & F1 & Prevalence & Detection Rate & Detection Prevalence & Balanced Accuracy\\
+\hline
+Class: PATH\_IDLE & 0.4848914 & 1.0000000 & 1.0000000 & 0.7213282 & 1.0000000 & 0.4848914 & 0.6531002 & 0.4285714 & 0.2078106 & 0.2078106 & 0.7424457\\
+\hline
+Class: PATH\_MOVING & 0.9577766 & 0.9459459 & 0.9152196 & 0.9735255 & 0.9152196 & 0.9577766 & 0.9360146 & 0.3785917 & 0.3626062 & 0.3961959 & 0.9518613\\
+\hline
+Class: PATH\_TRANSITION & 0.9707031 & 0.9832480 & 0.7599388 & 0.9983749 & 0.7599388 & 0.9707031 & 0.8524871 & 0.0518009 & 0.0502833 & 0.0661675 & 0.9769755\\
+\hline
+Class: SHUTTLE & 1.0000000 & 0.7802120 & 0.4276074 & 1.0000000 & 0.4276074 & 1.0000000 & 0.5990546 & 0.1410360 & 0.1410360 & 0.3298260 & 0.8901060\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:robustness_cm_chunk}Acc Confusion Matrix (IMU8, Acc 1, Vel 0.2)}
+\centering
+\begin{tabular}[t]{l|r|r|r|r}
+\hline
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\hline
+PATH\_IDLE & 0 & 0 & 0 & 0\\
+\hline
+PATH\_MOVING & 390 & 1356 & 19 & 0\\
+\hline
+PATH\_TRANSITION & 0 & 497 & 237 & 0\\
+\hline
+SHUTTLE & 1728 & 18 & 0 & 697\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:robustness_cm_chunk}Mag Confusion Matrix (IMU8, Acc 1, Vel 0.2)}
+\centering
+\begin{tabular}[t]{l|r|r|r|r}
+\hline
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\hline
+PATH\_IDLE & 0 & 0 & 0 & 0\\
+\hline
+PATH\_MOVING & 0 & 24 & 3 & 0\\
+\hline
+PATH\_TRANSITION & 1639 & 1847 & 253 & 471\\
+\hline
+SHUTTLE & 479 & 0 & 0 & 226\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:robustness_cm_chunk}Acc-Mag Confusion Matrix (IMU8, Acc 1, Vel 0.2)}
+\centering
+\begin{tabular}[t]{l|r|r|r|r}
+\hline
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\hline
+PATH\_IDLE & 2054 & 0 & 0 & 0\\
+\hline
+PATH\_MOVING & 317 & 3584 & 15 & 0\\
+\hline
+PATH\_TRANSITION & 0 & 157 & 497 & 0\\
+\hline
+SHUTTLE & 1865 & 1 & 0 & 1394\\
+\hline
+\end{tabular}
+\end{table}
+
+
+\end{document}

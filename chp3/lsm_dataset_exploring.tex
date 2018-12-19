@@ -1,0 +1,849 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={MSc Data Science \& Analytics: LSM Track Data Exploration},
+            pdfauthor={Jill Daly},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+  \title{MSc Data Science \& Analytics: LSM Track Data Exploration}
+  \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \author{Jill Daly}
+  \preauthor{\centering\large\emph}
+  \postauthor{\par}
+  \predate{\centering\large\emph}
+  \postdate{\par}
+  \date{02 December, 2018}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\newpage 
+\tableofcontents 
+\listoffigures
+\listoftables
+\newpage
+
+\newpage
+
+\hypertarget{summary}{%
+\subsection{Summary}\label{summary}}
+
+modular\_a\_1\_v\_0\_2\_acc Sensor Summary
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_1\_v\_0\_2\_acc & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & -26.637758 & 58.43080 & -822.265625 & 370.8496\\
+\hline
+IMU11\_X & -21.522108 & 58.30771 & -448.974609 & 465.3320\\
+\hline
+IMU12\_X & 14.598873 & 57.99032 & -397.827148 & 489.0137\\
+\hline
+IMU3\_X & -24.437720 & 62.20369 & -860.595703 & 538.2080\\
+\hline
+IMU7\_X & 8.057234 & 57.28327 & -481.567383 & 449.3408\\
+\hline
+IMU8\_X & 205.432504 & 61.46296 & -731.445312 & 647.9492\\
+\hline
+IMU9\_X & 62.809970 & 58.05233 & -567.749023 & 518.5547\\
+\hline
+IMU1\_Y & 18.789855 & 55.69453 & -2647.949219 & 1317.0166\\
+\hline
+IMU11\_Y & 13.441581 & 42.88379 & -1480.224609 & 637.8174\\
+\hline
+IMU12\_Y & -24.435779 & 40.46987 & -1218.261719 & 524.6582\\
+\hline
+IMU3\_Y & -19.363144 & 53.63549 & -1757.080078 & 926.5137\\
+\hline
+IMU7\_Y & 73.054488 & 35.70061 & -357.788086 & 1152.9541\\
+\hline
+IMU8\_Y & 33.272438 & 37.07584 & -623.901367 & 754.7607\\
+\hline
+IMU9\_Y & -41.076253 & 49.37018 & -993.530273 & 945.0684\\
+\hline
+IMU1\_Z & 1044.557492 & 50.41367 & -725.830078 & 2072.1436\\
+\hline
+IMU11\_Z & 996.841585 & 53.62945 & -508.056641 & 2265.1367\\
+\hline
+IMU12\_Z & 996.126799 & 63.55264 & -1.953125 & 3259.6436\\
+\hline
+IMU3\_Z & 1034.154666 & 90.77265 & -341.430664 & 3091.7969\\
+\hline
+IMU7\_Z & 1014.665925 & 46.30972 & -577.148438 & 2276.0010\\
+\hline
+IMU8\_Z & 977.054511 & 65.35107 & -432.373047 & 2216.4307\\
+\hline
+IMU9\_Z & 994.740578 & 77.37151 & 14.038086 & 3130.3711\\
+\hline
+\end{tabular}
+\end{table}
+
+modular\_a\_1\_v\_0\_2\_acc Sensor Summary
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{}
+\hline
+
+\hline
+\end{tabular}
+\end{table}
+
+modular\_a\_1\_v\_0\_2\_acc Sensor Summary
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{}
+\hline
+
+\hline
+\end{tabular}
+\end{table}
+
+modular\_a\_1\_v\_0\_03\_mag Sensor Summary
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{l|r|r|r|r}
+\hline
+modular\_a\_1\_v\_0\_03\_mag & mean\_value & sd\_value & min\_value & max\_value\\
+\hline
+IMU1\_X & 470.011605 & 60.41604 & -56.67692 & 772.63541\\
+\hline
+IMU11\_X & 23.164841 & 45.46544 & -222.95922 & 273.18877\\
+\hline
+IMU12\_X & 158.223582 & 60.35987 & -150.23883 & 588.51038\\
+\hline
+IMU3\_X & 9.901381 & 16.83319 & -88.91380 & 88.91380\\
+\hline
+IMU7\_X & -491.692881 & 72.70623 & -812.36923 & -195.82027\\
+\hline
+IMU8\_X & -1836.755127 & 220.80897 & -3340.93968 & -793.02711\\
+\hline
+IMU9\_X & -620.843453 & 181.57536 & -1452.15873 & 382.64420\\
+\hline
+IMU1\_Y & -569.381643 & 122.76876 & -1395.48181 & -29.53797\\
+\hline
+IMU11\_Y & 55.599553 & 15.31054 & -18.29255 & 142.29206\\
+\hline
+IMU12\_Y & 90.478738 & 31.15674 & -64.02393 & 241.70159\\
+\hline
+IMU3\_Y & 7.621625 & 16.86894 & -56.97680 & 91.01294\\
+\hline
+IMU7\_Y & 259.695348 & 47.93301 & 51.12918 & 538.13089\\
+\hline
+IMU8\_Y & -81.408431 & 126.30397 & -469.90867 & 194.32088\\
+\hline
+IMU9\_Y & -114.255038 & 159.92638 & -1098.60269 & 796.17582\\
+\hline
+IMU1\_Z & -1599.135216 & 200.21316 & -3000.72821 & -493.89890\\
+\hline
+IMU11\_Z & -797.025298 & 122.05860 & -1449.45983 & -299.87790\\
+\hline
+IMU12\_Z & -946.145606 & 155.48963 & -1733.89402 & -196.71990\\
+\hline
+IMU3\_Z & -61.957995 & 10.48025 & -88.61392 & 31.03736\\
+\hline
+IMU7\_Z & -898.445492 & 131.42293 & -1872.88742 & -312.32283\\
+\hline
+IMU8\_Z & 1994.242749 & 402.08675 & 891.83687 & 3009.57460\\
+\hline
+IMU9\_Z & 349.208008 & 232.71895 & -923.92381 & 1370.44200\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{install_imports}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"tidyverse"}\NormalTok{, }\StringTok{"VIM"}\NormalTok{, }\StringTok{"kableExtra"}\NormalTok{, }\StringTok{"PerformanceAnalytics"}\NormalTok{, }\StringTok{"Hmisc"}\NormalTok{, }\StringTok{"outliers"}\NormalTok{, }\StringTok{"psych"}\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [[1]]
+##  [1] "kableExtra"           "psych"                "outliers"            
+##  [4] "bindrcpp"             "Hmisc"                "Formula"             
+##  [7] "survival"             "lattice"              "PerformanceAnalytics"
+## [10] "xts"                  "zoo"                  "VIM"                 
+## [13] "data.table"           "grid"                 "colorspace"          
+## [16] "forcats"              "stringr"              "dplyr"               
+## [19] "purrr"                "readr"                "tidyr"               
+## [22] "tibble"               "ggplot2"              "tidyverse"           
+## [25] "readxl"               "stats"                "graphics"            
+## [28] "grDevices"            "utils"                "datasets"            
+## [31] "methods"              "base"                
+## 
+## [[2]]
+##  [1] "kableExtra"           "psych"                "outliers"            
+##  [4] "bindrcpp"             "Hmisc"                "Formula"             
+##  [7] "survival"             "lattice"              "PerformanceAnalytics"
+## [10] "xts"                  "zoo"                  "VIM"                 
+## [13] "data.table"           "grid"                 "colorspace"          
+## [16] "forcats"              "stringr"              "dplyr"               
+## [19] "purrr"                "readr"                "tidyr"               
+## [22] "tibble"               "ggplot2"              "tidyverse"           
+## [25] "readxl"               "stats"                "graphics"            
+## [28] "grDevices"            "utils"                "datasets"            
+## [31] "methods"              "base"                
+## 
+## [[3]]
+##  [1] "kableExtra"           "psych"                "outliers"            
+##  [4] "bindrcpp"             "Hmisc"                "Formula"             
+##  [7] "survival"             "lattice"              "PerformanceAnalytics"
+## [10] "xts"                  "zoo"                  "VIM"                 
+## [13] "data.table"           "grid"                 "colorspace"          
+## [16] "forcats"              "stringr"              "dplyr"               
+## [19] "purrr"                "readr"                "tidyr"               
+## [22] "tibble"               "ggplot2"              "tidyverse"           
+## [25] "readxl"               "stats"                "graphics"            
+## [28] "grDevices"            "utils"                "datasets"            
+## [31] "methods"              "base"                
+## 
+## [[4]]
+##  [1] "kableExtra"           "psych"                "outliers"            
+##  [4] "bindrcpp"             "Hmisc"                "Formula"             
+##  [7] "survival"             "lattice"              "PerformanceAnalytics"
+## [10] "xts"                  "zoo"                  "VIM"                 
+## [13] "data.table"           "grid"                 "colorspace"          
+## [16] "forcats"              "stringr"              "dplyr"               
+## [19] "purrr"                "readr"                "tidyr"               
+## [22] "tibble"               "ggplot2"              "tidyverse"           
+## [25] "readxl"               "stats"                "graphics"            
+## [28] "grDevices"            "utils"                "datasets"            
+## [31] "methods"              "base"                
+## 
+## [[5]]
+##  [1] "kableExtra"           "psych"                "outliers"            
+##  [4] "bindrcpp"             "Hmisc"                "Formula"             
+##  [7] "survival"             "lattice"              "PerformanceAnalytics"
+## [10] "xts"                  "zoo"                  "VIM"                 
+## [13] "data.table"           "grid"                 "colorspace"          
+## [16] "forcats"              "stringr"              "dplyr"               
+## [19] "purrr"                "readr"                "tidyr"               
+## [22] "tibble"               "ggplot2"              "tidyverse"           
+## [25] "readxl"               "stats"                "graphics"            
+## [28] "grDevices"            "utils"                "datasets"            
+## [31] "methods"              "base"                
+## 
+## [[6]]
+##  [1] "kableExtra"           "psych"                "outliers"            
+##  [4] "bindrcpp"             "Hmisc"                "Formula"             
+##  [7] "survival"             "lattice"              "PerformanceAnalytics"
+## [10] "xts"                  "zoo"                  "VIM"                 
+## [13] "data.table"           "grid"                 "colorspace"          
+## [16] "forcats"              "stringr"              "dplyr"               
+## [19] "purrr"                "readr"                "tidyr"               
+## [22] "tibble"               "ggplot2"              "tidyverse"           
+## [25] "readxl"               "stats"                "graphics"            
+## [28] "grDevices"            "utils"                "datasets"            
+## [31] "methods"              "base"                
+## 
+## [[7]]
+##  [1] "kableExtra"           "psych"                "outliers"            
+##  [4] "bindrcpp"             "Hmisc"                "Formula"             
+##  [7] "survival"             "lattice"              "PerformanceAnalytics"
+## [10] "xts"                  "zoo"                  "VIM"                 
+## [13] "data.table"           "grid"                 "colorspace"          
+## [16] "forcats"              "stringr"              "dplyr"               
+## [19] "purrr"                "readr"                "tidyr"               
+## [22] "tibble"               "ggplot2"              "tidyverse"           
+## [25] "readxl"               "stats"                "graphics"            
+## [28] "grDevices"            "utils"                "datasets"            
+## [31] "methods"              "base"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{dim}\NormalTok{(tidy_sensor_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1582532      11
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(tidy_sensor_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Timestamp           Delta          Type        Sensor_Name   
+##  Min.   :  0.092   Min.   :0.00300   ACC:791266   IMU1 :226076  
+##  1st Qu.: 57.130   1st Qu.:0.01000   MAG:791266   IMU11:226076  
+##  Median :130.621   Median :0.01000                IMU12:226076  
+##  Mean   :183.942   Mean   :0.01621                IMU3 :226076  
+##  3rd Qu.:268.055   3rd Qu.:0.01000                IMU7 :226076  
+##  Max.   :632.556   Max.   :2.52900                IMU8 :226076  
+##                    NA's   :112                    IMU9 :226076  
+##                      Position      Acceleration    Velocity      
+##  FRONT_SURFACE           :678228   1:1174712    Min.   :0.01350  
+##  SIDE_SURFACE            :226076   2: 407820    1st Qu.:0.01350  
+##  TOP_SURFACE             :452152                Median :0.03000  
+##  TOP_SURFACE_WITH_PALETTE:226076                Mean   :0.08557  
+##                                                 3rd Qu.:0.06000  
+##                                                 Max.   :0.40000  
+##                                                                  
+##      X_AXIS              Y_AXIS             Z_AXIS       
+##  Min.   :-3911.865   Min.   :-2647.95   Min.   :-3000.7  
+##  1st Qu.:  -33.325   1st Qu.:  -23.93   1st Qu.: -776.1  
+##  Median :    7.446   Median :   14.39   Median :  982.9  
+##  Mean   : -148.545   Mean   :  -19.73   Mean   :  368.5  
+##  3rd Qu.:   64.941   3rd Qu.:   56.08   3rd Qu.: 1014.3  
+##  Max.   : 1954.154   Max.   : 3638.92   Max.   : 4000.0  
+##  NA's   :684         NA's   :709        NA's   :10       
+##              State       
+##  PATH_IDLE      :411516  
+##  PATH_MOVING    :968772  
+##  PATH_TRANSITION:136766  
+##  SHUTTLE        : 65478  
+##                          
+##                          
+## 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{describeBy}\NormalTok{(tidy_sensor_df, tidy_sensor_df}\OperatorTok{$}\NormalTok{State)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning
+## Inf
+
+## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning
+## Inf
+
+## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning
+## Inf
+
+## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning
+## Inf
+
+## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning
+## Inf
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning
+## -Inf
+
+## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning
+## -Inf
+
+## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning
+## -Inf
+
+## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning
+## -Inf
+
+## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning
+## -Inf
+\end{verbatim}
+
+\begin{verbatim}
+## 
+##  Descriptive statistics by group 
+## group: PATH_IDLE
+##               vars      n    mean      sd median trimmed    mad      min
+## Timestamp        1 411516  101.10   98.74  74.11   85.92  71.39     0.10
+## Delta            2 411460    0.02    0.05   0.01    0.01   0.00     0.00
+## Type*            3 411516    1.50    0.50   1.50    1.50   0.74     1.00
+## Sensor_Name*     4 411516    4.00    2.00   4.00    4.00   2.97     1.00
+## Position*        5 411516    2.14    1.12   2.00    2.05   1.48     1.00
+## Acceleration*    6 411516    1.54    0.50   2.00    1.54   0.00     1.00
+## Velocity         7 411516    0.17    0.13   0.20    0.16   0.21     0.01
+## X_AXIS           8 411362 -149.99  540.57   6.84  -45.81  72.57 -2038.87
+## Y_AXIS           9 411345  -18.63  174.89  13.06    9.89  50.13  -630.49
+## Z_AXIS          10 411516  375.38 1015.22 984.50  424.17 519.62 -1758.78
+## State*          11 411516    1.00    0.00   1.00    1.00   0.00     1.00
+##                   max   range  skew kurtosis   se
+## Timestamp      629.66  629.57  2.74    10.66 0.15
+## Delta            2.30    2.30 15.67   339.61 0.00
+## Type*            2.00    1.00  0.00    -2.00 0.00
+## Sensor_Name*     7.00    6.00  0.00    -1.25 0.00
+## Position*        4.00    3.00  0.32    -1.39 0.00
+## Acceleration*    2.00    1.00 -0.14    -1.98 0.00
+## Velocity         0.40    0.39  0.57    -0.77 0.00
+## X_AXIS         587.52 2626.39 -2.15     4.31 0.84
+## Y_AXIS         427.49 1057.98 -1.86     3.88 0.27
+## Z_AXIS        2324.65 4083.44 -0.43    -0.78 1.58
+## State*           1.00    0.00   NaN      NaN 0.00
+## -------------------------------------------------------- 
+## group: PATH_MOVING
+##              vars      n    mean      sd      min     max   range   se
+## Timestamp       1 968772  218.65  177.38     0.09  625.12  625.03 0.18
+## Delta           2 968716    0.02    0.06     0.00    2.53    2.53 0.00
+## Type            3 968772     NaN      NA      Inf    -Inf    -Inf   NA
+## Sensor_Name     4 968772     NaN      NA      Inf    -Inf    -Inf   NA
+## Position        5 968772     NaN      NA      Inf    -Inf    -Inf   NA
+## Acceleration    6 968772     NaN      NA      Inf    -Inf    -Inf   NA
+## Velocity        7 968772    0.05    0.08     0.01    0.40    0.39 0.00
+## X_AXIS          8 968332 -149.36  540.06 -2789.61 1347.05 4136.67 0.55
+## Y_AXIS          9 968296  -18.64  179.07 -1059.32 1027.34 2086.66 0.18
+## Z_AXIS         10 968766  370.81 1020.73 -2602.79 2882.58 5485.37 1.04
+## State          11 968772     NaN      NA      Inf    -Inf    -Inf   NA
+## -------------------------------------------------------- 
+## group: PATH_TRANSITION
+##               vars      n    mean      sd median trimmed    mad      min
+## Timestamp        1 136766  212.12  170.23 161.98  192.67 157.56     1.78
+## Delta            2 136766    0.01    0.05   0.01    0.01   0.00     0.00
+## Type*            3 136766    1.50    0.50   1.50    1.50   0.74     1.00
+## Sensor_Name*     4 136766    4.00    2.00   4.00    4.00   2.97     1.00
+## Position*        5 136766    2.14    1.12   2.00    2.05   1.48     1.00
+## Acceleration*    6 136766    1.15    0.36   1.00    1.06   0.00     1.00
+## Velocity         7 136766    0.05    0.07   0.03    0.03   0.02     0.01
+## X_AXIS           8 136709 -154.84  585.66   5.00  -39.59 109.01 -2869.83
+## Y_AXIS           9 136723  -20.45  231.13  15.14   10.54  73.66 -1366.24
+## Z_AXIS          10 136765  337.99 1090.93 984.62  420.35 315.93 -2870.13
+## State*          11 136766    3.00    0.00   3.00    3.00   0.00     3.00
+##                   max   range  skew kurtosis   se
+## Timestamp      565.06  563.29  0.85    -0.41 0.46
+## Delta            1.21    1.21 15.86   293.07 0.00
+## Type*            2.00    1.00  0.00    -2.00 0.00
+## Sensor_Name*     7.00    6.00  0.00    -1.25 0.01
+## Position*        4.00    3.00  0.32    -1.39 0.00
+## Acceleration*    2.00    1.00  1.95     1.80 0.00
+## Velocity         0.40    0.39  3.51    12.89 0.00
+## X_AXIS         722.41 3592.24 -2.49     6.55 1.58
+## Y_AXIS        1391.72 2757.97 -2.62    10.33 0.63
+## Z_AXIS        2903.27 5773.40 -0.63    -0.39 2.95
+## State*           3.00    0.00   NaN      NaN 0.00
+## -------------------------------------------------------- 
+## group: SHUTTLE
+##               vars     n    mean     sd median trimmed    mad      min
+## Timestamp        1 65478  132.27 123.16  86.07  108.47  70.11     6.05
+## Delta            2 65478    0.02   0.10   0.01    0.01   0.00     0.00
+## Type*            3 65478    1.50   0.50   1.50    1.50   0.74     1.00
+## Sensor_Name*     4 65478    4.00   2.00   4.00    4.00   2.97     1.00
+## Position*        5 65478    2.14   1.12   2.00    2.05   1.48     1.00
+## Acceleration*    6 65478    1.45   0.50   1.00    1.44   0.00     1.00
+## Velocity         7 65478    0.17   0.14   0.20    0.16   0.21     0.01
+## X_AXIS           8 65445 -114.31 489.20   2.93  -30.48 247.22 -3911.87
+## Y_AXIS           9 65459  -41.20 208.37   3.30  -22.56  91.59 -2647.95
+## Z_AXIS          10 65475  354.87 923.40 957.40  425.70 488.83 -3000.73
+## State*          11 65478    4.00   0.00   4.00    4.00   0.00     4.00
+##                   max   range  skew kurtosis   se
+## Timestamp      632.56  626.51  2.25     5.80 0.48
+## Delta            2.26    2.26 11.25   170.77 0.00
+## Type*            2.00    1.00  0.00    -2.00 0.00
+## Sensor_Name*     7.00    6.00  0.00    -1.25 0.01
+## Position*        4.00    3.00  0.32    -1.39 0.00
+## Acceleration*    2.00    1.00  0.20    -1.96 0.00
+## Velocity         0.40    0.39  0.60    -1.01 0.00
+## X_AXIS        1954.15 5866.02 -2.10     5.18 1.91
+## Y_AXIS        3638.92 6286.87 -0.77    12.21 0.81
+## Z_AXIS        4000.00 7000.73 -0.56    -0.76 3.61
+## State*           4.00    0.00   NaN      NaN 0.00
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{describe}\NormalTok{(tidy_sensor_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning
+## Inf
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning
+## Inf
+
+## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning
+## Inf
+
+## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning
+## Inf
+
+## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning
+## Inf
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning
+## -Inf
+
+## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning
+## -Inf
+
+## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning
+## -Inf
+
+## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning
+## -Inf
+
+## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning
+## -Inf
+\end{verbatim}
+
+\begin{verbatim}
+##              vars       n    mean      sd      min     max   range   se
+## Timestamp       1 1582532  183.94  166.22     0.09  632.56  632.46 0.13
+## Delta           2 1582420    0.02    0.06     0.00    2.53    2.53 0.00
+## Type            3 1582532     NaN      NA      Inf    -Inf    -Inf   NA
+## Sensor_Name     4 1582532     NaN      NA      Inf    -Inf    -Inf   NA
+## Position        5 1582532     NaN      NA      Inf    -Inf    -Inf   NA
+## Acceleration    6 1582532     NaN      NA      Inf    -Inf    -Inf   NA
+## Velocity        7 1582532    0.09    0.11     0.01    0.40    0.39 0.00
+## X_AXIS          8 1581848 -148.54  542.34 -3911.87 1954.15 5866.02 0.43
+## Y_AXIS          9 1581823  -19.73  184.44 -2647.95 3638.92 6286.87 0.15
+## Z_AXIS         10 1582522  368.50 1021.79 -3000.73 4000.00 7000.73 0.81
+## State          11 1582532     NaN      NA      Inf    -Inf    -Inf   NA
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Hmisc}\OperatorTok{::}\KeywordTok{describe}\NormalTok{(tidy_sensor_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## tidy_sensor_df 
+## 
+##  11  Variables      1582532  Observations
+## ---------------------------------------------------------------------------
+## Timestamp 
+##        n  missing distinct     Info     Mean      Gmd      .05      .10 
+##  1582532        0   100643        1    183.9      177    12.22    24.30 
+##      .25      .50      .75      .90      .95 
+##    57.13   130.62   268.06   478.06   553.87 
+## 
+## lowest :   0.092   0.095   0.096   0.097   0.102
+## highest: 632.466 632.476 632.539 632.546 632.556
+## ---------------------------------------------------------------------------
+## Delta 
+##        n  missing distinct     Info     Mean      Gmd      .05      .10 
+##  1582420      112     1596    0.938  0.01621   0.0126    0.010    0.010 
+##      .25      .50      .75      .90      .95 
+##    0.010    0.010    0.010    0.011    0.020 
+## 
+## lowest : 0.003 0.003 0.003 0.003 0.003, highest: 2.114 2.254 2.262 2.299 2.529
+## ---------------------------------------------------------------------------
+## Type 
+##        n  missing distinct 
+##  1582532        0        2 
+##                         
+## Value         ACC    MAG
+## Frequency  791266 791266
+## Proportion    0.5    0.5
+## ---------------------------------------------------------------------------
+## Sensor_Name 
+##        n  missing distinct 
+##  1582532        0        7 
+##                                                            
+## Value        IMU1  IMU11  IMU12   IMU3   IMU7   IMU8   IMU9
+## Frequency  226076 226076 226076 226076 226076 226076 226076
+## Proportion  0.143  0.143  0.143  0.143  0.143  0.143  0.143
+## ---------------------------------------------------------------------------
+## Position 
+##        n  missing distinct 
+##  1582532        0        4 
+##                                                             
+## Value                 FRONT_SURFACE             SIDE_SURFACE
+## Frequency                    678228                   226076
+## Proportion                    0.429                    0.143
+##                                                             
+## Value                   TOP_SURFACE TOP_SURFACE_WITH_PALETTE
+## Frequency                    452152                   226076
+## Proportion                    0.286                    0.143
+## ---------------------------------------------------------------------------
+## Acceleration 
+##        n  missing distinct 
+##  1582532        0        2 
+##                           
+## Value            1       2
+## Frequency  1174712  407820
+## Proportion   0.742   0.258
+## ---------------------------------------------------------------------------
+## Velocity 
+##        n  missing distinct     Info     Mean      Gmd 
+##  1582532        0        5     0.93  0.08557   0.1014 
+##                                              
+## Value      0.0135 0.0300 0.0600 0.2000 0.4000
+## Frequency  581826 303240 324408 251076 121982
+## Proportion  0.368  0.192  0.205  0.159  0.077
+## ---------------------------------------------------------------------------
+## X_AXIS 
+##         n   missing  distinct      Info      Mean       Gmd       .05 
+##   1581848       684     26765         1    -148.5     479.3 -1692.961 
+##       .10       .25       .50       .75       .90       .95 
+##  -752.544   -33.325     7.446    64.941   209.351   467.210 
+## 
+## lowest : -3911.865 -3431.353 -3431.053 -3366.729 -3360.132
+## highest:  1152.344  1190.215  1313.615  1347.052  1954.154
+## ---------------------------------------------------------------------------
+## Y_AXIS 
+##        n  missing distinct     Info     Mean      Gmd      .05      .10 
+##  1581823      709    15720        1   -19.73    165.3  -525.09  -245.45 
+##      .25      .50      .75      .90      .95 
+##   -23.93    14.39    56.08   104.21   247.25 
+## 
+## lowest : -2647.949 -2413.574 -2374.146 -2340.820 -2320.435
+## highest:  2771.118  2844.238  2971.924  3164.795  3638.916
+## ---------------------------------------------------------------------------
+## Z_AXIS 
+##        n  missing distinct     Info     Mean      Gmd      .05      .10 
+##  1582522       10    34122        1    368.5     1092  -1543.8   -957.7 
+##      .25      .50      .75      .90      .95 
+##   -776.1    982.9   1014.3   1047.0   1577.2 
+## 
+## lowest : -3000.728 -3000.578 -2994.881 -2993.981 -2990.982
+## highest:  3304.688  3405.273  3607.300  3687.744  4000.000
+## ---------------------------------------------------------------------------
+## State 
+##        n  missing distinct 
+##  1582532        0        4 
+##                                                                           
+## Value            PATH_IDLE     PATH_MOVING PATH_TRANSITION         SHUTTLE
+## Frequency           411516          968772          136766           65478
+## Proportion           0.260           0.612           0.086           0.041
+## ---------------------------------------------------------------------------
+\end{verbatim}
+
+\hypertarget{univariate-distribution-summary-describe}{%
+\section{UNIVARIATE (DISTRIBUTION, SUMMARY,
+DESCRIBE)}\label{univariate-distribution-summary-describe}}
+
+\hypertarget{histogram}{%
+\subsection{Histogram}\label{histogram}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(mag_X_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lsm_dataset_exploring_files/figure-latex/histograms-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(mag_Y_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lsm_dataset_exploring_files/figure-latex/histograms-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(mag_Z_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lsm_dataset_exploring_files/figure-latex/histograms-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(acc_X_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lsm_dataset_exploring_files/figure-latex/histograms-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(acc_Y_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lsm_dataset_exploring_files/figure-latex/histograms-5.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(acc_Z_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lsm_dataset_exploring_files/figure-latex/histograms-6.pdf}
+
+\hypertarget{boxplots}{%
+\subsection{Boxplots}\label{boxplots}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(mag_X_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lsm_dataset_exploring_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(mag_Y_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lsm_dataset_exploring_files/figure-latex/unnamed-chunk-5-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(mag_Z_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lsm_dataset_exploring_files/figure-latex/unnamed-chunk-5-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(acc_X_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lsm_dataset_exploring_files/figure-latex/unnamed-chunk-5-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(acc_Y_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lsm_dataset_exploring_files/figure-latex/unnamed-chunk-5-5.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(acc_Z_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lsm_dataset_exploring_files/figure-latex/unnamed-chunk-5-6.pdf}
+
+\hypertarget{outliers}{%
+\subsection{OUTLIERS}\label{outliers}}
+
+
+\end{document}

@@ -1,0 +1,388 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Chp 4 Results - Matrix Profile},
+            pdfauthor={Jill Daly},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Chp 4 Results - Matrix Profile}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Jill Daly}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{16 December, 2018}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+\begin{document}
+\maketitle
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-vib-x-results}Matrix Profile - Vibration X Axis - Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.6461506\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-vib-x-results}Matrix Profile - Vibration X Axis - Metrics}
+\centering
+\begin{tabular}[t]{lrr}
+\toprule
+  & Sensitivity & Specificity\\
+\midrule
+PATH\_IDLE & 0.6359426 & 0.9267274\\
+PATH\_MOVING & 0.6900552 & 0.7790815\\
+PATH\_TRANSITION & 0.3321033 & 0.9621849\\
+SHUTTLE & 0.6962025 & 0.9120283\\
+UNKOWN & NA & 0.9374087\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-vib-x-results}Matrix Profile - Vibration X Axis - Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE & UNKOWN\\
+\midrule
+PATH\_IDLE & 1373 & 119 & 7 & 67 & 0\\
+PATH\_MOVING & 483 & 1249 & 84 & 92 & 0\\
+PATH\_TRANSITION & 44 & 118 & 90 & 9 & 0\\
+SHUTTLE & 191 & 138 & 44 & 385 & 0\\
+UNKOWN & 68 & 186 & 46 & 0 & 0\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-vib-y-results}Matrix Profile - Vibration Y Axis - Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.4504486\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-vib-y-results}Matrix Profile - Vibration Y Axis - Metrics}
+\centering
+\begin{tabular}[t]{lrr}
+\toprule
+  & Sensitivity & Specificity\\
+\midrule
+PATH\_IDLE & 0.6201945 & 0.8747153\\
+PATH\_MOVING & 0.3187845 & 0.6530339\\
+PATH\_TRANSITION & 0.1660517 & 0.9475896\\
+SHUTTLE & 0.3580470 & 0.9334906\\
+UNKOWN & NA & 0.8435218\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-vib-y-results}Matrix Profile - Vibration Y Axis - Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE & UNKOWN\\
+\midrule
+PATH\_IDLE & 1339 & 277 & 1 & 52 & 0\\
+PATH\_MOVING & 667 & 577 & 123 & 245 & 0\\
+PATH\_TRANSITION & 45 & 134 & 45 & 58 & 0\\
+SHUTTLE & 94 & 156 & 32 & 198 & 0\\
+UNKOWN & 14 & 666 & 70 & 0 & 0\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-vib-z-results}Matrix Profile - Vibration Z Axis - Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.3959942\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-vib-z-results}Matrix Profile - Vibration Z Axis - Metrics}
+\centering
+\begin{tabular}[t]{lrr}
+\toprule
+  & Sensitivity & Specificity\\
+\midrule
+PATH\_IDLE & 0.5548865 & 0.7300683\\
+PATH\_MOVING & 0.2668508 & 0.7422058\\
+PATH\_TRANSITION & 0.0000000 & 0.9307828\\
+SHUTTLE & 0.3924051 & 0.7400943\\
+UNKOWN & NA & 1.0000000\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-vib-z-results}Matrix Profile - Vibration Z Axis - Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE & UNKOWN\\
+\midrule
+PATH\_IDLE & 1198 & 557 & 47 & 107 & 0\\
+PATH\_MOVING & 566 & 483 & 62 & 141 & 0\\
+PATH\_TRANSITION & 87 & 138 & 0 & 88 & 0\\
+SHUTTLE & 308 & 632 & 162 & 217 & 0\\
+UNKOWN & 0 & 0 & 0 & 0 & 0\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-mag-x-results}Matrix Profile - Magnetometer X Axis - Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.5902358\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-mag-x-results}Matrix Profile - Magnetometer X Axis - Metrics}
+\centering
+\begin{tabular}[t]{lrr}
+\toprule
+  & Sensitivity & Specificity\\
+\midrule
+PATH\_IDLE & 0.5544233 & 0.9343204\\
+PATH\_MOVING & 0.5917127 & 0.6902447\\
+PATH\_TRANSITION & 0.3948339 & 0.9595312\\
+SHUTTLE & 0.8209765 & 0.9450472\\
+UNKOWN & NA & 0.9059044\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-mag-x-results}Matrix Profile - Magnetometer X Axis - Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE & UNKOWN\\
+\midrule
+PATH\_IDLE & 1197 & 90 & 5 & 78 & 0\\
+PATH\_MOVING & 764 & 1071 & 139 & 21 & 0\\
+PATH\_TRANSITION & 19 & 164 & 107 & 0 & 0\\
+SHUTTLE & 173 & 60 & 0 & 454 & 0\\
+UNKOWN & 6 & 425 & 20 & 0 & 0\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-mag-y-results}Matrix Profile - Magnetometer Y Axis - Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.6680576\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-mag-y-results}Matrix Profile - Magnetometer Y Axis - Metrics}
+\centering
+\begin{tabular}[t]{lrr}
+\toprule
+  & Sensitivity & Specificity\\
+\midrule
+PATH\_IDLE & 0.6215841 & 0.8944571\\
+PATH\_MOVING & 0.7337017 & 0.7294670\\
+PATH\_TRANSITION & 0.5092251 & 0.9504644\\
+SHUTTLE & 0.7124774 & 0.9334906\\
+UNKOWN & NA & 1.0000000\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-mag-y-results}Matrix Profile - Magnetometer Y Axis - Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE & UNKOWN\\
+\midrule
+PATH\_IDLE & 1342 & 195 & 27 & 56 & 0\\
+PATH\_MOVING & 631 & 1328 & 103 & 73 & 0\\
+PATH\_TRANSITION & 29 & 165 & 138 & 30 & 0\\
+SHUTTLE & 157 & 122 & 3 & 394 & 0\\
+UNKOWN & 0 & 0 & 0 & 0 & 0\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-mag-z-results}Matrix Profile - Magnetometer Z Axis - Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.7037346\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-mag-z-results}Matrix Profile - Magnetometer Z Axis - Metrics}
+\centering
+\begin{tabular}[t]{lrr}
+\toprule
+  & Sensitivity & Specificity\\
+\midrule
+PATH\_IDLE & 0.5363594 & 0.9476082\\
+PATH\_MOVING & 0.8878453 & 0.7495810\\
+PATH\_TRANSITION & 0.7269373 & 0.9807607\\
+SHUTTLE & 0.7432188 & 0.8943396\\
+UNKOWN & NA & 1.0000000\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mp-mag-z-results}Matrix Profile - Magnetometer Z Axis - Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE & UNKOWN\\
+\midrule
+PATH\_IDLE & 1158 & 69 & 0 & 69 & 0\\
+PATH\_MOVING & 603 & 1607 & 71 & 73 & 0\\
+PATH\_TRANSITION & 16 & 71 & 197 & 0 & 0\\
+SHUTTLE & 382 & 63 & 3 & 411 & 0\\
+UNKOWN & 0 & 0 & 0 & 0 & 0\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\end{document}

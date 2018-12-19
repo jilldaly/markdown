@@ -1,0 +1,214 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Random Forest: Measuring the Effect of Labels},
+            pdfauthor={Jill Daly},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Random Forest: Measuring the Effect of Labels}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Jill Daly}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{04 December, 2018}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+\begin{document}
+\maketitle
+
+\begin{table}[!h]
+
+\caption{\label{tab:overall_accuracy_chunk}Overall Statistics (IMU12, Acc 1, Vel 0.2)}
+\centering
+\begin{tabular}[t]{lrr}
+\toprule
+  & BC & MC\\
+\midrule
+Accuracy & 0.9208021 & 0.5797043\\
+Kappa & 0.8371304 & 0.4066832\\
+AccuracyLower & 0.9129165 & 0.5657904\\
+AccuracyUpper & 0.9281857 & 0.5935238\\
+AccuracyNull & 0.6248734 & 0.4579704\\
+\addlinespace
+AccuracyPValue & 0.0000000 & 0.0000000\\
+McnemarPValue & 0.0000000 & NaN\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:overall_accuracy_chunk}Statistics By Class (IMU12, Acc 1, Vel 0.2)}
+\centering
+\begin{tabular}[t]{lrrrrrrrrrrr}
+\toprule
+  & Sensitivity & Specificity & Pos Pred Value & Neg Pred Value & Precision & Recall & F1 & Prevalence & Detection Rate & Detection Prevalence & Balanced Accuracy\\
+\midrule
+MC: PATH\_IDLE & 0.1309155 & 1.0000000 & 1.0000000 & 0.5765999 & 1.0000000 & 0.1309155 & 0.2315213 & 0.4579704 & 0.0599554 & 0.0599554 & 0.5654578\\
+MC: PATH\_MOVING & 0.9811015 & 0.6064830 & 0.5994721 & 0.9816369 & 0.5994721 & 0.9811015 & 0.7442146 & 0.3751266 & 0.3680373 & 0.6139356 & 0.7937922\\
+MC: PATH\_TRANSITION & 0.7232472 & 0.9924989 & 0.8484848 & 0.9840629 & 0.8484848 & 0.7232472 & 0.7808765 & 0.0548916 & 0.0397002 & 0.0467895 & 0.8578731\\
+MC: SHUTTLE & 1.0000000 & 0.8115876 & 0.4010152 & 1.0000000 & 0.4010152 & 1.0000000 & 0.5724638 & 0.1120113 & 0.1120113 & 0.2793194 & 0.9057938\\
+BC: PATH\_MOVING & 0.9875810 & 0.8807131 & 0.8324989 & 0.9916058 & 0.8324989 & 0.9875810 & 0.9034329 & 0.3751266 & 0.3704679 & 0.4450071 & 0.9341471\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{LSMRFLabelEffect_files/figure-latex/bc_fourfold_plot-1.pdf}
+\caption{BC Confusion Matrix}
+\end{figure}
+
+\begin{verbatim}
+##                  Reference
+## Prediction        PATH_IDLE PATH_MOVING PATH_TRANSITION SHUTTLE
+##   PATH_IDLE             296           0               0       0
+##   PATH_MOVING          1139        1817              75       0
+##   PATH_TRANSITION         0          35             196       0
+##   SHUTTLE               826           0               0     553
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{LSMRFLabelEffect_files/figure-latex/plot_mc-roc-1.pdf}
+\caption{Multi-Class ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{LSMRFLabelEffect_files/figure-latex/get_bc_roc_chunk-1.pdf}
+\caption{Binary-Class ROC Curve}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mc_auc_chink}MC AUC (IMU12, Acc 1, Vel 0.2)}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+State & AUC & NA & NA & NA\\
+\midrule
+PATH\_IDLE & 0.9982743 & 0.9806603 & 0.9883917 & 0.9995019\\
+PATH\_MOVING & 0.9982743 & 0.9806603 & 0.9883917 & 0.9995019\\
+PATH\_TRANSITION & 0.9982743 & 0.9806603 & 0.9883917 & 0.9995019\\
+SHUTTLE & 0.9982743 & 0.9806603 & 0.9883917 & 0.9995019\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## BC AUC:
+\end{verbatim}
+
+\begin{verbatim}
+## Area under the curve: 0.9959
+\end{verbatim}
+
+\begin{verbatim}
+## BC AUC CI:
+\end{verbatim}
+
+\begin{verbatim}
+## 95% CI: 0.9947-0.9972 (DeLong)
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{LSMRFLabelEffect_files/figure-latex/cal_plots_mc_data-1.pdf}
+\caption{Calibration PLot - MC Validation Data}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{LSMRFLabelEffect_files/figure-latex/cal_plots_bc_data-1.pdf}
+\caption{Calibration PLot - BC Validation Data}
+\end{figure}
+
+
+\end{document}

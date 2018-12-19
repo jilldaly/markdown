@@ -1,0 +1,262 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Chp 4 Results - Random Forest},
+            pdfauthor={Jill Daly},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Chp 4 Results - Random Forest}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Jill Daly}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{05 December, 2018}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+\begin{document}
+\maketitle
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/baseline-rf-plot-1.pdf}
+\caption{Baseline Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline RF Model Model Method}
+\centering
+\begin{tabular}[t]{l}
+\toprule
+x\\
+\midrule
+ranger\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline RF Model Tuning Params}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+parameter & class & label\\
+\midrule
+mtry & numeric & \#Randomly Selected Predictors\\
+splitrule & character & Splitting Rule\\
+min.node.size & numeric & Minimal Node Size\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline RF Best Tuned Model from Caret}
+\centering
+\begin{tabular}[t]{lrlr}
+\toprule
+  & mtry & splitrule & min.node.size\\
+\midrule
+4 & 3 & extratrees & 1\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline RF Model Coefficients}
+\centering
+\begin{tabular}[t]{l}
+\toprule
+x\\
+\midrule
+Timestamp\\
+X\_AXIS\\
+Y\_AXIS\\
+Z\_AXIS\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.4487455 & 0.9387021 & 0.7353786 & 0.8550068 & 0.7634394 & 0.6844051 & 0.6620867 & 0.9420844 & 0.7554920 & 0.9512844 & 0.7554920 & 0.6620867 & 0.2137517 & 0.8020856 & 0.0280067 & 0.0031981 & 0.0132194 & 0.0069373 & 0.0108489 & 0.0143302 & 0.0118781 & 0.0024055 & 0.0294446 & 0.0030692 & 0.0294446 & 0.0118781 & 0.0017343 & 0.0066330\\
+2 & 1 & extratrees & 0.3530964 & 0.9617985 & 0.7972860 & 0.8909119 & 0.8208446 & 0.7028694 & 0.6828205 & 0.9551559 & 0.8190249 & 0.9669909 & 0.8190249 & 0.6828205 & 0.2227280 & 0.8189882 & 0.0124065 & 0.0027975 & 0.0086557 & 0.0088995 & 0.0151193 & 0.0171659 & 0.0153807 & 0.0039673 & 0.0286393 & 0.0031075 & 0.0286393 & 0.0153807 & 0.0022249 & 0.0095433\\
+3 & 1 & gini & 0.5059330 & 0.9321490 & 0.7072317 & 0.8452941 & 0.7488978 & 0.6861009 & 0.6638492 & 0.9392804 & 0.7425958 & 0.9471307 & 0.7425958 & 0.6638492 & 0.2113235 & 0.8015648 & 0.0500526 & 0.0022093 & 0.0141827 & 0.0078235 & 0.0119076 & 0.0172640 & 0.0145806 & 0.0025524 & 0.0376562 & 0.0034468 & 0.0376562 & 0.0145806 & 0.0019559 & 0.0078804\\
+3 & 1 & extratrees & 0.3467689 & 0.9626015 & 0.7973887 & 0.8892257 & 0.8183917 & 0.7104901 & 0.6874635 & 0.9546831 & 0.8155006 & 0.9659645 & 0.8155006 & 0.6874635 & 0.2223064 & 0.8210733 & 0.0111946 & 0.0031310 & 0.0085157 & 0.0090085 & 0.0152882 & 0.0180415 & 0.0162764 & 0.0040344 & 0.0252857 & 0.0031902 & 0.0252857 & 0.0162764 & 0.0022521 & 0.0099721\\
+4 & 1 & gini & 0.6604023 & 0.9218684 & 0.6714717 & 0.8355367 & 0.7341041 & 0.6817465 & 0.6613384 & 0.9362863 & 0.7252357 & 0.9430396 & 0.7252357 & 0.6613384 & 0.2088842 & 0.7988124 & 0.0952746 & 0.0029518 & 0.0217877 & 0.0079621 & 0.0119472 & 0.0161945 & 0.0137684 & 0.0024694 & 0.0306039 & 0.0034747 & 0.0306039 & 0.0137684 & 0.0019905 & 0.0075639\\
+4 & 1 & extratrees & 0.3498294 & 0.9608276 & 0.7905987 & 0.8848190 & 0.8113087 & 0.7106646 & 0.6858637 & 0.9530537 & 0.8096822 & 0.9640836 & 0.8096822 & 0.6858637 & 0.2212047 & 0.8194587 & 0.0118728 & 0.0035990 & 0.0105722 & 0.0092255 & 0.0155113 & 0.0164312 & 0.0161502 & 0.0039776 & 0.0262108 & 0.0032694 & 0.0262108 & 0.0161502 & 0.0023064 & 0.0097932\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  4 
+## Mtry:                             3 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.0243982
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-results}Baseline RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.6157426\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-results}Baseline RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.2046861 & 1.0000000 & 0.998426798368898\\
+PATH\_MOVING & 0.9811422 & 0.6386909 & 0.984004863454533\\
+PATH\_TRANSITION & 0.7601476 & 0.9925070 & 0.991583856108311\\
+SHUTTLE & 1.0000000 & 0.8293461 & 0.999448110659684\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-results}Baseline RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 463 & 0 & 0 & 0\\
+PATH\_MOVING & 1050 & 1821 & 65 & 0\\
+PATH\_TRANSITION & 0 & 35 & 206 & 0\\
+SHUTTLE & 749 & 0 & 0 & 553\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-results}Baseline RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\end{document}

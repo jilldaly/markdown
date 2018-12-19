@@ -1,0 +1,964 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Chp 4 Results - Random Forest},
+            pdfauthor={Jill Daly},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Chp 4 Results - Random Forest}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Jill Daly}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{06 December, 2018}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+\begin{document}
+\maketitle
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/baseline-rf-plot-1.pdf}
+\caption{Baseline Vibration Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline Vibration RF Model Model Method}
+\centering
+\begin{tabular}[t]{l}
+\toprule
+x\\
+\midrule
+ranger\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline Vibration RF Model Tuning Params}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+parameter & class & label\\
+\midrule
+mtry & numeric & \#Randomly Selected Predictors\\
+splitrule & character & Splitting Rule\\
+min.node.size & numeric & Minimal Node Size\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline Vibration RF Best Tuned Model from Caret}
+\centering
+\begin{tabular}[t]{lrlr}
+\toprule
+  & mtry & splitrule & min.node.size\\
+\midrule
+6 & 4 & extratrees & 1\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline Vibration RF Model Coefficients}
+\centering
+\begin{tabular}[t]{l}
+\toprule
+x\\
+\midrule
+Timestamp\\
+X\_AXIS\\
+Y\_AXIS\\
+Z\_AXIS\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-params}Baseline Vibration RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & logLossSD\\
+\midrule
+2 & 1 & gini & 0.4345940 & 0.0256439\\
+2 & 1 & extratrees & 0.3516809 & 0.0134467\\
+3 & 1 & gini & 0.4880673 & 0.0271524\\
+3 & 1 & extratrees & 0.3436974 & 0.0182447\\
+4 & 1 & gini & 0.6376795 & 0.0799568\\
+4 & 1 & extratrees & 0.3435414 & 0.0201902\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  4 
+## Mtry:                             4 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.0236973
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    4 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (4), centered (4), scaled (4) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 494, 495, 495, 494, 494, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss  
+##   2     gini        0.4345940
+##   2     extratrees  0.3516809
+##   3     gini        0.4880673
+##   3     extratrees  0.3436974
+##   4     gini        0.6376795
+##   4     extratrees  0.3435414
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 4, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-results}Baseline Vibration RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.5918656\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-results}Baseline Vibration RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.1414677 & 1.0000000 & 0.998044343930216\\
+PATH\_MOVING & 0.9838362 & 0.6092029 & 0.988328739217154\\
+PATH\_TRANSITION & 0.8339483 & 0.9935774 & 0.99421372826445\\
+SHUTTLE & 1.0000000 & 0.8220551 & 0.999112733337536\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-results}Baseline Vibration RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 320 & 0 & 0 & 0\\
+PATH\_MOVING & 1161 & 1826 & 45 & 0\\
+PATH\_TRANSITION & 0 & 30 & 226 & 0\\
+SHUTTLE & 781 & 0 & 0 & 553\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:baseline-rf-results}Baseline Vibration RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/plot_mc-roc-1.pdf}
+\caption{Baseline Vibration ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/mag-rf-plot-1.pdf}
+\caption{Mag Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mag-rf-params}Mag RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & logLossSD\\
+\midrule
+2 & 1 & gini & 0.2092190 & 0.0171072\\
+2 & 1 & extratrees & 0.2111362 & 0.0055793\\
+3 & 1 & gini & 0.2324539 & 0.0309970\\
+3 & 1 & extratrees & 0.2064035 & 0.0071584\\
+4 & 1 & gini & 0.2525624 & 0.0355965\\
+4 & 1 & extratrees & 0.2032366 & 0.0077632\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  4 
+## Mtry:                             4 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.01622868
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    4 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (4), centered (4), scaled (4) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 494, 495, 495, 494, 494, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss  
+##   2     gini        0.2092190
+##   2     extratrees  0.2111362
+##   3     gini        0.2324539
+##   3     extratrees  0.2064035
+##   4     gini        0.2525624
+##   4     extratrees  0.2032366
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 4, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mag-rf-results}Mag RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.4196682\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mag-rf-results}Mag RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.0000000 & 1.0000000 & 0.992485599192367\\
+PATH\_MOVING & 0.7052802 & 0.5194426 & 0.725379459796187\\
+PATH\_TRANSITION & 0.8929889 & 0.9154357 & 0.942341889700207\\
+SHUTTLE & 0.9457505 & 0.7744361 & 0.978250121440375\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mag-rf-results}Mag RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 0 & 0 & 0 & 0\\
+PATH\_MOVING & 1438 & 1309 & 20 & 25\\
+PATH\_TRANSITION & 4 & 386 & 242 & 5\\
+SHUTTLE & 820 & 161 & 9 & 523\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:mag-rf-results}Mag RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/plot_mag-roc-1.pdf}
+\caption{Mag ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/combined-rf-plot-1.pdf}
+\caption{Vibration + Magnetometer Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:combined-rf-params}Vibration + Magnetometer RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & logLossSD\\
+\midrule
+2 & 1 & gini & 1.7195396 & 0.5881610\\
+2 & 1 & extratrees & 1.0850881 & 0.0517257\\
+3 & 1 & gini & 1.9053229 & 0.6463260\\
+3 & 1 & extratrees & 1.0029054 & 0.0470129\\
+4 & 1 & gini & 4.0143578 & 1.8836691\\
+4 & 1 & extratrees & 0.9645406 & 0.0613808\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      9884 
+## Number of independent variables:  4 
+## Mtry:                             4 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.008035631
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 9884 samples
+##    4 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (4), centered (4), scaled (4) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 494, 495, 495, 494, 494, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss  
+##   2     gini        1.7195396
+##   2     extratrees  1.0850881
+##   3     gini        1.9053229
+##   3     extratrees  1.0029054
+##   4     gini        4.0143578
+##   4     extratrees  0.9645406
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 4, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:combined-rf-results}Vibration + Magnetometer RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.8954877\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:combined-rf-results}Vibration + Magnetometer RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.8231653 & 1.0000000 & 0.999839826068596\\
+PATH\_MOVING & 0.9399246 & 0.9536617 & 0.99632325211746\\
+PATH\_TRANSITION & 0.9815498 & 0.9728110 & 0.997001301901266\\
+SHUTTLE & 1.0000000 & 0.9438369 & 0.999961579932076\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:combined-rf-results}Vibration + Magnetometer RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 3724 & 0 & 0 & 0\\
+PATH\_MOVING & 276 & 3489 & 10 & 0\\
+PATH\_TRANSITION & 31 & 223 & 532 & 0\\
+SHUTTLE & 493 & 0 & 0 & 1106\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:combined-rf-results}Vibration + Magnetometer RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/plot_combined-roc-1.pdf}
+\caption{Vibration + Magnetometer ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/a_1_v_0_04-rf-plot-1.pdf}
+\caption{a\_1\_v\_0\_04 Model}
+\end{figure}
+
+\textbackslash{}begin\{table\}{[}!h{]}
+
+\textbackslash{}caption\{\label{tab:a_1_v_0_04-rf-params}a\_1\_v\_0\_04
+RF Training Model Results\} \centering
+
+\begin{tabular}[t]{rrlrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & logLossSD\\
+\midrule
+2 & 1 & gini & 0.7796189 & 0.1054723\\
+2 & 1 & extratrees & 0.6393502 & 0.0288047\\
+3 & 1 & gini & 0.8536428 & 0.1186917\\
+3 & 1 & extratrees & 0.6379508 & 0.0282093\\
+4 & 1 & gini & 0.9332342 & 0.1879865\\
+4 & 1 & extratrees & 0.6441374 & 0.0382260\\
+\bottomrule
+\end{tabular}
+
+\textbackslash{}end\{table\}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      8362 
+## Number of independent variables:  4 
+## Mtry:                             3 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.01326603
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 8362 samples
+##    4 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (4), centered (4), scaled (4) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 494, 495, 495, 494, 494, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss  
+##   2     gini        0.7796189
+##   2     extratrees  0.6393502
+##   3     gini        0.8536428
+##   3     extratrees  0.6379508
+##   4     gini        0.9332342
+##   4     extratrees  0.6441374
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 3, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\textbackslash{}begin\{table\}{[}!h{]}
+
+\textbackslash{}caption\{\label{tab:a_1_v_0_04-rf-params}a\_1\_v\_0\_04
+RF - Validation Accuracy\} \centering
+
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.5875389\\
+\bottomrule
+\end{tabular}
+
+\textbackslash{}end\{table\}
+
+\textbackslash{}begin\{table\}{[}!h{]}
+
+\textbackslash{}caption\{\label{tab:a_1_v_0_04-rf-params}a\_1\_v\_0\_04
+RF Validation Metrics\} \centering
+
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.3970301 & 0.9996917 & 0.997810940473145\\
+PATH\_MOVING & 0.8532505 & 0.7456140 & 0.936670646283709\\
+PATH\_TRANSITION & 0.7800000 & 0.9621548 & 0.975789201183432\\
+SHUTTLE & 0.9988914 & 0.7927614 & 0.999069018505198\\
+\bottomrule
+\end{tabular}
+
+\textbackslash{}end\{table\}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/a_1_v_0_06-rf-plot-1.pdf}
+\caption{a\_1\_v\_0\_06 Model}
+\end{figure}
+
+\textbackslash{}begin\{table\}{[}!h{]}
+
+\textbackslash{}caption\{\label{tab:a_1_v_0_06-rf-params}a\_1\_v\_0\_06
+RF Training Model Results\} \centering
+
+\begin{tabular}[t]{rrlrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & logLossSD\\
+\midrule
+2 & 1 & gini & 1.404503 & 0.1638134\\
+2 & 1 & extratrees & 1.581914 & 0.5605284\\
+3 & 1 & gini & 2.359028 & 0.5717812\\
+3 & 1 & extratrees & 1.647546 & 0.5409843\\
+4 & 1 & gini & 6.054099 & 0.9444707\\
+4 & 1 & extratrees & 1.965166 & 0.5644683\\
+\bottomrule
+\end{tabular}
+
+\textbackslash{}end\{table\}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      23132 
+## Number of independent variables:  4 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        gini 
+## OOB prediction error (Brier s.):  0.009390752
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 23132 samples
+##     4 predictor
+##     4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (4), centered (4), scaled (4) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 494, 495, 495, 494, 494, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss 
+##   2     gini        1.404503
+##   2     extratrees  1.581914
+##   3     gini        2.359028
+##   3     extratrees  1.647546
+##   4     gini        6.054099
+##   4     extratrees  1.965166
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule = gini
+##  and min.node.size = 1.
+\end{verbatim}
+
+\textbackslash{}begin\{table\}{[}!h{]}
+
+\textbackslash{}caption\{\label{tab:a_1_v_0_06-rf-params}a\_1\_v\_0\_06
+RF - Validation Accuracy\} \centering
+
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.6490144\\
+\bottomrule
+\end{tabular}
+
+\textbackslash{}end\{table\}
+
+\textbackslash{}begin\{table\}{[}!h{]}
+
+\textbackslash{}caption\{\label{tab:a_1_v_0_06-rf-params}a\_1\_v\_0\_06
+RF Validation Metrics\} \centering
+
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.3987805 & 0.9996705 & 0.990792075804571\\
+PATH\_MOVING & 0.6923801 & 0.7665455 & 0.857084596808021\\
+PATH\_TRANSITION & 0.8141862 & 0.7436402 & 0.903621924829476\\
+SHUTTLE & 0.8488372 & 0.9617195 & 0.98469590743274\\
+\bottomrule
+\end{tabular}
+
+\textbackslash{}end\{table\}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/a_2_v_0_4-rf-plot-1.pdf}
+\caption{a\_2\_v\_0\_4 Model}
+\end{figure}
+
+\textbackslash{}begin\{table\}{[}!h{]}
+
+\textbackslash{}caption\{\label{tab:a_2_v_0_4-rf-params}a\_2\_v\_0\_4 RF
+Training Model Results\} \centering
+
+\begin{tabular}[t]{rrlrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & logLossSD\\
+\midrule
+2 & 1 & gini & 0.7656648 & 0.0501640\\
+2 & 1 & extratrees & 0.6557411 & 0.0143744\\
+3 & 1 & gini & 0.8426329 & 0.0763494\\
+3 & 1 & extratrees & 0.6447617 & 0.0273652\\
+4 & 1 & gini & 0.9534549 & 0.1090660\\
+4 & 1 & extratrees & 0.6475105 & 0.0308461\\
+\bottomrule
+\end{tabular}
+
+\textbackslash{}end\{table\}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      9064 
+## Number of independent variables:  4 
+## Mtry:                             3 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.01977015
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 9064 samples
+##    4 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (4), centered (4), scaled (4) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 494, 495, 495, 494, 494, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss  
+##   2     gini        0.7656648
+##   2     extratrees  0.6557411
+##   3     gini        0.8426329
+##   3     extratrees  0.6447617
+##   4     gini        0.9534549
+##   4     extratrees  0.6475105
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 3, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\textbackslash{}begin\{table\}{[}!h{]}
+
+\textbackslash{}caption\{\label{tab:a_2_v_0_4-rf-params}a\_2\_v\_0\_4 RF
+- Validation Accuracy\} \centering
+
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.515887\\
+\bottomrule
+\end{tabular}
+
+\textbackslash{}end\{table\}
+
+\textbackslash{}begin\{table\}{[}!h{]}
+
+\textbackslash{}caption\{\label{tab:a_2_v_0_4-rf-params}a\_2\_v\_0\_4 RF
+Validation Metrics\} \centering
+
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.2748220 & 0.9994632 & 0.991272154779222\\
+PATH\_MOVING & 0.8101105 & 0.7670641 & 0.928282866972157\\
+PATH\_TRANSITION & 0.7604167 & 0.8931176 & 0.9486139993543\\
+SHUTTLE & 0.9990775 & 0.7637845 & 0.997380674934569\\
+\bottomrule
+\end{tabular}
+
+\textbackslash{}end\{table\}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/a_2_v_0_06-rf-plot-1.pdf}
+\caption{a\_2\_v\_0\_06 Model}
+\end{figure}
+
+\textbackslash{}begin\{table\}{[}!h{]}
+
+\textbackslash{}caption\{\label{tab:a_2_v_0_06-rf-params}a\_2\_v\_0\_06
+RF Training Model Results\} \centering
+
+\begin{tabular}[t]{rrlrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & logLossSD\\
+\midrule
+2 & 1 & gini & 1.786720 & 0.5718651\\
+2 & 1 & extratrees & 1.534895 & 0.2006457\\
+3 & 1 & gini & 3.371592 & 0.7382088\\
+3 & 1 & extratrees & 1.780658 & 0.3953811\\
+4 & 1 & gini & 7.530882 & 0.7433695\\
+4 & 1 & extratrees & 2.645977 & 1.1235611\\
+\bottomrule
+\end{tabular}
+
+\textbackslash{}end\{table\}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      23212 
+## Number of independent variables:  4 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.0154965
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 23212 samples
+##     4 predictor
+##     4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (4), centered (4), scaled (4) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 494, 495, 495, 494, 494, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss 
+##   2     gini        1.786720
+##   2     extratrees  1.534895
+##   3     gini        3.371592
+##   3     extratrees  1.780658
+##   4     gini        7.530882
+##   4     extratrees  2.645977
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\textbackslash{}begin\{table\}{[}!h{]}
+
+\textbackslash{}caption\{\label{tab:a_2_v_0_06-rf-params}a\_2\_v\_0\_06
+RF - Validation Accuracy\} \centering
+
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.6203688\\
+\bottomrule
+\end{tabular}
+
+\textbackslash{}end\{table\}
+
+\textbackslash{}begin\{table\}{[}!h{]}
+
+\textbackslash{}caption\{\label{tab:a_2_v_0_06-rf-params}a\_2\_v\_0\_06
+RF Validation Metrics\} \centering
+
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.0820056 & 0.9997026 & 0.973866235845022\\
+PATH\_MOVING & 0.8186150 & 0.6261501 & 0.852037564855777\\
+PATH\_TRANSITION & 0.7782931 & 0.8790369 & 0.931781472130508\\
+SHUTTLE & 0.9828431 & 0.8816172 & 0.991207585302024\\
+\bottomrule
+\end{tabular}
+
+\textbackslash{}end\{table\}
+
+
+\end{document}

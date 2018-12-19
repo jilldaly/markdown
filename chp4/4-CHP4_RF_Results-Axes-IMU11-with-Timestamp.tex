@@ -1,0 +1,2590 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Chp 4 Results - Random Forest},
+            pdfauthor={Jill Daly},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Chp 4 Results - Random Forest}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Jill Daly}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{15 December, 2018}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+\begin{document}
+\maketitle
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4a-axis-plot-x-vib-1.pdf}
+\caption{Axis - X Vibration - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-x-vib-rf-params}Axes - X Vibration - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.5790570 & 0.9459304 & 0.6799041 & 0.8834921 & 0.8127897 & 0.7591078 & 0.7371154 & 0.9553733 & 0.7970433 & 0.9604213 & 0.7970433 & 0.7371154 & 0.2208730 & 0.8462444 & 0.1097909 & 0.0071670 & 0.0331589 & 0.0150620 & 0.0243126 & 0.0164537 & 0.0178684 & 0.0061421 & 0.0236278 & 0.0059548 & 0.0236278 & 0.0178684 & 0.0037655 & 0.0116207\\
+2 & 1 & extratrees & 0.2646212 & 0.9770526 & 0.8232845 & 0.9133054 & 0.8598945 & 0.7826322 & 0.7560499 & 0.9658768 & 0.8492762 & 0.9727986 & 0.8492762 & 0.7560499 & 0.2283263 & 0.8609634 & 0.0202178 & 0.0042604 & 0.0223952 & 0.0130549 & 0.0213085 & 0.0230216 & 0.0228527 & 0.0051175 & 0.0301897 & 0.0046229 & 0.0301897 & 0.0228527 & 0.0032637 & 0.0138070\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.01245147
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   gini        0.5790570  0.9459304  0.6799041  0.8834921  0.8127897
+##   extratrees  0.2646212  0.9770526  0.8232845  0.9133054  0.8598945
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.7591078  0.7371154         0.9553733         0.7970433          
+##   0.7826322  0.7560499         0.9658768         0.8492762          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9604213            0.7970433       0.7371154    0.2208730          
+##   0.9727986            0.8492762       0.7560499    0.2283263          
+##   Mean_Balanced_Accuracy
+##   0.8462444             
+##   0.8609634             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-x-vib-rf-results}Axis - X Vibration - RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.6904087\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-x-vib-rf-results}Axis - X Vibration - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.3457118 & 1.0000000 & 0.998574023120472\\
+PATH\_MOVING & 0.9800647 & 0.6918341 & 0.983079347498156\\
+PATH\_TRANSITION & 0.9520295 & 0.9920788 & 0.997674273467205\\
+SHUTTLE & 1.0000000 & 0.8765095 & 0.999895349091123\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-x-vib-rf-results}Axis - X Vibration - RF Validation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 782 & 0 & 0 & 0\\
+PATH\_MOVING & 938 & 1819 & 13 & 0\\
+PATH\_TRANSITION & 0 & 37 & 258 & 0\\
+SHUTTLE & 542 & 0 & 0 & 553\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-x-vib-rf-results}Axis - X Vibration - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4a-axis-roc-x-vib-1.pdf}
+\caption{Axis - X Vibration ROC - using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4b-axis-plot-y-vib-1.pdf}
+\caption{Axis - Y Vibration - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-y-vib-rf-params}Axes - Y Vibration - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.3087941 & 0.9741232 & 0.7395753 & 0.9177580 & 0.8681385 & 0.8158227 & 0.7921200 & 0.9682396 & 0.8605721 & 0.9726241 & 0.8605721 & 0.7921200 & 0.2294395 & 0.8801798 & 0.1343627 & 0.0143428 & 0.0279323 & 0.0194960 & 0.0315902 & 0.0427368 & 0.0421384 & 0.0074596 & 0.0460431 & 0.0070418 & 0.0460431 & 0.0421384 & 0.0048740 & 0.0243945\\
+2 & 1 & extratrees & 0.2020625 & 0.9910940 & 0.9145422 & 0.9451868 & 0.9123961 & 0.8737561 & 0.8482375 & 0.9784916 & 0.9191966 & 0.9821537 & 0.9191966 & 0.8482375 & 0.2362967 & 0.9133646 & 0.0666832 & 0.0075484 & 0.0208680 & 0.0092517 & 0.0148575 & 0.0212465 & 0.0215588 & 0.0036195 & 0.0180040 & 0.0033498 & 0.0180040 & 0.0215588 & 0.0023129 & 0.0122102\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.004981054
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   gini        0.3087941  0.9741232  0.7395753  0.9177580  0.8681385
+##   extratrees  0.2020625  0.9910940  0.9145422  0.9451868  0.9123961
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.8158227  0.7921200         0.9682396         0.8605721          
+##   0.8737561  0.8482375         0.9784916         0.9191966          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9726241            0.8605721       0.7921200    0.2294395          
+##   0.9821537            0.9191966       0.8482375    0.2362967          
+##   Mean_Balanced_Accuracy
+##   0.8801798             
+##   0.9133646             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-y-vib-rf-results}Axis - Y Vibration - RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.9890732\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-y-vib-rf-results}Axis - Y Vibration - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.9801061 & 0.9996269 & 0.999944821647729\\
+PATH\_MOVING & 1.0000000 & 0.9948153 & 0.999995460589537\\
+PATH\_TRANSITION & 0.9704797 & 1.0000000 & 0.999996840045472\\
+SHUTTLE & 0.9981917 & 0.9915698 & 0.999911829549214\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-y-vib-rf-results}Axis - Y Vibration - RF Validation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 2217 & 0 & 0 & 1\\
+PATH\_MOVING & 8 & 1856 & 8 & 0\\
+PATH\_TRANSITION & 0 & 0 & 263 & 0\\
+SHUTTLE & 37 & 0 & 0 & 552\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-y-vib-rf-results}Axis - Y Vibration - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4b-axis-roc-y-vib-1.pdf}
+\caption{Axis - Y Vibration ROC - using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4c-axis-plot-z-vib-1.pdf}
+\caption{Axis - Z Vibration - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-vib-rf-params}Axes - Z Vibration - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.2807445 & 0.9758351 & 0.7616235 & 0.9213086 & 0.8738498 & 0.8211490 & 0.7966329 & 0.9695541 & 0.8725708 & 0.9738552 & 0.8725708 & 0.7966329 & 0.2303271 & 0.8830935 & 0.0771229 & 0.0087481 & 0.0437593 & 0.0172006 & 0.0277435 & 0.0336330 & 0.0329601 & 0.0066783 & 0.0401954 & 0.0062373 & 0.0401954 & 0.0329601 & 0.0043001 & 0.0196478\\
+2 & 1 & extratrees & 0.1983292 & 0.9913739 & 0.9207389 & 0.9470522 & 0.9151474 & 0.8722069 & 0.8428296 & 0.9787839 & 0.9292932 & 0.9832636 & 0.9292932 & 0.8428296 & 0.2367631 & 0.9108067 & 0.0347792 & 0.0056007 & 0.0147817 & 0.0068459 & 0.0111024 & 0.0174715 & 0.0182676 & 0.0028054 & 0.0143422 & 0.0023425 & 0.0143422 & 0.0182676 & 0.0017115 & 0.0102666\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.005141476
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   gini        0.2807445  0.9758351  0.7616235  0.9213086  0.8738498
+##   extratrees  0.1983292  0.9913739  0.9207389  0.9470522  0.9151474
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.8211490  0.7966329         0.9695541         0.8725708          
+##   0.8722069  0.8428296         0.9787839         0.9292932          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9738552            0.8725708       0.7966329    0.2303271          
+##   0.9832636            0.9292932       0.8428296    0.2367631          
+##   Mean_Balanced_Accuracy
+##   0.8830935             
+##   0.9108067             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-vib-rf-results}Axis - Z Vibration - RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.9979765\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-vib-rf-results}Axis - Z Vibration - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.9995579 & 0.9992537 & 0.999998185465247\\
+PATH\_MOVING & 0.9983836 & 0.9980557 & 0.999987865806646\\
+PATH\_TRANSITION & 0.9815498 & 0.9995718 & 0.999971955403562\\
+SHUTTLE & 0.9981917 & 1.0000000 & 1\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-vib-rf-results}Axis - Z Vibration - RF Validation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 2261 & 1 & 0 & 1\\
+PATH\_MOVING & 1 & 1853 & 5 & 0\\
+PATH\_TRANSITION & 0 & 2 & 266 & 0\\
+SHUTTLE & 0 & 0 & 0 & 552\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-vib-rf-results}Axis - Z Vibration - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4c-axis-roc-z-vib-1.pdf}
+\caption{Axis - Z Vibration ROC - using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4d-axis-plot-xy-vib-1.pdf}
+\caption{Axes - XY Vibration - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-vib-rf-params}Axes - XY Vibration - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.4386704 & 0.9432730 & 0.7296962 & 0.8547604 & 0.7646390 & 0.7035278 & 0.6810272 & 0.9428834 & 0.7573224 & 0.9502661 & 0.7573224 & 0.6810272 & 0.2136901 & 0.8119553 & 0.0313496 & 0.0036159 & 0.0226582 & 0.0119639 & 0.0190173 & 0.0210523 & 0.0168336 & 0.0042744 & 0.0306194 & 0.0046857 & 0.0306194 & 0.0168336 & 0.0029910 & 0.0104123\\
+2 & 1 & extratrees & 0.3095269 & 0.9702702 & 0.8185488 & 0.9015921 & 0.8394585 & 0.7367547 & 0.7121039 & 0.9602302 & 0.8372723 & 0.9700297 & 0.8372723 & 0.7121039 & 0.2253980 & 0.8361670 & 0.0156062 & 0.0043284 & 0.0158050 & 0.0099951 & 0.0165078 & 0.0206106 & 0.0186280 & 0.0039122 & 0.0224601 & 0.0035356 & 0.0224601 & 0.0186280 & 0.0024988 & 0.0110333\\
+3 & 1 & gini & 0.6979390 & 0.9224775 & 0.6632747 & 0.8339631 & 0.7319436 & 0.6842181 & 0.6644874 & 0.9358214 & 0.7218791 & 0.9423465 & 0.7218791 & 0.6644874 & 0.2084908 & 0.8001544 & 0.0894787 & 0.0054575 & 0.0323937 & 0.0117263 & 0.0183492 & 0.0197757 & 0.0156394 & 0.0039057 & 0.0349193 & 0.0043591 & 0.0349193 & 0.0156394 & 0.0029316 & 0.0097127\\
+3 & 1 & extratrees & 0.3202802 & 0.9683091 & 0.8126963 & 0.8951848 & 0.8290900 & 0.7342538 & 0.7083308 & 0.9577380 & 0.8270840 & 0.9673630 & 0.8270840 & 0.7083308 & 0.2237962 & 0.8330344 & 0.0243113 & 0.0049656 & 0.0223187 & 0.0138044 & 0.0225941 & 0.0227244 & 0.0209172 & 0.0053127 & 0.0310966 & 0.0051428 & 0.0310966 & 0.0209172 & 0.0034511 & 0.0128512\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  3 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.02121172
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    3 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (3), centered (3), scaled (3) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        0.4386704  0.9432730  0.7296962  0.8547604  0.7646390
+##   2     extratrees  0.3095269  0.9702702  0.8185488  0.9015921  0.8394585
+##   3     gini        0.6979390  0.9224775  0.6632747  0.8339631  0.7319436
+##   3     extratrees  0.3202802  0.9683091  0.8126963  0.8951848  0.8290900
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.7035278  0.6810272         0.9428834         0.7573224          
+##   0.7367547  0.7121039         0.9602302         0.8372723          
+##   0.6842181  0.6644874         0.9358214         0.7218791          
+##   0.7342538  0.7083308         0.9577380         0.8270840          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9502661            0.7573224       0.6810272    0.2136901          
+##   0.9700297            0.8372723       0.7121039    0.2253980          
+##   0.9423465            0.7218791       0.6644874    0.2084908          
+##   0.9673630            0.8270840       0.7083308    0.2237962          
+##   Mean_Balanced_Accuracy
+##   0.8119553             
+##   0.8361670             
+##   0.8001544             
+##   0.8330344             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-vib-rf-results}Axes - XY Vibration - RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.5864023\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-vib-rf-results}Axes - XY Vibration - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.1476569 & 1.0000000 & 0.999046049592884\\
+PATH\_MOVING & 0.9768319 & 0.6406351 & 0.982780182889355\\
+PATH\_TRANSITION & 0.7306273 & 0.9910083 & 0.991018619242069\\
+SHUTTLE & 1.0000000 & 0.7965368 & 0.99968336919893\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-vib-rf-results}Axes - XY Vibration - RF Validation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 334 & 0 & 0 & 0\\
+PATH\_MOVING & 1036 & 1813 & 73 & 0\\
+PATH\_TRANSITION & 0 & 42 & 198 & 0\\
+SHUTTLE & 892 & 1 & 0 & 553\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-vib-rf-results}Axes - XY Vibration - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4d-axis-roc-xy-vib-1.pdf}
+\caption{Axes - XY Vibration ROC - using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4e-axis-plot-xz-vib-1.pdf}
+\caption{Axes - XZ Vibration - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-vib-rf-params}Axes - XZ Vibration - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.4472419 & 0.9421815 & 0.7353770 & 0.8599311 & 0.7721202 & 0.7055785 & 0.6785262 & 0.9444951 & 0.7707886 & 0.9531441 & 0.7707886 & 0.6785262 & 0.2149828 & 0.8115106 & 0.0546858 & 0.0040775 & 0.0310619 & 0.0095647 & 0.0154826 & 0.0219203 & 0.0162814 & 0.0037433 & 0.0362406 & 0.0035954 & 0.0362406 & 0.0162814 & 0.0023912 & 0.0096567\\
+2 & 1 & extratrees & 0.3122181 & 0.9687201 & 0.8177780 & 0.9004450 & 0.8372239 & 0.7354903 & 0.7081336 & 0.9593708 & 0.8385676 & 0.9699561 & 0.8385676 & 0.7081336 & 0.2251113 & 0.8337522 & 0.0106666 & 0.0029488 & 0.0143467 & 0.0082239 & 0.0137563 & 0.0193415 & 0.0165799 & 0.0033847 & 0.0272692 & 0.0027351 & 0.0272692 & 0.0165799 & 0.0020560 & 0.0098327\\
+3 & 1 & gini & 0.6735153 & 0.9254102 & 0.6820973 & 0.8466661 & 0.7517625 & 0.6996981 & 0.6758013 & 0.9401715 & 0.7475761 & 0.9475277 & 0.7475761 & 0.6758013 & 0.2116665 & 0.8079864 & 0.1464961 & 0.0054376 & 0.0415202 & 0.0100361 & 0.0154672 & 0.0210396 & 0.0152547 & 0.0032762 & 0.0365229 & 0.0038802 & 0.0365229 & 0.0152547 & 0.0025090 & 0.0088804\\
+3 & 1 & extratrees & 0.3186570 & 0.9673807 & 0.8131777 & 0.8943977 & 0.8274674 & 0.7345836 & 0.7059599 & 0.9570950 & 0.8305980 & 0.9674210 & 0.8305980 & 0.7059599 & 0.2235994 & 0.8315275 & 0.0167707 & 0.0043407 & 0.0204485 & 0.0111938 & 0.0185852 & 0.0229852 & 0.0202931 & 0.0044654 & 0.0296385 & 0.0038384 & 0.0296385 & 0.0202931 & 0.0027985 & 0.0121408\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  3 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.02238808
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    3 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (3), centered (3), scaled (3) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        0.4472419  0.9421815  0.7353770  0.8599311  0.7721202
+##   2     extratrees  0.3122181  0.9687201  0.8177780  0.9004450  0.8372239
+##   3     gini        0.6735153  0.9254102  0.6820973  0.8466661  0.7517625
+##   3     extratrees  0.3186570  0.9673807  0.8131777  0.8943977  0.8274674
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.7055785  0.6785262         0.9444951         0.7707886          
+##   0.7354903  0.7081336         0.9593708         0.8385676          
+##   0.6996981  0.6758013         0.9401715         0.7475761          
+##   0.7345836  0.7059599         0.9570950         0.8305980          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9531441            0.7707886       0.6785262    0.2149828          
+##   0.9699561            0.8385676       0.7081336    0.2251113          
+##   0.9475277            0.7475761       0.6758013    0.2116665          
+##   0.9674210            0.8305980       0.7059599    0.2235994          
+##   Mean_Balanced_Accuracy
+##   0.8115106             
+##   0.8337522             
+##   0.8079864             
+##   0.8315275             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-vib-rf-results}Axes - XZ Vibration - RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.7021449\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-vib-rf-results}Axes - XZ Vibration - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.3992042 & 0.9992537 & 0.997053278039511\\
+PATH\_MOVING & 0.9725216 & 0.6493843 & 0.97649283750866\\
+PATH\_TRANSITION & 0.7712177 & 0.9897238 & 0.992257716411461\\
+SHUTTLE & 1.0000000 & 0.9225336 & 0.999509912377524\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-vib-rf-results}Axes - XZ Vibration - RF Validation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 903 & 2 & 0 & 0\\
+PATH\_MOVING & 1020 & 1805 & 62 & 0\\
+PATH\_TRANSITION & 0 & 48 & 209 & 0\\
+SHUTTLE & 339 & 1 & 0 & 553\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-vib-rf-results}Axes - XZ Vibration - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4e-axis-roc-xz-vib-1.pdf}
+\caption{Axes - XZ Vibration ROC - using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4f-axis-plot-yz-vib-1.pdf}
+\caption{Axes - YZ Vibration - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-vib-rf-params}Axes - YZ Vibration - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.4327712 & 0.9404894 & 0.7388880 & 0.8568058 & 0.7672687 & 0.6873095 & 0.6665251 & 0.9437817 & 0.7555182 & 0.9515153 & 0.7555182 & 0.6665251 & 0.2142015 & 0.8051534 & 0.0399881 & 0.0072789 & 0.0180573 & 0.0125674 & 0.0206208 & 0.0216262 & 0.0206326 & 0.0049927 & 0.0346240 & 0.0050768 & 0.0346240 & 0.0206326 & 0.0031419 & 0.0123421\\
+2 & 1 & extratrees & 0.3247577 & 0.9739223 & 0.8401470 & 0.9048518 & 0.8448020 & 0.7452366 & 0.7215532 & 0.9608665 & 0.8626553 & 0.9706127 & 0.8626553 & 0.7215532 & 0.2262129 & 0.8412098 & 0.0199177 & 0.0046643 & 0.0170636 & 0.0072547 & 0.0121722 & 0.0198633 & 0.0172488 & 0.0030032 & 0.0270648 & 0.0024354 & 0.0270648 & 0.0172488 & 0.0018137 & 0.0098860\\
+3 & 1 & gini & 0.4359137 & 0.9454491 & 0.7542883 & 0.8666990 & 0.7841033 & 0.7158519 & 0.6925916 & 0.9477000 & 0.7772488 & 0.9545983 & 0.7772488 & 0.6925916 & 0.2166748 & 0.8201458 & 0.0680592 & 0.0147998 & 0.0418822 & 0.0229403 & 0.0373352 & 0.0395955 & 0.0355444 & 0.0086201 & 0.0551589 & 0.0088469 & 0.0551589 & 0.0355444 & 0.0057351 & 0.0216715\\
+3 & 1 & extratrees & 0.2822792 & 0.9824554 & 0.8778212 & 0.9188814 & 0.8684413 & 0.7882228 & 0.7590576 & 0.9668374 & 0.8863958 & 0.9748902 & 0.8863958 & 0.7590576 & 0.2297203 & 0.8629475 & 0.0241135 & 0.0052519 & 0.0197272 & 0.0072698 & 0.0120419 & 0.0200540 & 0.0179439 & 0.0030075 & 0.0214187 & 0.0025232 & 0.0214187 & 0.0179439 & 0.0018174 & 0.0100416\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  3 
+## Mtry:                             3 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.006984451
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    3 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (3), centered (3), scaled (3) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        0.4327712  0.9404894  0.7388880  0.8568058  0.7672687
+##   2     extratrees  0.3247577  0.9739223  0.8401470  0.9048518  0.8448020
+##   3     gini        0.4359137  0.9454491  0.7542883  0.8666990  0.7841033
+##   3     extratrees  0.2822792  0.9824554  0.8778212  0.9188814  0.8684413
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.6873095  0.6665251         0.9437817         0.7555182          
+##   0.7452366  0.7215532         0.9608665         0.8626553          
+##   0.7158519  0.6925916         0.9477000         0.7772488          
+##   0.7882228  0.7590576         0.9668374         0.8863958          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9515153            0.7555182       0.6665251    0.2142015          
+##   0.9706127            0.8626553       0.7215532    0.2262129          
+##   0.9545983            0.7772488       0.6925916    0.2166748          
+##   0.9748902            0.8863958       0.7590576    0.2297203          
+##   Mean_Balanced_Accuracy
+##   0.8051534             
+##   0.8412098             
+##   0.8201458             
+##   0.8629475             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 3, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-vib-rf-results}Axes - YZ Vibration - RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.9880615\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-vib-rf-results}Axes - YZ Vibration - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.9778957 & 0.9992537 & 0.99995265713871\\
+PATH\_MOVING & 0.9989224 & 0.9948153 & 0.999970144646568\\
+PATH\_TRANSITION & 0.9778598 & 0.9997859 & 0.999951415699128\\
+SHUTTLE & 0.9981917 & 0.9908863 & 0.999937786270707\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-vib-rf-results}Axes - YZ Vibration - RF Validation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 2212 & 1 & 0 & 1\\
+PATH\_MOVING & 10 & 1854 & 6 & 0\\
+PATH\_TRANSITION & 0 & 1 & 265 & 0\\
+SHUTTLE & 40 & 0 & 0 & 552\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-vib-rf-results}Axes - YZ Vibration - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4f-axis-roc-yz-vib-1.pdf}
+\caption{Axes - YZ Vibration ROC - using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4g-axis-plot-x-mag-1.pdf}
+\caption{Axis - X Magnetometer - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-x-mag-rf-params}Axis - X Magnetometer - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.3145104 & 0.9794310 & 0.5897142 & 0.9350913 & 0.8964732 & 0.8590777 & 0.8392761 & 0.9751791 & 0.8873525 & 0.9783757 & 0.8873525 & 0.8392761 & 0.2337728 & 0.9072276 & 0.2095206 & 0.0110764 & 0.0333662 & 0.0051689 & 0.0083042 & 0.0125861 & 0.0131231 & 0.0020795 & 0.0181814 & 0.0018194 & 0.0181814 & 0.0131231 & 0.0012922 & 0.0074394\\
+2 & 1 & extratrees & 0.1803988 & 0.9893518 & 0.8064974 & 0.9380139 & 0.9007568 & 0.8536532 & 0.8289939 & 0.9759211 & 0.8936981 & 0.9801809 & 0.8936981 & 0.8289939 & 0.2345035 & 0.9024575 & 0.0133546 & 0.0022628 & 0.0153214 & 0.0053536 & 0.0088731 & 0.0132043 & 0.0175679 & 0.0023439 & 0.0163975 & 0.0015319 & 0.0163975 & 0.0175679 & 0.0013384 & 0.0098565\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.007946382
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   gini        0.3145104  0.9794310  0.5897142  0.9350913  0.8964732
+##   extratrees  0.1803988  0.9893518  0.8064974  0.9380139  0.9007568
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.8590777  0.8392761         0.9751791         0.8873525          
+##   0.8536532  0.8289939         0.9759211         0.8936981          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9783757            0.8873525       0.8392761    0.2337728          
+##   0.9801809            0.8936981       0.8289939    0.2345035          
+##   Mean_Balanced_Accuracy
+##   0.9072276             
+##   0.9024575             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-x-mag-rf-results}Axis - X Magnetometer - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.5392554\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-x-mag-rf-results}Axis - X Magnetometer - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.2104332 & 1.0000000 & 0.9998297636486\\
+PATH\_MOVING & 0.7419181 & 0.8726507 & 0.95931448616667\\
+PATH\_TRANSITION & 0.9557196 & 0.8462856 & 0.9552767685673\\
+SHUTTLE & 1.0000000 & 0.7343358 & 0.999970541181163\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-x-mag-rf-results}Axis - X Magnetometer - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 476 & 0 & 0 & 0\\
+PATH\_MOVING & 385 & 1377 & 8 & 0\\
+PATH\_TRANSITION & 244 & 474 & 259 & 0\\
+SHUTTLE & 1157 & 5 & 4 & 553\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-x-mag-rf-results}Axis - X Magnetometer - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4g-axis-roc-x-mag-1.pdf}
+\caption{Axis - X Magnetometer - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4h-axis-plot-y-mag-1.pdf}
+\caption{Axis - Y Magnetometer - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-y-mag-rf-params}Axis - Y Magnetometer - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.2866027 & 0.9828034 & 0.6509546 & 0.9472771 & 0.9161939 & 0.8952098 & 0.8794444 & 0.9796898 & 0.9204798 & 0.9819563 & 0.9204798 & 0.8794444 & 0.2368193 & 0.9295671 & 0.1773235 & 0.0082076 & 0.0592723 & 0.0102549 & 0.0163598 & 0.0214866 & 0.0262837 & 0.0040403 & 0.0226724 & 0.0037462 & 0.0226724 & 0.0262837 & 0.0025637 & 0.0143369\\
+2 & 1 & extratrees & 0.1883710 & 0.9899129 & 0.8667335 & 0.9441514 & 0.9105744 & 0.8812481 & 0.8529376 & 0.9776558 & 0.9249974 & 0.9819974 & 0.9249974 & 0.8529376 & 0.2360379 & 0.9152967 & 0.0332598 & 0.0039736 & 0.0136441 & 0.0072671 & 0.0119269 & 0.0125890 & 0.0163765 & 0.0034379 & 0.0128580 & 0.0025199 & 0.0128580 & 0.0163765 & 0.0018168 & 0.0093704\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.008861495
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   gini        0.2866027  0.9828034  0.6509546  0.9472771  0.9161939
+##   extratrees  0.1883710  0.9899129  0.8667335  0.9441514  0.9105744
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.8952098  0.8794444         0.9796898         0.9204798          
+##   0.8812481  0.8529376         0.9776558         0.9249974          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9819563            0.9204798       0.8794444    0.2368193          
+##   0.9819974            0.9249974       0.8529376    0.2360379          
+##   Mean_Balanced_Accuracy
+##   0.9295671             
+##   0.9152967             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-y-mag-rf-results}Axis - Y Magnetometer - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.4876568\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-y-mag-rf-results}Axis - Y Magnetometer - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.2281167 & 1.0000000 & 0.999976658484764\\
+PATH\_MOVING & 0.5802802 & 0.8434867 & 0.894587643445371\\
+PATH\_TRANSITION & 0.9741697 & 0.7889103 & 0.968743704778088\\
+SHUTTLE & 1.0000000 & 0.7578036 & 0.999656794460259\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-y-mag-rf-results}Axis - Y Magnetometer - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 516 & 0 & 0 & 0\\
+PATH\_MOVING & 478 & 1077 & 5 & 0\\
+PATH\_TRANSITION & 207 & 779 & 264 & 0\\
+SHUTTLE & 1061 & 0 & 2 & 553\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-y-mag-rf-results}Axis - Y Magnetometer - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4h-axis-roc-y-mag-1.pdf}
+\caption{Axis - Y Magnetometer - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4i-axis-plot-z-mag-1.pdf}
+\caption{Axis - Z Magnetometer - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-mag-rf-params}Axis - Z Magnetometer - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.3047249 & 0.9813938 & 0.625330 & 0.9419031 & 0.9075422 & 0.8836576 & 0.8684201 & 0.9783236 & 0.9037510 & 0.9809414 & 0.9037510 & 0.8684201 & 0.2354758 & 0.9233719 & 0.0863174 & 0.0050696 & 0.0497686 & 0.0085587 & 0.0137346 & 0.0169361 & 0.0220962 & 0.0032177 & 0.0190555 & 0.0027436 & 0.0190555 & 0.0220962 & 0.0021397 & 0.0124948\\
+2 & 1 & extratrees & 0.1735905 & 0.9911508 & 0.821114 & 0.9512562 & 0.9221428 & 0.8985378 & 0.8762786 & 0.9809920 & 0.9273251 & 0.9847820 & 0.9273251 & 0.8762786 & 0.2378140 & 0.9286353 & 0.0223732 & 0.0025749 & 0.0264933 & 0.0082226 & 0.0132587 & 0.0162304 & 0.0186185 & 0.0032346 & 0.0169411 & 0.0025731 & 0.0169411 & 0.0186185 & 0.0020556 & 0.0107851\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.01087471
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss    AUC        prAUC     Accuracy   Kappa    
+##   gini        0.3047249  0.9813938  0.625330  0.9419031  0.9075422
+##   extratrees  0.1735905  0.9911508  0.821114  0.9512562  0.9221428
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.8836576  0.8684201         0.9783236         0.9037510          
+##   0.8985378  0.8762786         0.9809920         0.9273251          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9809414            0.9037510       0.8684201    0.2354758          
+##   0.9847820            0.9273251       0.8762786    0.2378140          
+##   Mean_Balanced_Accuracy
+##   0.9233719             
+##   0.9286353             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-mag-rf-results}Axis - Z Magnetometer - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.4878592\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-mag-rf-results}Axis - Z Magnetometer - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.0663130 & 1.0000000 & 0.999408049276166\\
+PATH\_MOVING & 0.7807112 & 0.7391445 & 0.908751738943393\\
+PATH\_TRANSITION & 0.9557196 & 0.8606294 & 0.978132719670164\\
+SHUTTLE & 1.0000000 & 0.7550695 & 0.995532559823033\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-mag-rf-results}Axis - Z Magnetometer - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 150 & 0 & 0 & 0\\
+PATH\_MOVING & 793 & 1449 & 12 & 0\\
+PATH\_TRANSITION & 244 & 407 & 259 & 0\\
+SHUTTLE & 1075 & 0 & 0 & 553\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-mag-rf-results}Axis - Z Magnetometer - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4i-axis-roc-z-mag-1.pdf}
+\caption{Axis - Z Magnetometer - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4j-axis-plot-xy-mag-1.pdf}
+\caption{Axes - XY Magnetometer - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-mag-rf-params}Axes - XY Magnetometer - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.2148637 & 0.9866284 & 0.7908045 & 0.9363050 & 0.8980951 & 0.8647945 & 0.8384971 & 0.9751044 & 0.9060236 & 0.9791988 & 0.9060236 & 0.8384971 & 0.2340762 & 0.9068008 & 0.0199341 & 0.0023457 & 0.0163407 & 0.0081267 & 0.0131130 & 0.0136794 & 0.0148288 & 0.0034007 & 0.0189937 & 0.0029580 & 0.0189937 & 0.0148288 & 0.0020317 & 0.0085324\\
+2 & 1 & extratrees & 0.2261754 & 0.9882802 & 0.8687989 & 0.9298521 & 0.8870005 & 0.8489943 & 0.8146446 & 0.9716966 & 0.9049067 & 0.9779852 & 0.9049067 & 0.8146446 & 0.2324630 & 0.8931706 & 0.0089146 & 0.0011600 & 0.0133847 & 0.0069962 & 0.0115434 & 0.0163314 & 0.0187284 & 0.0030701 & 0.0176045 & 0.0023054 & 0.0176045 & 0.0187284 & 0.0017490 & 0.0104928\\
+3 & 1 & gini & 0.2376146 & 0.9837490 & 0.7529800 & 0.9327756 & 0.8924375 & 0.8629308 & 0.8364427 & 0.9735909 & 0.9040316 & 0.9777609 & 0.9040316 & 0.8364427 & 0.2331939 & 0.9050168 & 0.0369788 & 0.0032134 & 0.0222106 & 0.0072810 & 0.0116432 & 0.0139197 & 0.0147802 & 0.0028023 & 0.0189497 & 0.0027231 & 0.0189497 & 0.0147802 & 0.0018202 & 0.0082924\\
+3 & 1 & extratrees & 0.2118760 & 0.9891861 & 0.8619157 & 0.9343262 & 0.8944344 & 0.8568387 & 0.8253193 & 0.9736845 & 0.9072315 & 0.9793053 & 0.9072315 & 0.8253193 & 0.2335815 & 0.8995019 & 0.0082082 & 0.0011975 & 0.0114914 & 0.0076202 & 0.0125598 & 0.0167382 & 0.0194751 & 0.0033879 & 0.0146383 & 0.0024466 & 0.0146383 & 0.0194751 & 0.0019050 & 0.0110214\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  3 
+## Mtry:                             3 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.01320605
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    3 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (3), centered (3), scaled (3) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        0.2148637  0.9866284  0.7908045  0.9363050  0.8980951
+##   2     extratrees  0.2261754  0.9882802  0.8687989  0.9298521  0.8870005
+##   3     gini        0.2376146  0.9837490  0.7529800  0.9327756  0.8924375
+##   3     extratrees  0.2118760  0.9891861  0.8619157  0.9343262  0.8944344
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.8647945  0.8384971         0.9751044         0.9060236          
+##   0.8489943  0.8146446         0.9716966         0.9049067          
+##   0.8629308  0.8364427         0.9735909         0.9040316          
+##   0.8568387  0.8253193         0.9736845         0.9072315          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9791988            0.9060236       0.8384971    0.2340762          
+##   0.9779852            0.9049067       0.8146446    0.2324630          
+##   0.9777609            0.9040316       0.8364427    0.2331939          
+##   0.9793053            0.9072315       0.8253193    0.2335815          
+##   Mean_Balanced_Accuracy
+##   0.9068008             
+##   0.8931706             
+##   0.9050168             
+##   0.8995019             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 3, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-mag-rf-results}Axes - XY Magnetometer - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.3292189\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-mag-rf-results}Axes - XY Magnetometer - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.0822281 & 1.0000000 & 0.998847770431661\\
+PATH\_MOVING & 0.3394397 & 0.9144524 & 0.809148518336425\\
+PATH\_TRANSITION & 0.9520295 & 0.6287733 & 0.921447875365073\\
+SHUTTLE & 1.0000000 & 0.6999316 & 0.993640191222755\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-mag-rf-results}Axes - XY Magnetometer - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 186 & 0 & 0 & 0\\
+PATH\_MOVING & 255 & 630 & 9 & 0\\
+PATH\_TRANSITION & 599 & 1135 & 258 & 0\\
+SHUTTLE & 1222 & 91 & 4 & 553\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-mag-rf-results}Axes - XY Magnetometer - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4j-axis-roc-xy-mag-1.pdf}
+\caption{Axes - XY Magnetometer - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4k-axis-plot-xz-mag-1.pdf}
+\caption{Axes - XZ Magnetometer - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-mag-rf-params}Axes - XZ Magnetometer - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.2233212 & 0.9869147 & 0.7497343 & 0.9398347 & 0.9038414 & 0.8784634 & 0.8567394 & 0.9769701 & 0.9082069 & 0.9809764 & 0.9082069 & 0.8567394 & 0.2349587 & 0.9168547 & 0.0266725 & 0.0022810 & 0.0197757 & 0.0055624 & 0.0089807 & 0.0110822 & 0.0148868 & 0.0022704 & 0.0173197 & 0.0018938 & 0.0173197 & 0.0148868 & 0.0013906 & 0.0082970\\
+2 & 1 & extratrees & 0.1992596 & 0.9903613 & 0.8637712 & 0.9426452 & 0.9080449 & 0.8820626 & 0.8542538 & 0.9774170 & 0.9199939 & 0.9823535 & 0.9199939 & 0.8542538 & 0.2356613 & 0.9158354 & 0.0137721 & 0.0017989 & 0.0103042 & 0.0067233 & 0.0109288 & 0.0096242 & 0.0117181 & 0.0028121 & 0.0116693 & 0.0023047 & 0.0116693 & 0.0117181 & 0.0016808 & 0.0069461\\
+3 & 1 & gini & 0.2737943 & 0.9823484 & 0.6915736 & 0.9329103 & 0.8928377 & 0.8674673 & 0.8483447 & 0.9745776 & 0.8938223 & 0.9784314 & 0.8938223 & 0.8483447 & 0.2332276 & 0.9114612 & 0.0403527 & 0.0027716 & 0.0163059 & 0.0052578 & 0.0084232 & 0.0106643 & 0.0134846 & 0.0020314 & 0.0165170 & 0.0018735 & 0.0165170 & 0.0134846 & 0.0013144 & 0.0074159\\
+3 & 1 & extratrees & 0.1930264 & 0.9903811 & 0.8501157 & 0.9441965 & 0.9106318 & 0.8852962 & 0.8595332 & 0.9781386 & 0.9202877 & 0.9827325 & 0.9202877 & 0.8595332 & 0.2360491 & 0.9188359 & 0.0172750 & 0.0021638 & 0.0174752 & 0.0075946 & 0.0123104 & 0.0105410 & 0.0134330 & 0.0031027 & 0.0119097 & 0.0025644 & 0.0119097 & 0.0134330 & 0.0018986 & 0.0079562\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  3 
+## Mtry:                             3 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.01382147
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    3 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (3), centered (3), scaled (3) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        0.2233212  0.9869147  0.7497343  0.9398347  0.9038414
+##   2     extratrees  0.1992596  0.9903613  0.8637712  0.9426452  0.9080449
+##   3     gini        0.2737943  0.9823484  0.6915736  0.9329103  0.8928377
+##   3     extratrees  0.1930264  0.9903811  0.8501157  0.9441965  0.9106318
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.8784634  0.8567394         0.9769701         0.9082069          
+##   0.8820626  0.8542538         0.9774170         0.9199939          
+##   0.8674673  0.8483447         0.9745776         0.8938223          
+##   0.8852962  0.8595332         0.9781386         0.9202877          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9809764            0.9082069       0.8567394    0.2349587          
+##   0.9823535            0.9199939       0.8542538    0.2356613          
+##   0.9784314            0.8938223       0.8483447    0.2332276          
+##   0.9827325            0.9202877       0.8595332    0.2360491          
+##   Mean_Balanced_Accuracy
+##   0.9168547             
+##   0.9158354             
+##   0.9114612             
+##   0.9188359             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 3, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-mag-rf-results}Axes - XZ Magnetometer - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.3648321\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-mag-rf-results}Axes - XZ Magnetometer - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.0000000 & 1.0000000 & 0.998762487298257\\
+PATH\_MOVING & 0.5393319 & 0.8308490 & 0.883709819233693\\
+PATH\_TRANSITION & 0.9261993 & 0.6683794 & 0.929817409927471\\
+SHUTTLE & 0.9963834 & 0.7566644 & 0.993845784937438\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-mag-rf-results}Axes - XZ Magnetometer - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 0 & 0 & 0 & 0\\
+PATH\_MOVING & 506 & 1001 & 16 & 0\\
+PATH\_TRANSITION & 710 & 837 & 251 & 2\\
+SHUTTLE & 1046 & 18 & 4 & 551\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-mag-rf-results}Axes - XZ Magnetometer - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4k-axis-roc-xz-mag-1.pdf}
+\caption{Axes - XZ Magnetometer - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4l-axis-plot-yz-mag-1.pdf}
+\caption{Axes - YZ Magnetometer - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-mag-rf-params}Axes - YZ Magnetometer - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.2216506 & 0.9873511 & 0.7873215 & 0.9412070 & 0.9062973 & 0.8826052 & 0.8637160 & 0.9776393 & 0.9073966 & 0.9808035 & 0.9073966 & 0.8637160 & 0.2353017 & 0.9206777 & 0.0315003 & 0.0025356 & 0.0203041 & 0.0077478 & 0.0122917 & 0.0158948 & 0.0168572 & 0.0030223 & 0.0170384 & 0.0030454 & 0.0170384 & 0.0168572 & 0.0019370 & 0.0092866\\
+2 & 1 & extratrees & 0.2032935 & 0.9902130 & 0.8790067 & 0.9414763 & 0.9062446 & 0.8813328 & 0.8546182 & 0.9768155 & 0.9180817 & 0.9816510 & 0.9180817 & 0.8546182 & 0.2353691 & 0.9157169 & 0.0146004 & 0.0017737 & 0.0113744 & 0.0059411 & 0.0096161 & 0.0150325 & 0.0164101 & 0.0023460 & 0.0146367 & 0.0019040 & 0.0146367 & 0.0164101 & 0.0014853 & 0.0089604\\
+3 & 1 & gini & 0.2727560 & 0.9836179 & 0.7262457 & 0.9370929 & 0.8998517 & 0.8770641 & 0.8599877 & 0.9761745 & 0.8992574 & 0.9790425 & 0.8992574 & 0.8599877 & 0.2342732 & 0.9180811 & 0.0525513 & 0.0036852 & 0.0395485 & 0.0098763 & 0.0155839 & 0.0180519 & 0.0179520 & 0.0036069 & 0.0209042 & 0.0039021 & 0.0209042 & 0.0179520 & 0.0024691 & 0.0102695\\
+3 & 1 & extratrees & 0.2012566 & 0.9898141 & 0.8674851 & 0.9422632 & 0.9075727 & 0.8827507 & 0.8569378 & 0.9772395 & 0.9182720 & 0.9818330 & 0.9182720 & 0.8569378 & 0.2355658 & 0.9170886 & 0.0139741 & 0.0020169 & 0.0111114 & 0.0063175 & 0.0102111 & 0.0151118 & 0.0165062 & 0.0025003 & 0.0153672 & 0.0020484 & 0.0153672 & 0.0165062 & 0.0015794 & 0.0090393\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      4942 
+## Number of independent variables:  3 
+## Mtry:                             3 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.01406532
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 4942 samples
+##    3 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (3), centered (3), scaled (3) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        0.2216506  0.9873511  0.7873215  0.9412070  0.9062973
+##   2     extratrees  0.2032935  0.9902130  0.8790067  0.9414763  0.9062446
+##   3     gini        0.2727560  0.9836179  0.7262457  0.9370929  0.8998517
+##   3     extratrees  0.2012566  0.9898141  0.8674851  0.9422632  0.9075727
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.8826052  0.8637160         0.9776393         0.9073966          
+##   0.8813328  0.8546182         0.9768155         0.9180817          
+##   0.8770641  0.8599877         0.9761745         0.8992574          
+##   0.8827507  0.8569378         0.9772395         0.9182720          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9808035            0.9073966       0.8637160    0.2353017          
+##   0.9816510            0.9180817       0.8546182    0.2353691          
+##   0.9790425            0.8992574       0.8599877    0.2342732          
+##   0.9818330            0.9182720       0.8569378    0.2355658          
+##   Mean_Balanced_Accuracy
+##   0.9206777             
+##   0.9157169             
+##   0.9180811             
+##   0.9170886             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 3, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-mag-rf-results}Axes - YZ Magnetometer - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.4160259\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-mag-rf-results}Axes - YZ Magnetometer - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.0000000 & 1.0000000 & 0.99607293439962\\
+PATH\_MOVING & 0.6826509 & 0.5787427 & 0.752947386835989\\
+PATH\_TRANSITION & 0.8966790 & 0.9077285 & 0.958410653470697\\
+SHUTTLE & 0.9873418 & 0.7368421 & 0.977029537513025\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-mag-rf-results}Axes - YZ Magnetometer - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 0 & 0 & 0 & 0\\
+PATH\_MOVING & 1274 & 1267 & 21 & 5\\
+PATH\_TRANSITION & 97 & 332 & 243 & 2\\
+SHUTTLE & 891 & 257 & 7 & 546\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-mag-rf-results}Axes - YZ Magnetometer - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4l-axis-roc-yz-mag-1.pdf}
+\caption{Axes - YZ Magnetometer - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4m-axis-plot-x-combined-1.pdf}
+\caption{Axes - X Combined - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-x-combined-rf-params}Axis - X Combined - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 5.8550196 & 0.8304717 & 0.5532919 & 0.6353915 & 0.4451436 & 0.5602331 & 0.5791791 & 0.8649290 & 0.6186011 & 0.8750345 & 0.6186011 & 0.5791791 & 0.1588479 & 0.7220541 & 1.5376329 & 0.0233914 & 0.0574717 & 0.0202578 & 0.0333359 & 0.0302443 & 0.0351503 & 0.0086396 & 0.0467518 & 0.0089020 & 0.0467518 & 0.0351503 & 0.0050644 & 0.0213787\\
+2 & 1 & extratrees & 0.6435698 & 0.9368678 & 0.7551676 & 0.6772566 & 0.5014832 & 0.6066959 & 0.6111787 & 0.8771917 & 0.6797049 & 0.8896878 & 0.6797049 & 0.6111787 & 0.1693141 & 0.7441852 & 0.0559746 & 0.0119144 & 0.0374967 & 0.0213504 & 0.0320296 & 0.0363029 & 0.0372947 & 0.0072536 & 0.0419652 & 0.0082899 & 0.0419652 & 0.0372947 & 0.0053376 & 0.0219770\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      9884 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.004518916
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 9884 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   gini        5.8550196  0.8304717  0.5532919  0.6353915  0.4451436
+##   extratrees  0.6435698  0.9368678  0.7551676  0.6772566  0.5014832
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.5602331  0.5791791         0.8649290         0.6186011          
+##   0.6066959  0.6111787         0.8771917         0.6797049          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.8750345            0.6186011       0.5791791    0.1588479          
+##   0.8896878            0.6797049       0.6111787    0.1693141          
+##   Mean_Balanced_Accuracy
+##   0.7220541             
+##   0.7441852             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-x-combined-rf-results}Axis - X Combined - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.8747471\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-x-combined-rf-results}Axis - X Combined - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.7917772 & 1.0000000 & 0.99995836879924\\
+PATH\_MOVING & 0.9216056 & 0.9739145 & 0.997491364644557\\
+PATH\_TRANSITION & 0.9907749 & 0.9688504 & 0.998374697138108\\
+SHUTTLE & 1.0000000 & 0.9104580 & 0.999958335341889\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-x-combined-rf-results}Axis - X Combined - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 3582 & 0 & 0 & 0\\
+PATH\_MOVING & 156 & 3421 & 5 & 0\\
+PATH\_TRANSITION & 0 & 291 & 537 & 0\\
+SHUTTLE & 786 & 0 & 0 & 1106\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-x-combined-rf-results}Axis - X Combined - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4m-axis-roc-x-combined-1.pdf}
+\caption{Axis - X Combined - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4n-axis-plot-y-combined-1.pdf}
+\caption{Axes - Y Combined - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-y-combined-rf-params}Axis - Y Combined - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.7072947 & 0.9408629 & 0.7232569 & 0.7150759 & 0.5882747 & 0.6330606 & 0.6966183 & 0.9078514 & 0.6581624 & 0.9024951 & 0.6581624 & 0.6966183 & 0.1787690 & 0.8022348 & 0.2767975 & 0.0327288 & 0.0733518 & 0.0742849 & 0.0950511 & 0.0724382 & 0.0563158 & 0.0221468 & 0.0805989 & 0.0239838 & 0.0805989 & 0.0563158 & 0.0185712 & 0.0386155\\
+2 & 1 & extratrees & 0.3955925 & 0.9796430 & 0.8827403 & 0.8577099 & 0.7814062 & 0.7756398 & 0.7936873 & 0.9506011 & 0.7993711 & 0.9479606 & 0.7993711 & 0.7936873 & 0.2144275 & 0.8721442 & 0.0701013 & 0.0099227 & 0.0347878 & 0.0469062 & 0.0683649 & 0.0531172 & 0.0420748 & 0.0158238 & 0.0624946 & 0.0161225 & 0.0624946 & 0.0420748 & 0.0117266 & 0.0282224\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      9884 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.002290109
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 9884 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   gini        0.7072947  0.9408629  0.7232569  0.7150759  0.5882747
+##   extratrees  0.3955925  0.9796430  0.8827403  0.8577099  0.7814062
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.6330606  0.6966183         0.9078514         0.6581624          
+##   0.7756398  0.7936873         0.9506011         0.7993711          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9024951            0.6581624       0.6966183    0.1787690          
+##   0.9479606            0.7993711       0.7936873    0.2144275          
+##   Mean_Balanced_Accuracy
+##   0.8022348             
+##   0.8721442             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-y-combined-rf-results}Axis - Y Combined - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.9989883\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-y-combined-rf-results}Axis - Y Combined - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.9993369 & 1.0000000 & 0.999999876281721\\
+PATH\_MOVING & 0.9983836 & 0.9996760 & 0.999996900979395\\
+PATH\_TRANSITION & 0.9981550 & 0.9993577 & 0.999990520136415\\
+SHUTTLE & 1.0000000 & 0.9997722 & 0.999999793994274\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-y-combined-rf-results}Axis - Y Combined - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 4521 & 0 & 0 & 0\\
+PATH\_MOVING & 1 & 3706 & 1 & 0\\
+PATH\_TRANSITION & 0 & 6 & 541 & 0\\
+SHUTTLE & 2 & 0 & 0 & 1106\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-y-combined-rf-results}Axis - Y Combined - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4n-axis-roc-y-combined-1.pdf}
+\caption{Axis - Y Combined - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4o-axis-plot-z-combined-1.pdf}
+\caption{Axes - Y Combined - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-combined-rf-params}Axis - Z Combined - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.8521332 & 0.9426053 & 0.7210836 & 0.6413460 & 0.5054306 & 0.5792185 & 0.6383243 & 0.8919825 & 0.7000309 & 0.8823873 & 0.7000309 & 0.6383243 & 0.1603365 & 0.7651534 & 0.2116518 & 0.0222742 & 0.0754984 & 0.0998445 & 0.1207664 & 0.0986315 & 0.0939953 & 0.0272930 & 0.0721635 & 0.0298799 & 0.0721635 & 0.0939953 & 0.0249611 & 0.0604098\\
+2 & 1 & extratrees & 0.6507485 & 0.9695248 & 0.8517766 & 0.6221764 & 0.4821625 & 0.5666110 & 0.6203676 & 0.8880836 & 0.7420868 & 0.8774501 & 0.7420868 & 0.6203676 & 0.1555441 & 0.7542256 & 0.0887334 & 0.0105781 & 0.0352240 & 0.0556813 & 0.0628809 & 0.0472149 & 0.0472840 & 0.0137302 & 0.0143608 & 0.0166494 & 0.0143608 & 0.0472840 & 0.0139203 & 0.0301576\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      9884 
+## Number of independent variables:  2 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.002510219
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 9884 samples
+##    2 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (2), centered (2), scaled (2) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   gini        0.8521332  0.9426053  0.7210836  0.6413460  0.5054306
+##   extratrees  0.6507485  0.9695248  0.8517766  0.6221764  0.4821625
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.5792185  0.6383243         0.8919825         0.7000309          
+##   0.5666110  0.6203676         0.8880836         0.7420868          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.8823873            0.7000309       0.6383243    0.1603365          
+##   0.8774501            0.7420868       0.6203676    0.1555441          
+##   Mean_Balanced_Accuracy
+##   0.7651534             
+##   0.7542256             
+## 
+## Tuning parameter 'mtry' was held constant at a value of 2
+## Tuning
+##  parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-combined-rf-results}Axis - Z Combined - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.999393\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-combined-rf-results}Axis - Z Combined - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.9997790 & 1.0000000 & 1\\
+PATH\_MOVING & 0.9989224 & 0.9996760 & 0.999998297721076\\
+PATH\_TRANSITION & 0.9981550 & 0.9995718 & 0.999994272582418\\
+SHUTTLE & 1.0000000 & 1.0000000 & 1\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-combined-rf-results}Axis - Z Combined - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 4523 & 0 & 0 & 0\\
+PATH\_MOVING & 1 & 3708 & 1 & 0\\
+PATH\_TRANSITION & 0 & 4 & 541 & 0\\
+SHUTTLE & 0 & 0 & 0 & 1106\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-combined-rf-results}Axis - Z Combined - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4o-axis-roc-z-combined-1.pdf}
+\caption{Axis - Z Combined - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4p-axis-plot-xy-combined-1.pdf}
+\caption{Axes - XY Combined - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-combined-rf-params}Axes - XY Combined - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 1.5251376 & 0.8443977 & 0.6031932 & 0.5985646 & 0.3967286 & 0.5062363 & 0.5265093 & 0.8544747 & 0.5710104 & 0.8596259 & 0.5710104 & 0.5265093 & 0.1496412 & 0.6904920 & 0.4931581 & 0.0203154 & 0.0251843 & 0.0370459 & 0.0377811 & 0.0302469 & 0.0271937 & 0.0078335 & 0.0404872 & 0.0145565 & 0.0404872 & 0.0271937 & 0.0092615 & 0.0165676\\
+2 & 1 & extratrees & 0.7623310 & 0.9161089 & 0.7212067 & 0.6556160 & 0.4635647 & 0.5566178 & 0.5603626 & 0.8677676 & 0.6650228 & 0.8852146 & 0.6650228 & 0.5603626 & 0.1639040 & 0.7140651 & 0.0455147 & 0.0127094 & 0.0168901 & 0.0093718 & 0.0159230 & 0.0243852 & 0.0194114 & 0.0049710 & 0.0414405 & 0.0053632 & 0.0414405 & 0.0194114 & 0.0023429 & 0.0111718\\
+3 & 1 & gini & 4.2686445 & 0.7881987 & 0.5223636 & 0.5655824 & 0.3461260 & 0.4790175 & 0.4868908 & 0.8417937 & 0.5607593 & 0.8460433 & 0.5607593 & 0.4868908 & 0.1413956 & 0.6643422 & 1.4580571 & 0.0244363 & 0.0237724 & 0.0511716 & 0.0444358 & 0.0345066 & 0.0381602 & 0.0087819 & 0.0383623 & 0.0158530 & 0.0383623 & 0.0381602 & 0.0127929 & 0.0232134\\
+3 & 1 & extratrees & 0.7872811 & 0.9115778 & 0.7151796 & 0.6462124 & 0.4499051 & 0.5510046 & 0.5541100 & 0.8645936 & 0.6471199 & 0.8808382 & 0.6471199 & 0.5541100 & 0.1615531 & 0.7093518 & 0.0700706 & 0.0157252 & 0.0297054 & 0.0172372 & 0.0290011 & 0.0295391 & 0.0271614 & 0.0077875 & 0.0392162 & 0.0084580 & 0.0392162 & 0.0271614 & 0.0043093 & 0.0167962\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      9884 
+## Number of independent variables:  3 
+## Mtry:                             2 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.0117148
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 9884 samples
+##    3 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (3), centered (3), scaled (3) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        1.5251376  0.8443977  0.6031932  0.5985646  0.3967286
+##   2     extratrees  0.7623310  0.9161089  0.7212067  0.6556160  0.4635647
+##   3     gini        4.2686445  0.7881987  0.5223636  0.5655824  0.3461260
+##   3     extratrees  0.7872811  0.9115778  0.7151796  0.6462124  0.4499051
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.5062363  0.5265093         0.8544747         0.5710104          
+##   0.5566178  0.5603626         0.8677676         0.6650228          
+##   0.4790175  0.4868908         0.8417937         0.5607593          
+##   0.5510046  0.5541100         0.8645936         0.6471199          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.8596259            0.5710104       0.5265093    0.1496412          
+##   0.8852146            0.6650228       0.5603626    0.1639040          
+##   0.8460433            0.5607593       0.4868908    0.1413956          
+##   0.8808382            0.6471199       0.5541100    0.1615531          
+##   Mean_Balanced_Accuracy
+##   0.6904920             
+##   0.7140651             
+##   0.6643422             
+##   0.7093518             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 2, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-combined-rf-results}Axes - XY Combined - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.7141845\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-combined-rf-results}Axes - XY Combined - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.5209991 & 1.0000000 & 0.998832862379086\\
+PATH\_MOVING & 0.8356681 & 0.9175308 & 0.966388524475105\\
+PATH\_TRANSITION & 0.9114391 & 0.9056947 & 0.972592233147765\\
+SHUTTLE & 1.0000000 & 0.8365231 & 0.999242413942138\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-combined-rf-results}Axes - XY Combined - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 2357 & 0 & 0 & 0\\
+PATH\_MOVING & 473 & 3102 & 36 & 0\\
+PATH\_TRANSITION & 280 & 601 & 494 & 0\\
+SHUTTLE & 1414 & 9 & 12 & 1106\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xy-combined-rf-results}Axes - XY Combined - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4p-axis-roc-xy-combined-1.pdf}
+\caption{Axes - XY Combined - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4q-axis-plot-xz-combined-1.pdf}
+\caption{Axes - XZ Combined - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-combined-rf-params}Axes - XZ Combined - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 1.7681754 & 0.8549698 & 0.6132725 & 0.5687343 & 0.3809073 & 0.4791537 & 0.5134266 & 0.8551518 & 0.5754912 & 0.8546264 & 0.5754912 & 0.5134266 & 0.1421836 & 0.6842892 & 0.4480763 & 0.0147584 & 0.0284573 & 0.0584460 & 0.0400527 & 0.0352488 & 0.0158123 & 0.0039884 & 0.0420790 & 0.0156459 & 0.0420790 & 0.0158123 & 0.0146115 & 0.0094563\\
+2 & 1 & extratrees & 0.9637489 & 0.9041623 & 0.6960469 & 0.6103448 & 0.4497932 & 0.4904019 & 0.5509133 & 0.8757177 & 0.6345362 & 0.8719530 & 0.6345362 & 0.5509133 & 0.1525862 & 0.7133155 & 0.0667889 & 0.0157545 & 0.0302743 & 0.0694961 & 0.0737514 & 0.0424019 & 0.0457511 & 0.0154964 & 0.0375214 & 0.0215600 & 0.0375214 & 0.0457511 & 0.0173740 & 0.0305160\\
+3 & 1 & gini & 4.6177900 & 0.8078780 & 0.5491135 & 0.5605234 & 0.3723117 & 0.4833474 & 0.5198949 & 0.8526262 & 0.5599358 & 0.8511161 & 0.5599358 & 0.5198949 & 0.1401308 & 0.6862606 & 1.1601206 & 0.0248940 & 0.0467896 & 0.0669815 & 0.0517929 & 0.0557245 & 0.0380944 & 0.0072372 & 0.0491743 & 0.0181030 & 0.0491743 & 0.0380944 & 0.0167454 & 0.0224190\\
+3 & 1 & extratrees & 0.9116190 & 0.9072085 & 0.7018587 & 0.6387048 & 0.4706351 & 0.5244873 & 0.5713958 & 0.8769123 & 0.6249418 & 0.8791445 & 0.6249418 & 0.5713958 & 0.1596762 & 0.7241540 & 0.0647068 & 0.0166385 & 0.0382377 & 0.0364464 & 0.0409106 & 0.0265430 & 0.0309956 & 0.0102244 & 0.0469601 & 0.0134457 & 0.0469601 & 0.0309956 & 0.0091116 & 0.0201318\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      9884 
+## Number of independent variables:  3 
+## Mtry:                             3 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.006479702
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 9884 samples
+##    3 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (3), centered (3), scaled (3) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        1.7681754  0.8549698  0.6132725  0.5687343  0.3809073
+##   2     extratrees  0.9637489  0.9041623  0.6960469  0.6103448  0.4497932
+##   3     gini        4.6177900  0.8078780  0.5491135  0.5605234  0.3723117
+##   3     extratrees  0.9116190  0.9072085  0.7018587  0.6387048  0.4706351
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.4791537  0.5134266         0.8551518         0.5754912          
+##   0.4904019  0.5509133         0.8757177         0.6345362          
+##   0.4833474  0.5198949         0.8526262         0.5599358          
+##   0.5244873  0.5713958         0.8769123         0.6249418          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.8546264            0.5754912       0.5134266    0.1421836          
+##   0.8719530            0.6345362       0.5509133    0.1525862          
+##   0.8511161            0.5599358       0.5198949    0.1401308          
+##   0.8791445            0.6249418       0.5713958    0.1596762          
+##   Mean_Balanced_Accuracy
+##   0.6842892             
+##   0.7133155             
+##   0.6862606             
+##   0.7241540             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 3, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-combined-rf-results}Axes - XZ Combined - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.8945771\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-combined-rf-results}Axes - XZ Combined - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.8275862 & 1.0000000 & 0.999892880590417\\
+PATH\_MOVING & 0.9310345 & 0.9846079 & 0.997475694948824\\
+PATH\_TRANSITION & 0.9889299 & 0.9465853 & 0.997620652988803\\
+SHUTTLE & 1.0000000 & 0.9489633 & 0.999950404121433\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-combined-rf-results}Axes - XZ Combined - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 3744 & 0 & 0 & 0\\
+PATH\_MOVING & 89 & 3456 & 6 & 0\\
+PATH\_TRANSITION & 243 & 256 & 536 & 0\\
+SHUTTLE & 448 & 0 & 0 & 1106\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-xz-combined-rf-results}Axes - XZ Combined - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4q-axis-roc-xz-combined-1.pdf}
+\caption{Axes - XZ Combined - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4r-axis-plot-yz-combined-1.pdf}
+\caption{Axes - YZ Combined - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-combined-rf-params}Axes - YZ Combined - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 1.2424237 & 0.8525583 & 0.6013312 & 0.5220459 & 0.3547307 & 0.4310234 & 0.4919501 & 0.8550654 & 0.5721357 & 0.8443374 & 0.5721357 & 0.4919501 & 0.1305115 & 0.6735078 & 0.1839551 & 0.0262176 & 0.0333009 & 0.0687174 & 0.0727242 & 0.0450067 & 0.0493955 & 0.0161345 & 0.0439322 & 0.0202777 & 0.0439322 & 0.0493955 & 0.0171794 & 0.0325763\\
+2 & 1 & extratrees & 0.9854971 & 0.8989818 & 0.6964769 & 0.5234199 & 0.3616582 & 0.4318649 & 0.4975218 & 0.8581457 & 0.6682278 & 0.8475827 & 0.6682278 & 0.4975218 & 0.1308550 & 0.6778338 & 0.0748432 & 0.0165600 & 0.0258703 & 0.0641630 & 0.0700336 & 0.0415811 & 0.0448026 & 0.0152111 & 0.0254277 & 0.0192786 & 0.0254277 & 0.0448026 & 0.0160408 & 0.0299485\\
+3 & 1 & gini & 1.1102525 & 0.8770956 & 0.6412819 & 0.5678068 & 0.4074409 & 0.4844136 & 0.5466184 & 0.8668430 & 0.5953936 & 0.8583767 & 0.5953936 & 0.5466184 & 0.1419517 & 0.7067307 & 0.2674697 & 0.0357286 & 0.0573150 & 0.0815238 & 0.0903086 & 0.0668598 & 0.0678259 & 0.0201430 & 0.0636393 & 0.0258130 & 0.0636393 & 0.0678259 & 0.0203810 & 0.0437760\\
+3 & 1 & extratrees & 0.7619868 & 0.9401698 & 0.7788848 & 0.6042415 & 0.4558203 & 0.5102891 & 0.5750742 & 0.8802990 & 0.6676951 & 0.8715721 & 0.6676951 & 0.5750742 & 0.1510604 & 0.7276866 & 0.0946620 & 0.0165133 & 0.0323230 & 0.0739799 & 0.0816180 & 0.0546187 & 0.0577402 & 0.0171105 & 0.0462737 & 0.0224907 & 0.0462737 & 0.0577402 & 0.0184950 & 0.0372163\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      9884 
+## Number of independent variables:  3 
+## Mtry:                             3 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.003682483
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 9884 samples
+##    3 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (3), centered (3), scaled (3) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 494, 495, 494, 495, 494, 493, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        1.2424237  0.8525583  0.6013312  0.5220459  0.3547307
+##   2     extratrees  0.9854971  0.8989818  0.6964769  0.5234199  0.3616582
+##   3     gini        1.1102525  0.8770956  0.6412819  0.5678068  0.4074409
+##   3     extratrees  0.7619868  0.9401698  0.7788848  0.6042415  0.4558203
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.4310234  0.4919501         0.8550654         0.5721357          
+##   0.4318649  0.4975218         0.8581457         0.6682278          
+##   0.4844136  0.5466184         0.8668430         0.5953936          
+##   0.5102891  0.5750742         0.8802990         0.6676951          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.8443374            0.5721357       0.4919501    0.1305115          
+##   0.8475827            0.6682278       0.4975218    0.1308550          
+##   0.8583767            0.5953936       0.5466184    0.1419517          
+##   0.8715721            0.6676951       0.5750742    0.1510604          
+##   Mean_Balanced_Accuracy
+##   0.6735078             
+##   0.6778338             
+##   0.7067307             
+##   0.7276866             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 3, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-combined-rf-results}Axes - YZ Combined - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.9946378\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-combined-rf-results}Axes - YZ Combined - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.9984527 & 0.9998134 & 0.999999443267746\\
+PATH\_MOVING & 0.9889547 & 0.9990279 & 0.999836733991944\\
+PATH\_TRANSITION & 0.9926199 & 0.9956112 & 0.999802206596247\\
+SHUTTLE & 0.9990958 & 0.9994304 & 0.999999381982822\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-combined-rf-results}Axes - YX Combined - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 4517 & 0 & 0 & 1\\
+PATH\_MOVING & 2 & 3671 & 4 & 0\\
+PATH\_TRANSITION & 0 & 41 & 538 & 0\\
+SHUTTLE & 5 & 0 & 0 & 1105\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-yz-combined-rf-results}Axes - YZ Combined - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{4-CHP4_RF_Results-Axes_files/figure-latex/4r-axis-roc-yz-combined-1.pdf}
+\caption{Axes - YZ Combined - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+
+\end{document}

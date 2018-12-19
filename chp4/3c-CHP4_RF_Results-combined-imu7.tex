@@ -1,0 +1,258 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Chp 4 Results - Random Forest},
+            pdfauthor={Jill Daly},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Chp 4 Results - Random Forest}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Jill Daly}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{07 December, 2018}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+\begin{document}
+\maketitle
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/sensor-rf-plot-1.pdf}
+\caption{Sensor IMU7 Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-rf-params}Sensor IMU7 RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.2216566 & 0.9842768 & 0.8130260 & 0.9296730 & 0.8866471 & 0.8398289 & 0.8036698 & 0.9718756 & 0.9062791 & 0.9780007 & 0.9062791 & 0.8036698 & 0.2324183 & 0.8877727 & 0.0073746 & 0.0019034 & 0.0117600 & 0.0040774 & 0.0067597 & 0.0104200 & 0.0115134 & 0.0018152 & 0.0096464 & 0.0013082 & 0.0096464 & 0.0115134 & 0.0010194 & 0.0064328\\
+2 & 1 & extratrees & 0.2448608 & 0.9841406 & 0.8724888 & 0.9281441 & 0.8835993 & 0.8261857 & 0.7855658 & 0.9707362 & 0.9123793 & 0.9786181 & 0.9123793 & 0.7855658 & 0.2320360 & 0.8781510 & 0.0089153 & 0.0020261 & 0.0127865 & 0.0050606 & 0.0083508 & 0.0126661 & 0.0117225 & 0.0020381 & 0.0137129 & 0.0016020 & 0.0137129 & 0.0117225 & 0.0012652 & 0.0067680\\
+3 & 1 & gini & 0.1552602 & 0.9918677 & 0.8079375 & 0.9585302 & 0.9337681 & 0.8974261 & 0.8704983 & 0.9836489 & 0.9424078 & 0.9871170 & 0.9424078 & 0.8704983 & 0.2396325 & 0.9270736 & 0.0091391 & 0.0025424 & 0.0186650 & 0.0039131 & 0.0063183 & 0.0132466 & 0.0144783 & 0.0015178 & 0.0124572 & 0.0012458 & 0.0124572 & 0.0144783 & 0.0009783 & 0.0079224\\
+3 & 1 & extratrees & 0.1986698 & 0.9914716 & 0.8962424 & 0.9435562 & 0.9090650 & 0.8602677 & 0.8233014 & 0.9769818 & 0.9326290 & 0.9831780 & 0.9326290 & 0.8233014 & 0.2358891 & 0.9001416 & 0.0112296 & 0.0021349 & 0.0140161 & 0.0044566 & 0.0073151 & 0.0122063 & 0.0120937 & 0.0018525 & 0.0127578 & 0.0013427 & 0.0127578 & 0.0120937 & 0.0011141 & 0.0067594\\
+4 & 1 & gini & 0.1184497 & 0.9933250 & 0.5904031 & 0.9735599 & 0.9581222 & 0.9401007 & 0.9282259 & 0.9901142 & 0.9560058 & 0.9911903 & 0.9560058 & 0.9282259 & 0.2433900 & 0.9591700 & 0.0527654 & 0.0047882 & 0.1065192 & 0.0040369 & 0.0064036 & 0.0119781 & 0.0168613 & 0.0014095 & 0.0145068 & 0.0014209 & 0.0145068 & 0.0168613 & 0.0010092 & 0.0090138\\
+4 & 1 & extratrees & 0.1539820 & 0.9960948 & 0.9095927 & 0.9589009 & 0.9341784 & 0.8990368 & 0.8670400 & 0.9833181 & 0.9541832 & 0.9876764 & 0.9541832 & 0.8670400 & 0.2397252 & 0.9251790 & 0.0124739 & 0.0016817 & 0.0153189 & 0.0044726 & 0.0072686 & 0.0156400 & 0.0176317 & 0.0017392 & 0.0108181 & 0.0013026 & 0.0108181 & 0.0176317 & 0.0011182 & 0.0096076\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      9884 
+## Number of independent variables:  4 
+## Mtry:                             4 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        gini 
+## OOB prediction error (Brier s.):  0.003249256
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 9884 samples
+##    4 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (4), centered (4), scaled (4) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 988, 989, 987, 990, 989, 987, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        0.2216566  0.9842768  0.8130260  0.9296730  0.8866471
+##   2     extratrees  0.2448608  0.9841406  0.8724888  0.9281441  0.8835993
+##   3     gini        0.1552602  0.9918677  0.8079375  0.9585302  0.9337681
+##   3     extratrees  0.1986698  0.9914716  0.8962424  0.9435562  0.9090650
+##   4     gini        0.1184497  0.9933250  0.5904031  0.9735599  0.9581222
+##   4     extratrees  0.1539820  0.9960948  0.9095927  0.9589009  0.9341784
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.8398289  0.8036698         0.9718756         0.9062791          
+##   0.8261857  0.7855658         0.9707362         0.9123793          
+##   0.8974261  0.8704983         0.9836489         0.9424078          
+##   0.8602677  0.8233014         0.9769818         0.9326290          
+##   0.9401007  0.9282259         0.9901142         0.9560058          
+##   0.8990368  0.8670400         0.9833181         0.9541832          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9780007            0.9062791       0.8036698    0.2324183          
+##   0.9786181            0.9123793       0.7855658    0.2320360          
+##   0.9871170            0.9424078       0.8704983    0.2396325          
+##   0.9831780            0.9326290       0.8233014    0.2358891          
+##   0.9911903            0.9560058       0.9282259    0.2433900          
+##   0.9876764            0.9541832       0.8670400    0.2397252          
+##   Mean_Balanced_Accuracy
+##   0.8877727             
+##   0.8781510             
+##   0.9270736             
+##   0.9001416             
+##   0.9591700             
+##   0.9251790             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 4, splitrule = gini
+##  and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-rf-results}Sensor IMU7 RF - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.9235127\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-rf-results}Sensor IMU7 RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 1.0000000 & 1.0000000 & 1\\
+PATH\_MOVING & 0.7984914 & 0.9987038 & 0.998296346158681\\
+PATH\_TRANSITION & 0.9852399 & 0.9199315 & 0.992620518690736\\
+SHUTTLE & 1.0000000 & 1.0000000 & 1\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-rf-results}Sensor IMU7 RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 4524 & 0 & 0 & 0\\
+PATH\_MOVING & 0 & 2964 & 8 & 0\\
+PATH\_TRANSITION & 0 & 748 & 534 & 0\\
+SHUTTLE & 0 & 0 & 0 & 1106\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-rf-results}Sensor IMU7 RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/plot_sensor-roc-1.pdf}
+\caption{Sensor IMU7 ROC using 4 Binary ROC Curves}
+\end{figure}
+
+
+\end{document}

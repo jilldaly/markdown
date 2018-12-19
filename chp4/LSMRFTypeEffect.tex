@@ -1,0 +1,178 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Random Forest: Measuring the Effect of Type},
+            pdfauthor={Jill Daly},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Random Forest: Measuring the Effect of Type}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Jill Daly}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{04 December, 2018}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+\begin{document}
+\maketitle
+
+\begin{figure}
+\centering
+\includegraphics{LSMRFTypeEffect_files/figure-latex/get_acc_roc_chunk-1.pdf}
+\caption{Binary-Class ROC Curve}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{LSMRFTypeEffect_files/figure-latex/get_mag_roc_chunk-1.pdf}
+\caption{Binary-Class ROC Curve}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{LSMRFTypeEffect_files/figure-latex/get_combined_roc_chunk-1.pdf}
+\caption{Binary-Class ROC Curve}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:all_accuracy_chunk}Model Metrics (IMU12, Acc 1, Vel 0.2)}
+\centering
+\begin{tabular}[t]{lrrr}
+\toprule
+  & Accelerometer & Magnetometer & Combined\\
+\midrule
+Accuracy & 0.9208021 & 0.8016596 & 0.9593200\\
+Kappa & 0.8371304 & 0.5699585 & 0.9114400\\
+AccuracyLower & 0.9129165 & 0.7902632 & 0.9534326\\
+AccuracyUpper & 0.9281857 & 0.8126984 & 0.9646564\\
+AccuracyNull & 0.6248734 & 0.6243675 & 0.6243675\\
+\addlinespace
+AccuracyPValue & 0.0000000 & 0.0000000 & 0.0000000\\
+McnemarPValue & 0.0000000 & 0.0000007 & 0.0000000\\
+Sensitivity & 0.9875810 & 0.6939655 & 0.8938578\\
+Specificity & 0.8807131 & 0.8664506 & 0.9987034\\
+Pos Pred Value & 0.8324989 & 0.7576471 & 0.9975947\\
+\addlinespace
+Neg Pred Value & 0.9916058 & 0.8247454 & 0.9399024\\
+Precision & 0.8324989 & 0.7576471 & 0.9975947\\
+Recall & 0.9875810 & 0.6939655 & 0.8938578\\
+F1 & 0.9034329 & 0.7244094 & 0.9428815\\
+Prevalence & 0.3751266 & 0.3756325 & 0.3756325\\
+\addlinespace
+Detection Rate & 0.3704679 & 0.2606760 & 0.3357620\\
+Detection Prevalence & 0.4450071 & 0.3440599 & 0.3365715\\
+Balanced Accuracy & 0.9341471 & 0.7802080 & 0.9462806\\
+AUC & 0.9959453 & 0.8770769 & 0.9970259\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{figure}
+\centering
+\includegraphics{LSMRFTypeEffect_files/figure-latex/acc_fourfold_plot-1.pdf}
+\caption{Accelerometer Confusion Matrix}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{LSMRFTypeEffect_files/figure-latex/mag_fourfold_plot-1.pdf}
+\caption{Magnetometer Confusion Matrix}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{LSMRFTypeEffect_files/figure-latex/combined_fourfold_plot-1.pdf}
+\caption{Combined Confusion Matrix}
+\end{figure}
+
+
+\end{document}

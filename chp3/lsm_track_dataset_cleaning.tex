@@ -1,0 +1,1087 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={MSc Data Science \& Analytics: LSM Track Data Cleaning \& Exploration},
+            pdfauthor={Jill Daly},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+  \title{MSc Data Science \& Analytics: LSM Track Data Cleaning \& Exploration}
+  \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \author{Jill Daly}
+  \preauthor{\centering\large\emph}
+  \postauthor{\par}
+  \predate{\centering\large\emph}
+  \postdate{\par}
+  \date{15/10/2018}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\newpage 
+\tableofcontents 
+\listoffigures
+\listoftables
+\newpage
+
+\newpage
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+This thesis research question stems from research for a separate
+Master's thesis project (Catenazzo, 2018), which was completed in
+association with the Tyndall National Institute. That project (ibid)
+examined data generated from a prototype Wireless Sensor Network (WSN)
+for the purpose of designing a Predictive Maintenance (PdM) pipeline for
+a manufacturing production environment. The problem of how to accurately
+identify useful data observations from experiments, conducted as part of
+the Tyndall's prototype, will be addressed by research for this MSc
+thesis. Isolation of this useful data will improve cost and accuracy of
+the final PdM pipeline for its designated manufacturing pipeline.
+
+The following document is a draft report, which will feed into the final
+thesis document. The aim of this draft report is to provide transparency
+regarding steps taken while cleaning the data. By outlining the steps
+taken, this project aims to meet with open science reproducibility
+standards (add ref).
+
+\newpage
+
+\hypertarget{data-capture-experiment---lit-review}{%
+\section{Data Capture Experiment - Lit
+Review}\label{data-capture-experiment---lit-review}}
+
+Catenazzo's work (ibid) analysed results from two experiments. The first
+experiment involved a static application in a laboratory setting. The
+results from this experiment led to the second experiment, this time
+involving a prototype of a manufacturing production line.
+
+It was while examining results from this second prototype experiment
+(ibid), that a gap in the research was identified. A problem emerged of
+how to effectively isolate data observations from specific sections of
+the track constructed for the prototype experiment. This MSc thesis
+seeks a solution to this problem by identifying the state of the vehicle
+on the track from the data observations generated by the experiment.
+
+Isolating the data is useful because it represents sensor readings taken
+from straight paths along the closed loop prototype. The prototype was
+intended to mimic a production environment, however in reality it needed
+to transition the vehicle on shuttles between each straight path
+section. This was necessary in order to increase the distance traveled
+by the vehicle. This shuttle will not exist in production, and the data
+generated from the transition to and from the shuttle, as well as the
+shuttle readings, need to be omitted from the dataset.
+
+The isolated data observations will be labelled by a supervised learning
+classification model, which will be constructed as part of this MSc
+thesis. This labelled data will feed into the design and implementation
+of a PdM pipeline in a manufacturing production environment.
+Successfully omitting the shuttle and transition data, and including the
+straight path data will improve the quality of the data, ultimately
+improving the accuracy of a PdM pipeline which detects faults of the
+system.
+
+Before building the classification model, data cleaning and exploratory
+analysis of the data produced by the prototype experiment is required.
+
+** Lookup -- who are MagenMotion. The prototype data capture was
+performed using MagneMotion's Linear Synchronous Motor (LSM) driven
+assembly system (Ranky, 2007).
+
+The prototype data capture was performed using QuickStick, which is
+MagneMotion's patented LSM system. This system propels and controls each
+vehicle independently by interacting with a permanent magnet array
+mounted to each vehicle (ibid).
+
+{[} TODO -- Show figure from paper/display QuickStick drawing/design {]}
+
+The core technology of an LSM is the linear electric motor. This motor
+can convert electrical energy directly into linear motion. QuickStick
+LSM is a 1m long, linear motor module with embedded position sensors and
+control software. QuickStick controls the velocity and acceleration of
+the system. Each node controller can handle 320 QuickSticks on 8 paths.
+A production environment could host many node controllers, allowing for
+multiple vehicles to be tracked and managed.
+
+For this prototype data capture, the experiment design included 6
+QuickStick 1m long modules in a closed loop. These QuickStick modules
+were joined to form a ``Straight Path''. There were two straight paths
+in the prototype loop, with shuttles bridging the gap between the
+straight paths.
+
+{[} TODO -- Insert Path Diagram from Donato's thesis, and reference {]}
+
+\newpage
+
+\hypertarget{second-data-capture-controller-logs}{%
+\section{Second Data Capture Controller
+Logs}\label{second-data-capture-controller-logs}}
+
+The controler logs document commands issued to the LSM vehicle during
+the prototype experiment. In a production environment, there could be
+many vehicles on many productions lines, all running in parallel. The
+controller would manage each of these vehicles, tracking where each
+vehicle is positioned on each line. The secidn data capture prototype
+experiment
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# These columns are specific to Data Capture May 2018}
+\NormalTok{factor_cols <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\StringTok{"Vehicle"}\NormalTok{, }\StringTok{"Path"}\NormalTok{, }\StringTok{"DstPath"}\NormalTok{, }\StringTok{'Destination'}\NormalTok{, }
+                    \StringTok{"Cmd"}\NormalTok{, }\StringTok{"Sig"}\NormalTok{, }\StringTok{"Obs"}\NormalTok{, }\StringTok{"Jam"}\NormalTok{, }\StringTok{"Sus"}\NormalTok{, }\StringTok{"PID"}\NormalTok{)}
+\NormalTok{missed_file <-}\StringTok{ }\KeywordTok{paste}\NormalTok{(DC2_LOGS_PATH, }\StringTok{"Acc_1_Vel_4_Test2"}\NormalTok{, }\DataTypeTok{sep =} \StringTok{"/"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create a list of data frames for the controller log files }
+\NormalTok{controller_logs <-}\StringTok{ }\KeywordTok{load_controller_logs}\NormalTok{(DC2_ALL_LOGS, factor_cols, missed_file)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "error Error in scan(file = file, what = what, sep = sep, quote = quote, dec = dec, : line 204 did not have 12 elements\n  "
+\end{verbatim}
+
+The total observation count for the all controller logs is 34972.
+
+Here is a summary of a single log file
+
+\begin{table}[!h]
+
+\caption{\label{tab:summlogfiles}Controller Log File - Summary}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{l|l|l|l|l|l|l|l|l|l|l|l|l}
+\hline
+  & Vehicle & Path & DstPath &    Position &  Destination &    Velocity &  Cmd & Sig & Obs & Jam & Sus & PID\\
+\hline
+ & 1 :6957 & 1:2653 & 0: 285 & Min.   :-0.1300 & 2.8500 :6153 & Min.   :-0.7076 & 0  : 810 & N:  62 & N:7108 & N:7413 & N:7413 & 0 :7143\\
+\hline
+ & 51:  73 & 5:4304 & 1:2380 & 1st Qu.: 0.5133 & Idle   : 810 & 1st Qu.: 0.0113 & 177:6603 & Y:7351 & Y: 305 & NA & NA & 15: 270\\
+\hline
+ & 52: 383 & 6:  73 & 5:4300 & Median : 1.3217 & 0.2000 : 350 & Median : 0.0129 & NA & NA & NA & NA & NA & NA\\
+\hline
+ & NA & 7: 383 & 6:  69 & Mean   : 1.3613 & 0.1500 :  21 & Mean   : 0.0170 & NA & NA & NA & NA & NA & NA\\
+\hline
+ & NA & NA & 7: 379 & 3rd Qu.: 2.1382 & 0.3000 :  19 & 3rd Qu.: 0.0137 & NA & NA & NA & NA & NA & NA\\
+\hline
+ & NA & NA & NA & Max.   : 3.0121 & 2.0000 :  17 & Max.   : 0.7179 & NA & NA & NA & NA & NA & NA\\
+\hline
+ & NA & NA & NA & NA & (Other):  43 & NA & NA & NA & NA & NA & NA & NA\\
+\hline
+\end{tabular}}
+\end{table}
+
+Here is a summary of contoller log file dimensions for each run:
+
+\begin{table}[!h]
+
+\caption{\label{tab:logfiledetails}Controller Datasets}
+\centering
+\begin{tabular}[t]{l|r|r}
+\hline
+df\_name & r\_count & col\_count\\
+\hline
+Acc\_1\_Vel\_0135\_Test2 & 7413 & 12\\
+\hline
+Acc\_1\_Vel\_03\_Test2 & 4380 & 12\\
+\hline
+Acc\_1\_Vel\_06\_Test2 & 2142 & 12\\
+\hline
+Acc\_1\_Vel\_2\_Test2 & 1379 & 12\\
+\hline
+Acc\_1\_Vel\_4\_Test2 & 2127 & 18\\
+\hline
+Acc\_2\_Vel\_06\_Test2 & 1997 & 12\\
+\hline
+Acc\_2\_Vel\_2\_Test2 & 2771 & 12\\
+\hline
+Acc\_2\_Vel\_4\_Test2 & 1098 & 12\\
+\hline
+Acc\_2\_Vel\_4\_Test2\_No\_Pallet & 3587 & 12\\
+\hline
+Acc\_2\_Vel\_6\_Test2\_No\_Pallet & 8078 & 12\\
+\hline
+\end{tabular}
+\end{table}
+
+This is a sample controller Log file:
+
+\begin{table}[!h]
+
+\caption{\label{tab:strlogfiles}Sample Controller Log File - Structure}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{l}
+\hline
+Log File Structure\\
+\hline
+'data.frame':   7413 obs. of  12 variables:\\
+\hline
+\$ Vehicle    : Factor w/ 3 levels "1","51","52": 1 1 1 1 1 1 1 1 1 1 ...\\
+\hline
+\$ Path       : Factor w/ 4 levels "1","5","6","7": 1 1 1 1 1 1 1 1 1 1 ...\\
+\hline
+\$ DstPath    : Factor w/ 5 levels "0","1","5","6",..: 1 1 1 1 1 1 1 1 1 1 ...\\
+\hline
+\$ Position   : num  0.348 0.348 0.348 0.348 0.348 ...\\
+\hline
+\$ Destination: Factor w/ 9 levels "-2.0000","0.1500",..: 9 9 9 9 9 9 9 9 9 9 ...\\
+\hline
+\$ Velocity   : num  0e+00 0e+00 0e+00 0e+00 0e+00 -2e-04 -2e-04 2e-04 0e+00 -2e-04 ...\\
+\hline
+\$ Cmd        : Factor w/ 2 levels "0","177": 1 1 1 1 1 1 1 1 1 1 ...\\
+\hline
+\$ Sig        : Factor w/ 2 levels "N","Y": 2 2 2 2 2 2 2 2 2 2 ...\\
+\hline
+\$ Obs        : Factor w/ 2 levels "N","Y": 1 1 1 1 1 1 1 1 1 1 ...\\
+\hline
+\$ Jam        : Factor w/ 1 level "N": 1 1 1 1 1 1 1 1 1 1 ...\\
+\hline
+\$ Sus        : Factor w/ 1 level "N": 1 1 1 1 1 1 1 1 1 1 ...\\
+\hline
+\$ PID        : Factor w/ 2 levels "0","15": 2 2 2 2 2 2 2 2 2 2 ...\\
+\hline
+\end{tabular}}
+\end{table}
+
+\newpage
+
+\hypertarget{controller-logs-missing-data}{%
+\subsection{Controller Logs Missing
+Data}\label{controller-logs-missing-data}}
+
+There is only one log file with missing data, as is demonstrated with
+the data below. This is because the log file
+\texttt{Acc\_1\_Vel\_4\_Test2} has a extra columns included, which were
+added after the data capture. They can be dicounted as missing data.
+These values will form part of the analysis for joining the Sensor and
+Controller datasets, so that they are part of a single dataset. This
+final dataset will then be presented for the data preprocessing and
+model construction in a later section.
+
+\begin{table}[!h]
+
+\caption{\label{tab:log_nas}Controller Missing Data - Summary}
+\centering
+\begin{tabular}[t]{l}
+\hline
+Missing Data\\
+\hline
+Classes 'tbl\_df', 'tbl' and 'data.frame':  1 obs. of  10 variables:\\
+\hline
+\$ Acc\_1\_Vel\_0135\_Test2       : int 0\\
+\hline
+\$ Acc\_1\_Vel\_03\_Test2         : int 0\\
+\hline
+\$ Acc\_1\_Vel\_06\_Test2         : int 0\\
+\hline
+\$ Acc\_1\_Vel\_2\_Test2          : int 0\\
+\hline
+\$ Acc\_1\_Vel\_4\_Test2          : int 2127\\
+\hline
+\$ Acc\_2\_Vel\_06\_Test2         : int 0\\
+\hline
+\$ Acc\_2\_Vel\_2\_Test2          : int 0\\
+\hline
+\$ Acc\_2\_Vel\_4\_Test2          : int 0\\
+\hline
+\$ Acc\_2\_Vel\_4\_Test2\_No\_Pallet: int 0\\
+\hline
+\$ Acc\_2\_Vel\_6\_Test2\_No\_Pallet: int 0\\
+\hline
+\end{tabular}
+\end{table}
+
+\newpage
+
+\hypertarget{todo---discuss-meaning-of-each-column}{%
+\subsubsection{TODO - Discuss meaning of each
+column}\label{todo---discuss-meaning-of-each-column}}
+
+\hypertarget{todo---plot-bar-charts-for-logs}{%
+\subsubsection{TODO - Plot Bar charts for
+Logs}\label{todo---plot-bar-charts-for-logs}}
+
+\hypertarget{todo---add-time-column-to-controller-logs}{%
+\subsubsection{TODO - Add Time Column to Controller
+Logs}\label{todo---add-time-column-to-controller-logs}}
+
+\hypertarget{todo---create-label-column-from-first-3-columns}{%
+\subsubsection{TODO - Create Label Column from first 3
+columns}\label{todo---create-label-column-from-first-3-columns}}
+
+\hypertarget{todo---add-section-on-quickstick}{%
+\subsubsection{TODO - Add section on
+QuickStick}\label{todo---add-section-on-quickstick}}
+
+\newpage
+
+\hypertarget{data-capture-sensor-data-files}{%
+\section{Data Capture Sensor Data
+Files}\label{data-capture-sensor-data-files}}
+
+TODO - Give description of LSM Vehicle, and Track Give explanation of
+each run, and number of sensors Re-iterate that 2nd Data Capture is the
+only one of interest here. Explain that there are 3 axes per sensor
+Include Image of Sensor Orientation, and also description of MPU925
+Sensor
+
+\hypertarget{hardcoded-values}{%
+\subsection{Hardcoded Values}\label{hardcoded-values}}
+
+These hardcoded values are only for the May 2018 Data Capture. There are
+two main objective to placing these hardcoded items outside of the
+functions and logic. Firstly, they provide transparency so that readers
+can discern decisions and secondly, because the values are easily
+edited, without impacting/breaking the code.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Pre-defined header for the raw sensor data}
+\NormalTok{sensor_header =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"IMU1_X"}\NormalTok{, }\StringTok{"IMU1_Y"}\NormalTok{,   }\StringTok{"IMU1_Z"}\NormalTok{,   }
+                  \StringTok{"IMU2_X"}\NormalTok{, }\StringTok{"IMU2_Y"}\NormalTok{,   }\StringTok{"IMU2_Z"}\NormalTok{,}
+                  \StringTok{"IMU3_X"}\NormalTok{, }\StringTok{"IMU3_Y"}\NormalTok{,   }\StringTok{"IMU3_Z"}\NormalTok{,}
+                  \StringTok{"IMU4_X"}\NormalTok{, }\StringTok{"IMU4_Y"}\NormalTok{,   }\StringTok{"IMU4_Z"}\NormalTok{,}
+                  \StringTok{"IMU5_X"}\NormalTok{, }\StringTok{"IMU5_Y"}\NormalTok{,   }\StringTok{"IMU5_Z"}\NormalTok{,}
+                  \StringTok{"IMU6_X"}\NormalTok{, }\StringTok{"IMU6_Y"}\NormalTok{,   }\StringTok{"IMU6_Z"}\NormalTok{,}
+                  \StringTok{"IMU7_X"}\NormalTok{, }\StringTok{"IMU7_Y"}\NormalTok{,   }\StringTok{"IMU7_Z"}\NormalTok{,}
+                  \StringTok{"IMU8_X"}\NormalTok{, }\StringTok{"IMU8_Y"}\NormalTok{,   }\StringTok{"IMU8_Z"}\NormalTok{,}
+                  \StringTok{"IMU9_X"}\NormalTok{, }\StringTok{"IMU9_Y"}\NormalTok{,   }\StringTok{"IMU9_Z"}\NormalTok{,   }
+                  \StringTok{"IMU10_X"}\NormalTok{, }\StringTok{"IMU10_Y"}\NormalTok{, }\StringTok{"IMU10_Z"}\NormalTok{,}
+                  \StringTok{"IMU11_X"}\NormalTok{, }\StringTok{"IMU11_Y"}\NormalTok{, }\StringTok{"IMU11_Z"}\NormalTok{,  }
+                  \StringTok{"IMU12_X"}\NormalTok{, }\StringTok{"IMU12_Y"}\NormalTok{, }\StringTok{"IMU12_Z"}\NormalTok{,}
+                  \StringTok{"Timestamp"}\NormalTok{, }\StringTok{"Delta"}\NormalTok{)}
+
+
+\CommentTok{# Magnetometer Data Column 1,2 Swap }
+\NormalTok{mag_col_swap =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"IMU1_Y"}\NormalTok{, }\StringTok{"IMU1_X"}\NormalTok{, }\StringTok{"IMU1_Z"}\NormalTok{,  }
+                 \StringTok{"IMU2_Y"}\NormalTok{, }\StringTok{"IMU2_X"}\NormalTok{, }\StringTok{"IMU2_Z"}\NormalTok{,}
+                 \StringTok{"IMU3_Y"}\NormalTok{, }\StringTok{"IMU3_X"}\NormalTok{, }\StringTok{"IMU3_Z"}\NormalTok{,}
+                 \StringTok{"IMU4_Y"}\NormalTok{, }\StringTok{"IMU4_X"}\NormalTok{, }\StringTok{"IMU4_Z"}\NormalTok{,}
+                 \StringTok{"IMU5_Y"}\NormalTok{, }\StringTok{"IMU5_X"}\NormalTok{, }\StringTok{"IMU5_Z"}\NormalTok{,}
+                 \StringTok{"IMU6_Y"}\NormalTok{, }\StringTok{"IMU6_X"}\NormalTok{, }\StringTok{"IMU6_Z"}\NormalTok{,}
+                 \StringTok{"IMU7_Y"}\NormalTok{, }\StringTok{"IMU7_X"}\NormalTok{, }\StringTok{"IMU7_Z"}\NormalTok{,}
+                 \StringTok{"IMU8_Y"}\NormalTok{, }\StringTok{"IMU8_X"}\NormalTok{, }\StringTok{"IMU8_Z"}\NormalTok{,}
+                 \StringTok{"IMU9_Y"}\NormalTok{, }\StringTok{"IMU9_X"}\NormalTok{, }\StringTok{"IMU9_Z"}\NormalTok{,  }
+                 \StringTok{"IMU10_Y"}\NormalTok{, }\StringTok{"IMU10_X"}\NormalTok{, }\StringTok{"IMU10_Z"}\NormalTok{,}
+                 \StringTok{"IMU11_Y"}\NormalTok{, }\StringTok{"IMU11_X"}\NormalTok{, }\StringTok{"IMU11_Z"}\NormalTok{,   }
+                 \StringTok{"IMU12_Y"}\NormalTok{, }\StringTok{"IMU12_X"}\NormalTok{, }\StringTok{"IMU12_Z"}\NormalTok{,}
+                 \StringTok{"Timestamp"}\NormalTok{,   }\StringTok{"Delta"}\NormalTok{)}
+
+
+\CommentTok{# Magnetometer Negate Col3 (Z Axes)}
+\NormalTok{mag_z_negate =}\StringTok{ }\NormalTok{negate_hdr <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"IMU1_Z"}\NormalTok{, }\StringTok{"IMU2_Z"}\NormalTok{, }\StringTok{"IMU3_Z"}\NormalTok{, }
+                               \StringTok{"IMU4_Z"}\NormalTok{, }\StringTok{"IMU5_Z"}\NormalTok{, }\StringTok{"IMU6_Z"}\NormalTok{, }
+                               \StringTok{"IMU7_Z"}\NormalTok{, }\StringTok{"IMU8_Z"}\NormalTok{, }\StringTok{"IMU9_Z"}\NormalTok{, }
+                               \StringTok{"IMU10_Z"}\NormalTok{, }\StringTok{"IMU11_Z"}\NormalTok{, }\StringTok{"IMU12_Z"}\NormalTok{)}
+
+
+\CommentTok{# This header swap is to account for orientation of the sensor.}
+\NormalTok{swap_position_header =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"IMU1_Y"}\NormalTok{, }\StringTok{"IMU1_X"}\NormalTok{, }\StringTok{"IMU1_Z"}\NormalTok{,  }
+                         \StringTok{"IMU2_X"}\NormalTok{, }\StringTok{"IMU2_Y"}\NormalTok{, }\StringTok{"IMU2_Z"}\NormalTok{, }
+                         \StringTok{"IMU3_X"}\NormalTok{, }\StringTok{"IMU3_Y"}\NormalTok{, }\StringTok{"IMU3_Z"}\NormalTok{,}
+                         \StringTok{"IMU4_X"}\NormalTok{, }\StringTok{"IMU4_Y"}\NormalTok{, }\StringTok{"IMU4_Z"}\NormalTok{,}
+                         \StringTok{"IMU5_X"}\NormalTok{, }\StringTok{"IMU5_Y"}\NormalTok{, }\StringTok{"IMU5_Z"}\NormalTok{,}
+                         \StringTok{"IMU6_X"}\NormalTok{, }\StringTok{"IMU6_Y"}\NormalTok{, }\StringTok{"IMU6_Z"}\NormalTok{,}
+                         \StringTok{"IMU7_Z"}\NormalTok{, }\StringTok{"IMU7_X"}\NormalTok{, }\StringTok{"IMU7_Y"}\NormalTok{,}
+                         \StringTok{"IMU8_Y"}\NormalTok{, }\StringTok{"IMU8_X"}\NormalTok{, }\StringTok{"IMU8_Z"}\NormalTok{,}
+                         \StringTok{"IMU9_Z"}\NormalTok{, }\StringTok{"IMU9_X"}\NormalTok{, }\StringTok{"IMU9_Y"}\NormalTok{,  }
+                         \StringTok{"IMU10_X"}\NormalTok{, }\StringTok{"IMU10_Y"}\NormalTok{, }\StringTok{"IMU10_Z"}\NormalTok{,}
+                         \StringTok{"IMU11_X"}\NormalTok{, }\StringTok{"IMU11_Y"}\NormalTok{, }\StringTok{"IMU11_Z"}\NormalTok{,   }
+                         \StringTok{"IMU12_X"}\NormalTok{, }\StringTok{"IMU12_Y"}\NormalTok{, }\StringTok{"IMU12_Z"}\NormalTok{,}
+                         \StringTok{"Timestamp"}\NormalTok{,   }\StringTok{"Delta"}\NormalTok{)}
+
+
+\CommentTok{# Axes to negate (using the post converted axis (already adjusted for orientation)}
+\NormalTok{negate_hdr <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"IMU1_Y"}\NormalTok{, }\StringTok{"IMU3_Y"}\NormalTok{, }\StringTok{"IMU3_Z"}\NormalTok{, }
+                \StringTok{"IMU8_Z"}\NormalTok{, }\StringTok{"IMU9_Y"}\NormalTok{, }\StringTok{"IMU9_Z"}\NormalTok{, }
+                \StringTok{"IMU12_Y"}\NormalTok{, }\StringTok{"IMU12_Z"}\NormalTok{)}
+
+
+\CommentTok{# There were 9 unique accel/vel settings }
+\CommentTok{# (10th run re-used setting, with platform off)}
+\NormalTok{run_settings <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"a_1_v_0_2"}\NormalTok{, }\StringTok{"a_1_v_0_03"}\NormalTok{, }\StringTok{"a_1_v_0_4"}\NormalTok{, }
+                  \StringTok{"a_1_v_0_06"}\NormalTok{, }\StringTok{"a_1_v_0_0135"}\NormalTok{, }\StringTok{"a_2_v_0_2"}\NormalTok{, }
+                  \StringTok{"a_2_v_0_4"}\NormalTok{, }\StringTok{"a_2_v_0_06"}\NormalTok{, }\StringTok{"a_2_v_0_6"}\NormalTok{ )}
+
+
+\CommentTok{# IMU Sensor Positions:}
+\NormalTok{s_pos_df <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{t}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"IMU1_POS"}\NormalTok{=}\StringTok{"FRONT_SURFACE"}\NormalTok{, }
+                         \StringTok{"IMU3_POS"}\NormalTok{=}\StringTok{"TOP_SURFACE_WITH_PALETTE"}\NormalTok{,}
+                         \StringTok{"IMU7_POS"}\NormalTok{=}\StringTok{"FRONT_SURFACE"}\NormalTok{, }
+                         \StringTok{"IMU8_POS"}\NormalTok{=}\StringTok{"FRONT_SURFACE"}\NormalTok{, }
+                         \StringTok{"IMU9_POS"}\NormalTok{=}\StringTok{"SIDE_SURFACE"}\NormalTok{, }
+                         \StringTok{"IMU11_POS"}\NormalTok{=}\StringTok{"TOP_SURFACE"}\NormalTok{, }
+                         \StringTok{"IMU12_POS"}\NormalTok{=}\StringTok{"TOP_SURFACE"}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+When loading the sensor data, each run dataset is loaded as a dataframe,
+and then added to the \texttt{sensor\_data} list. Due to the fact that
+there are acceleration and magnetometer sensor measurements, there are
+20 dataframes in the \texttt{sensor\_data} list.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create a list of data frames for the magnetic and vibration sensor data }
+\NormalTok{sensor_data <-}\StringTok{ }\KeywordTok{load_sensor_raw}\NormalTok{(DC2_EXCEL, sensor_header)}
+\end{Highlighting}
+\end{Shaded}
+
+The total observation count for sensor data is 253708. This is a summary
+of the raw sensor data file dimension.
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensorfiledetails}Raw Sensor Datasets}
+\centering
+\begin{tabular}[t]{l|r|r}
+\hline
+df\_name & r\_count & col\_count\\
+\hline
+modular\_a\_1\_v\_0\_2\_acc & 4942 & 38\\
+\hline
+modular\_a\_1\_v\_0\_2\_mag & 4942 & 38\\
+\hline
+modular\_a\_1\_v\_0\_03\_acc & 21660 & 38\\
+\hline
+modular\_a\_1\_v\_0\_03\_mag & 21660 & 38\\
+\hline
+modular\_a\_1\_v\_0\_4\_acc & 4181 & 38\\
+\hline
+modular\_a\_1\_v\_0\_4\_mag & 4181 & 38\\
+\hline
+modular\_a\_1\_v\_0\_06\_acc & 11566 & 38\\
+\hline
+modular\_a\_1\_v\_0\_06\_mag & 11566 & 38\\
+\hline
+modular\_a\_1\_v\_0\_0135\_acc & 41559 & 38\\
+\hline
+modular\_a\_1\_v\_0\_0135\_mag & 41559 & 38\\
+\hline
+modular\_a\_2\_v\_0\_2\_acc & 12992 & 38\\
+\hline
+modular\_a\_2\_v\_0\_2\_mag & 12992 & 38\\
+\hline
+modular\_a\_2\_v\_0\_4\_acc & 4532 & 38\\
+\hline
+modular\_a\_2\_v\_0\_4\_mag & 4532 & 38\\
+\hline
+modular\_a\_2\_v\_0\_4\_P\_OFF\_acc & 8582 & 38\\
+\hline
+modular\_a\_2\_v\_0\_4\_P\_OFF\_mag & 8582 & 38\\
+\hline
+modular\_a\_2\_v\_0\_06\_acc & 11606 & 38\\
+\hline
+modular\_a\_2\_v\_0\_06\_mag & 11606 & 38\\
+\hline
+modular\_a\_2\_v\_0\_6\_P\_OFF\_acc & 5234 & 38\\
+\hline
+modular\_a\_2\_v\_0\_6\_P\_OFF\_mag & 5234 & 38\\
+\hline
+\end{tabular}
+\end{table}
+
+\newpage
+
+\hypertarget{controller-logs-missing-data-1}{%
+\subsection{Controller Logs Missing
+Data}\label{controller-logs-missing-data-1}}
+
+For the prototype data experiment, each sensor was positioned in
+different location on the vehicle (see section on
+\texttt{Hardcoded\ Values} for the various postions for each sensors).
+Note, the sensors were not altered between runs.
+
+As a result of different sensor orientation, it is necessary to adjust
+the axis columns to their true position in each data frame. Here the
+variables from the \texttt{Hardcoded\ Values} section are utilised, when
+passed to the \texttt{convert\_axis} function.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Adjust the XYZ order of axes to account for sensor orientation}
+\CommentTok{# Adjust for gravity calibration }
+\NormalTok{sensor_data <-}\StringTok{ }\KeywordTok{convert_axis}\NormalTok{(sensor_data, mag_col_swap, mag_z_negate, }
+\NormalTok{                            swap_position_header, negate_hdr)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lsm_track_dataset_cleaning_files/figure-latex/aggrsensorfiles-pre_3-1.pdf}
+\includegraphics{lsm_track_dataset_cleaning_files/figure-latex/aggrsensorfiles-pre_3-2.pdf}
+
+Here are sample \texttt{aggr} plots displaying the amount of missing
+sensor data from the a sample raw dataset. This is due to some sensors
+not funtioning during the data capture, due to a number of technical
+issues. The second plot represents the rig where the platform was not
+present, effectively changing the vehicle payload.
+
+It is evident from the missing data plots that there are a number of
+columns that have little or no data. Due to the fact that these are
+missing as a result of technical facults, these columns can be dropped.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Drop Columns & Rows with only NAs, as these are empty variables/rows}
+\CommentTok{# due to mechanical issues and should not be included}
+\NormalTok{sensor_data <-}\StringTok{ }\KeywordTok{drop_na_only_cols}\NormalTok{(sensor_data, }\FloatTok{.15}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{lsm_track_dataset_cleaning_files/figure-latex/aggrsensorfiles-post-1.pdf}
+\caption{modular\_a\_1\_v\_0\_03\_acc}
+\end{figure}
+
+Here is the \texttt{aggr} plot for run modular\_a\_1\_v\_0\_03\_acc
+after the un-recorded sensors have been removed. This allows for more
+meaningful analysis of missing sensor data, after columns with missing
+data above the 85\% threshold were removed.
+
+\newpage
+
+\hypertarget{adding-columns-to-sensor-dataset}{%
+\subsection{Adding Columns to Sensor
+Dataset}\label{adding-columns-to-sensor-dataset}}
+
+In order to facilitate merging of all acceleration and magnetometer
+dataframes, the acceleration, velocity and platform values are added to
+each individual dataset.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Add Velocity and Acceleration columns}
+\NormalTok{sensor_data <-}\StringTok{ }\KeywordTok{sensor_vel_accel_list}\NormalTok{(sensor_data, run_settings)}
+
+\CommentTok{# Add Platform column}
+\NormalTok{sensor_data <-}\StringTok{ }\KeywordTok{sensor_platform_list}\NormalTok{(sensor_data)}
+\end{Highlighting}
+\end{Shaded}
+
+This is a summary of the sensor data file dimensions (after dropping
+columns with 85\% or more NAs, adding now columns)
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensorfiledetails-post}Post Cleaning Sensor Datasets}
+\centering
+\begin{tabular}[t]{l|r|r}
+\hline
+df\_name & r\_count & col\_count\\
+\hline
+modular\_a\_1\_v\_0\_2\_acc & 4942 & 26\\
+\hline
+modular\_a\_1\_v\_0\_2\_mag & 4942 & 26\\
+\hline
+modular\_a\_1\_v\_0\_03\_acc & 21660 & 26\\
+\hline
+modular\_a\_1\_v\_0\_03\_mag & 21660 & 26\\
+\hline
+modular\_a\_1\_v\_0\_4\_acc & 4181 & 26\\
+\hline
+modular\_a\_1\_v\_0\_4\_mag & 4181 & 26\\
+\hline
+modular\_a\_1\_v\_0\_06\_acc & 11566 & 26\\
+\hline
+modular\_a\_1\_v\_0\_06\_mag & 11566 & 26\\
+\hline
+modular\_a\_1\_v\_0\_0135\_acc & 41559 & 26\\
+\hline
+modular\_a\_1\_v\_0\_0135\_mag & 41559 & 26\\
+\hline
+modular\_a\_2\_v\_0\_2\_acc & 12992 & 26\\
+\hline
+modular\_a\_2\_v\_0\_2\_mag & 12992 & 26\\
+\hline
+modular\_a\_2\_v\_0\_4\_acc & 4532 & 26\\
+\hline
+modular\_a\_2\_v\_0\_4\_mag & 4532 & 26\\
+\hline
+modular\_a\_2\_v\_0\_4\_P\_OFF\_acc & 8582 & 23\\
+\hline
+modular\_a\_2\_v\_0\_4\_P\_OFF\_mag & 8582 & 23\\
+\hline
+modular\_a\_2\_v\_0\_06\_acc & 11606 & 26\\
+\hline
+modular\_a\_2\_v\_0\_06\_mag & 11606 & 26\\
+\hline
+modular\_a\_2\_v\_0\_6\_P\_OFF\_acc & 5234 & 23\\
+\hline
+modular\_a\_2\_v\_0\_6\_P\_OFF\_mag & 5234 & 23\\
+\hline
+\end{tabular}
+\end{table}
+
+The total observation count for the cleaned sensor data remains 253708.
+
+\newpage
+
+\hypertarget{sensor-axes-summaries-and-boxplots}{%
+\subsection{Sensor Axes Summaries and
+Boxplots}\label{sensor-axes-summaries-and-boxplots}}
+
+\hypertarget{this-is-a-sample-sensor-data-file}{%
+\subsubsection{This is a sample sensor data
+file:}\label{this-is-a-sample-sensor-data-file}}
+
+\begin{table}[!h]
+
+\caption{\label{tab:strsdfiles}Sample Sensor Data File - Structure}
+\centering
+\begin{tabular}[t]{l}
+\hline
+Data Structure\\
+\hline
+'data.frame':   21660 obs. of  26 variables:\\
+\hline
+\$ IMU1\_X      : num  -22.6 -22.9 -26.1 -27 -29.2 ...\\
+\hline
+\$ IMU1\_Y      : num  19.5 16.5 15.5 17.3 14.9 ...\\
+\hline
+\$ IMU1\_Z      : num  1046 1048 1043 1044 1047 ...\\
+\hline
+\$ IMU3\_X      : num  -26.9 -22.9 -24.2 -20.1 -21.6 ...\\
+\hline
+\$ IMU3\_Y      : num  -22.5 -22.2 -21.7 -21.6 -20.1 ...\\
+\hline
+\$ IMU3\_Z      : num  1033 1034 1036 1026 1038 ...\\
+\hline
+\$ IMU7\_X      : num  -2.08 3.66 3.91 1.46 10.62 ...\\
+\hline
+\$ IMU7\_Y      : num  74.1 78.9 71.8 77.8 73.7 ...\\
+\hline
+\$ IMU7\_Z      : num  1016 1016 1011 1013 1016 ...\\
+\hline
+\$ IMU8\_X      : num  200 203 204 202 205 ...\\
+\hline
+\$ IMU8\_Y      : num  32.3 37.2 30.3 33 31.5 ...\\
+\hline
+\$ IMU8\_Z      : num  977 980 978 983 977 ...\\
+\hline
+\$ IMU9\_X      : num  60.1 58.3 63.8 61.8 63.7 ...\\
+\hline
+\$ IMU9\_Y      : num  -45.3 -39.6 -41.4 -40.5 -40.4 ...\\
+\hline
+\$ IMU9\_Z      : num  993 994 991 992 991 ...\\
+\hline
+\$ IMU11\_X     : num  -25.1 -18.8 -15.6 -21.1 -19.8 ...\\
+\hline
+\$ IMU11\_Y     : num  14.2 12.1 12 12.1 14.2 ...\\
+\hline
+\$ IMU11\_Z     : num  998 1000 1002 998 1003 ...\\
+\hline
+\$ IMU12\_X     : num  9.03 9.28 11.96 13.67 13.67 ...\\
+\hline
+\$ IMU12\_Y     : num  -23.3 -19.4 -24.7 -23.7 -23.7 ...\\
+\hline
+\$ IMU12\_Z     : num  996 993 998 999 994 ...\\
+\hline
+\$ Timestamp   : num  0.113 0.123 0.133 0.144 0.163 0.173 0.183 0.193 0.204 0.214 ...\\
+\hline
+\$ Delta       : num  NA 0.01 0.01 0.011 0.019 ...\\
+\hline
+\$ velocity    : Factor w/ 1 level "0.03": 1 1 1 1 1 1 1 1 1 1 ...\\
+\hline
+\$ acceleration: Factor w/ 1 level "1": 1 1 1 1 1 1 1 1 1 1 ...\\
+\hline
+\$ platform    : Factor w/ 1 level "P\_ON": 1 1 1 1 1 1 1 1 1 1 ...\\
+\hline
+\end{tabular}
+\end{table}
+
+\newpage
+
+\hypertarget{sensor-axes-analysis}{%
+\subsubsection{Sensor Axes Analysis}\label{sensor-axes-analysis}}
+
+\hypertarget{magnetometer-x-axes-comparison-for-run-namessensor_data4}{%
+\paragraph{\texorpdfstring{Magnetometer X Axes Comparison, for run
+\texttt{names(sensor\_data){[}{[}4{]}{]}}}{Magnetometer X Axes Comparison, for run names(sensor\_data){[}{[}4{]}{]}}}\label{magnetometer-x-axes-comparison-for-run-namessensor_data4}}
+
+\begin{table}[!h]
+
+\caption{\label{tab:summsensorfiles-mag-x}X Axis for Acceleration - Summary}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{l|l|l|l|l|l|l|l}
+\hline
+  &     IMU1\_X &     IMU3\_X &     IMU7\_X &     IMU8\_X &     IMU9\_X &    IMU11\_X &    IMU12\_X\\
+\hline
+ & Min.   :-59.98 & Min.   :-70.771 & Min.   :-802.9 & Min.   :-2849.0 & Min.   :-1273.7 & Min.   :-195.52 & Min.   :-95.51\\
+\hline
+ & 1st Qu.:458.06 & 1st Qu.:  3.299 & 1st Qu.:-529.6 & 1st Qu.:-1936.0 & 1st Qu.: -764.8 & 1st Qu.:  11.85 & 1st Qu.:138.69\\
+\hline
+ & Median :479.50 & Median : 10.946 & Median :-517.4 & Median :-1903.2 & Median : -731.0 & Median :  21.44 & Median :149.19\\
+\hline
+ & Mean   :468.72 & Mean   : 11.925 & Mean   :-497.7 & Mean   :-1856.0 & Mean   : -637.6 & Mean   :  24.37 & Mean   :156.75\\
+\hline
+ & 3rd Qu.:489.70 & 3rd Qu.: 19.642 & 3rd Qu.:-433.6 & 3rd Qu.:-1670.9 & 3rd Qu.: -449.4 & 3rd Qu.:  34.79 & 3rd Qu.:180.83\\
+\hline
+ & Max.   :722.41 & Max.   :127.898 & Max.   :-194.3 & Max.   : -841.9 & Max.   :  731.9 & Max.   : 280.99 & Max.   :565.42\\
+\hline
+ & NA & NA's   :118 & NA & NA & NA & NA's   :6 & NA's   :3\\
+\hline
+\end{tabular}}
+\end{table}
+
+\includegraphics{lsm_track_dataset_cleaning_files/figure-latex/boxplot-mag-x-1.pdf}
+
+\hypertarget{magnetometer-y-axes-comparison-for-run-namessensor_data4}{%
+\paragraph{\texorpdfstring{Magnetometer Y Axes Comparison, for run
+\texttt{names(sensor\_data){[}{[}4{]}{]}}}{Magnetometer Y Axes Comparison, for run names(sensor\_data){[}{[}4{]}{]}}}\label{magnetometer-y-axes-comparison-for-run-namessensor_data4}}
+
+\begin{table}[!h]
+
+\caption{\label{tab:summsensorfiles-mag-y}Y Axis for Acceleration - Summary}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{l|l|l|l|l|l|l|l}
+\hline
+  &     IMU1\_Y &     IMU3\_Y &     IMU7\_Y &     IMU8\_Y &     IMU9\_Y &    IMU11\_Y &    IMU12\_Y\\
+\hline
+ & Min.   :-1375.99 & Min.   :-62.5245 & Min.   : 64.17 & Min.   :-440.52 & Min.   :-456.1143 & Min.   :-15.59 & Min.   :-64.17\\
+\hline
+ & 1st Qu.: -583.41 & 1st Qu.:  0.7497 & 1st Qu.:243.35 & 1st Qu.:-217.11 & 1st Qu.:-288.1827 & 1st Qu.: 44.38 & 1st Qu.: 71.07\\
+\hline
+ & Median : -556.87 & Median :  6.8972 & Median :256.40 & Median :  -1.20 & Median :  -0.4498 & Median : 50.38 & Median : 78.57\\
+\hline
+ & Mean   : -568.26 & Mean   :  8.1370 & Mean   :260.29 & Mean   : -67.39 & Mean   : -94.0807 & Mean   : 54.23 & Mean   : 88.26\\
+\hline
+ & 3rd Qu.: -530.63 & 3rd Qu.: 11.3954 & 3rd Qu.:268.09 & 3rd Qu.:  17.84 & 3rd Qu.:  22.9407 & 3rd Qu.: 65.22 & 3rd Qu.:107.81\\
+\hline
+ & Max.   :  -34.94 & Max.   : 90.5631 & Max.   :533.63 & Max.   : 185.62 & Max.   : 825.4139 & Max.   :134.50 & Max.   :240.65\\
+\hline
+ & NA & NA's   :160 & NA & NA's   :72 & NA's   :52 & NA's   :6 & NA\\
+\hline
+\end{tabular}}
+\end{table}
+
+\includegraphics{lsm_track_dataset_cleaning_files/figure-latex/boxplot-mag-y-1.pdf}
+
+\hypertarget{magnetometer-z-axes-comparison-for-run-namessensor_data4}{%
+\paragraph{\texorpdfstring{Magnetometer Z Axes Comparison, for run
+\texttt{names(sensor\_data){[}{[}4{]}{]}}}{Magnetometer Z Axes Comparison, for run names(sensor\_data){[}{[}4{]}{]}}}\label{magnetometer-z-axes-comparison-for-run-namessensor_data4}}
+
+\begin{table}[!h]
+
+\caption{\label{tab:summsensorfiles-mag-z}z Axis for Acceleration - Summary}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{l|l|l|l|l|l|l|l}
+\hline
+  &     IMU1\_Z &     IMU3\_Z &     IMU7\_Z &     IMU8\_Z &     IMU9\_Z &    IMU11\_Z &    IMU12\_Z\\
+\hline
+ & Min.   :-3000.6 & Min.   :-86.66 & Min.   :-1762.4 & Min.   : 913.3 & Min.   :-546.2 & Min.   :-1374.9 & Min.   :-1728.9\\
+\hline
+ & 1st Qu.:-1671.4 & 1st Qu.:-68.22 & 1st Qu.: -912.1 & 1st Qu.:1550.0 & 1st Qu.: 127.4 & 1st Qu.: -807.6 & 1st Qu.: -965.7\\
+\hline
+ & Median :-1629.1 & Median :-65.22 & Median : -890.6 & Median :2281.0 & Median : 488.4 & Median : -783.4 & Median : -935.9\\
+\hline
+ & Mean   :-1614.9 & Mean   :-63.76 & Mean   : -902.6 & Mean   :2048.7 & Mean   : 374.0 & Mean   : -801.4 & Mean   : -952.9\\
+\hline
+ & 3rd Qu.:-1495.9 & 3rd Qu.:-60.73 & 3rd Qu.: -860.6 & 3rd Qu.:2304.1 & 3rd Qu.: 508.3 & 3rd Qu.: -765.4 & 3rd Qu.: -899.8\\
+\hline
+ & Max.   : -492.1 & Max.   : 33.59 & Max.   : -312.6 & Max.   :3060.6 & Max.   : 908.5 & Max.   : -297.9 & Max.   : -197.0\\
+\hline
+ & NA & NA & NA & NA & NA's   :3 & NA & NA\\
+\hline
+\end{tabular}}
+\end{table}
+
+\includegraphics{lsm_track_dataset_cleaning_files/figure-latex/boxplot-mag-z-1.pdf}
+
+\hypertarget{acceleration-x-axes-comparison-for-run-namessensor_data3}{%
+\paragraph{\texorpdfstring{Acceleration X Axes Comparison, for run
+\texttt{names(sensor\_data){[}{[}3{]}{]}}}{Acceleration X Axes Comparison, for run names(sensor\_data){[}{[}3{]}{]}}}\label{acceleration-x-axes-comparison-for-run-namessensor_data3}}
+
+\begin{table}[!h]
+
+\caption{\label{tab:summsensorfiles-acc-x}X Axis for Acceleration - Summary}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{l|l|l|l|l|l|l|l}
+\hline
+  &     IMU1\_X &     IMU3\_X &     IMU7\_X &     IMU8\_X &     IMU9\_X &    IMU11\_X &    IMU12\_X\\
+\hline
+ & Min.   :-1161.01 & Min.   :-1215.09 & Min.   :-502.075 & Min.   :-273.1 & Min.   :-470.46 & Min.   :-422.36 & Min.   :-603.15\\
+\hline
+ & 1st Qu.:  -29.66 & 1st Qu.:  -18.92 & 1st Qu.:   6.470 & 1st Qu.: 202.3 & 1st Qu.:  57.62 & 1st Qu.: -23.68 & 1st Qu.:  13.06\\
+\hline
+ & Median :  -27.10 & Median :  -15.87 & Median :   9.399 & Median : 205.0 & Median :  60.67 & Median : -20.63 & Median :  15.62\\
+\hline
+ & Mean   :  -27.09 & Mean   :  -16.02 & Mean   :   9.308 & Mean   : 205.0 & Mean   :  60.72 & Mean   : -20.75 & Mean   :  15.67\\
+\hline
+ & 3rd Qu.:  -24.54 & 3rd Qu.:  -12.94 & 3rd Qu.:  12.329 & 3rd Qu.: 207.6 & 3rd Qu.:  63.96 & 3rd Qu.: -17.67 & 3rd Qu.:  18.31\\
+\hline
+ & Max.   :  501.59 & Max.   :  671.88 & Max.   : 456.177 & Max.   : 926.8 & Max.   : 987.67 & Max.   : 420.41 & Max.   : 490.84\\
+\hline
+ & NA's   :1 & NA's   :6 & NA's   :37 & NA & NA & NA's   :3 & NA's   :7\\
+\hline
+\end{tabular}}
+\end{table}
+
+\includegraphics{lsm_track_dataset_cleaning_files/figure-latex/boxplot-acc-x-1.pdf}
+
+\hypertarget{acceleration-y-axes-comparison-for-run-namessensor_data3}{%
+\paragraph{\texorpdfstring{Acceleration Y Axes Comparison, for run
+\texttt{names(sensor\_data){[}{[}3{]}{]}}}{Acceleration Y Axes Comparison, for run names(sensor\_data){[}{[}3{]}{]}}}\label{acceleration-y-axes-comparison-for-run-namessensor_data3}}
+
+\begin{table}[!h]
+
+\caption{\label{tab:summsensorfiles-acc-y}Y Axis for Acceleration - Summary}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{l|l|l|l|l|l|l|l}
+\hline
+  &     IMU1\_Y &     IMU3\_Y &     IMU7\_Y &     IMU8\_Y &     IMU9\_Y &    IMU11\_Y &    IMU12\_Y\\
+\hline
+ & Min.   :-1545.90 & Min.   :-794.56 & Min.   :-464.48 & Min.   :-715.82 & Min.   :-1028.69 & Min.   :-750.00 & Min.   :-692.14\\
+\hline
+ & 1st Qu.:   15.62 & 1st Qu.: -27.10 & 1st Qu.:  72.39 & 1st Qu.:  31.62 & 1st Qu.:  -44.19 & 1st Qu.:  12.57 & 1st Qu.: -23.56\\
+\hline
+ & Median :   17.70 & Median : -25.15 & Median :  74.46 & Median :  33.69 & Median :  -41.87 & Median :  14.40 & Median : -21.73\\
+\hline
+ & Mean   :   17.70 & Mean   : -25.22 & Mean   :  74.47 & Mean   :  33.78 & Mean   :  -41.78 & Mean   :  14.47 & Mean   : -21.65\\
+\hline
+ & 3rd Qu.:   19.65 & 3rd Qu.: -23.07 & 3rd Qu.:  76.66 & 3rd Qu.:  36.13 & 3rd Qu.:  -39.18 & 3rd Qu.:  16.60 & 3rd Qu.: -19.53\\
+\hline
+ & Max.   :  627.44 & Max.   :2255.62 & Max.   :1042.11 & Max.   :1269.04 & Max.   : 2971.92 & Max.   : 673.34 & Max.   : 776.61\\
+\hline
+ & NA & NA & NA & NA & NA & NA's   :1 & NA's   :1\\
+\hline
+\end{tabular}}
+\end{table}
+
+\includegraphics{lsm_track_dataset_cleaning_files/figure-latex/boxplot-acc-y-1.pdf}
+
+\hypertarget{acceleration-z-axes-comparison-for-run-namessensor_data3}{%
+\paragraph{\texorpdfstring{Acceleration Z Axes Comparison, for run
+\texttt{names(sensor\_data){[}{[}3{]}{]}}}{Acceleration Z Axes Comparison, for run names(sensor\_data){[}{[}3{]}{]}}}\label{acceleration-z-axes-comparison-for-run-namessensor_data3}}
+
+\begin{table}[!h]
+
+\caption{\label{tab:summsensorfiles-acc-z}Z Axis for Acceleration - Summary}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{l|l|l|l|l|l|l|l}
+\hline
+  &     IMU1\_Z &     IMU3\_Z &     IMU7\_Z &     IMU8\_Z &     IMU9\_Z &    IMU11\_Z &    IMU12\_Z\\
+\hline
+ & Min.   :-273.1 & Min.   :-481.3 & Min.   :-438.7 & Min.   :  15.38 & Min.   :-988.4 & Min.   :-346.2 & Min.   :-234.4\\
+\hline
+ & 1st Qu.:1044.3 & 1st Qu.:1031.2 & 1st Qu.:1012.5 & 1st Qu.: 975.22 & 1st Qu.: 991.2 & 1st Qu.: 994.5 & 1st Qu.: 991.9\\
+\hline
+ & Median :1046.4 & Median :1033.6 & Median :1013.8 & Median : 977.54 & Median : 993.0 & Median : 996.8 & Median : 993.8\\
+\hline
+ & Mean   :1046.4 & Mean   :1033.6 & Mean   :1013.7 & Mean   : 977.57 & Mean   : 993.1 & Mean   : 996.8 & Mean   : 993.6\\
+\hline
+ & 3rd Qu.:1048.5 & 3rd Qu.:1035.8 & 3rd Qu.:1015.0 & 3rd Qu.: 979.74 & 3rd Qu.: 994.9 & 3rd Qu.: 999.3 & 3rd Qu.: 995.7\\
+\hline
+ & Max.   :2042.6 & Max.   :3607.3 & Max.   :1839.8 & Max.   :2264.28 & Max.   :2148.8 & Max.   :1776.2 & Max.   :1400.9\\
+\hline
+\end{tabular}}
+\end{table}
+
+\includegraphics{lsm_track_dataset_cleaning_files/figure-latex/boxplot-acc-z-1.pdf}
+
+\newpage
+
+\hypertarget{sensor-axes-boxplots-for-run-namessensor_data4-and-namessensor_data3}{%
+\subsubsection{\texorpdfstring{Sensor Axes Boxplots, for run
+\texttt{names(sensor\_data){[}{[}4{]}{]}} and
+\texttt{names(sensor\_data){[}{[}3{]}{]}}}{Sensor Axes Boxplots, for run names(sensor\_data){[}{[}4{]}{]} and names(sensor\_data){[}{[}3{]}{]}}}\label{sensor-axes-boxplots-for-run-namessensor_data4-and-namessensor_data3}}
+
+\includegraphics{lsm_track_dataset_cleaning_files/figure-latex/corrplot-mag-x-1.pdf}
+
+\begin{verbatim}
+## null device 
+##           1
+\end{verbatim}
+
+\includegraphics{lsm_track_dataset_cleaning_files/figure-latex/corrplot-mag-y-1.pdf}
+
+\begin{verbatim}
+## null device 
+##           1
+\end{verbatim}
+
+\includegraphics{lsm_track_dataset_cleaning_files/figure-latex/corrplot-mag-z-1.pdf}
+
+\begin{verbatim}
+## null device 
+##           1
+\end{verbatim}
+
+\includegraphics{lsm_track_dataset_cleaning_files/figure-latex/corrplot-acc-x-1.pdf}
+
+\begin{verbatim}
+## null device 
+##           1
+\end{verbatim}
+
+\includegraphics{lsm_track_dataset_cleaning_files/figure-latex/corrplot-acc-y-1.pdf}
+
+\begin{verbatim}
+## null device 
+##           1
+\end{verbatim}
+
+\includegraphics{lsm_track_dataset_cleaning_files/figure-latex/corrplot-acc-z-1.pdf}
+
+\begin{verbatim}
+## null device 
+##           1
+\end{verbatim}
+
+\hypertarget{todo---anova-models}{%
+\subsubsection{TODO - Anova models}\label{todo---anova-models}}
+
+\hypertarget{todo---give-details-on-each-of-the-columns}{%
+\subsubsection{TODO - Give details on each of the
+Columns}\label{todo---give-details-on-each-of-the-columns}}
+
+\hypertarget{todo---examine-outliers}{%
+\subsubsection{TODO - Examine Outliers}\label{todo---examine-outliers}}
+
+\hypertarget{todo---examine-missing-data}{%
+\subsubsection{TODO - Examine Missing
+Data}\label{todo---examine-missing-data}}
+
+\hypertarget{todo---examine-distribution}{%
+\subsubsection{TODO - Examine
+Distribution}\label{todo---examine-distribution}}
+
+
+\end{document}

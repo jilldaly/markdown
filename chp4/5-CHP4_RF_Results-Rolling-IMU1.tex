@@ -1,0 +1,410 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Chp 4 Results - Random Forest},
+            pdfauthor={Jill Daly},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Chp 4 Results - Random Forest}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Jill Daly}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{08 December, 2018}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+\begin{document}
+\maketitle
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/sensor-z-combined-rolling-rf-plot-1.pdf}
+\caption{Rolling - Z Combined - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-combined-rolling-rf-params}Rolling - Z Combined - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.2213064 & 0.9873431 & 0.8155033 & 0.9360055 & 0.8978272 & 0.8801320 & 0.8550960 & 0.9750068 & 0.9141839 & 0.9786170 & 0.9141839 & 0.8550960 & 0.2340014 & 0.9150514 & 0.0181808 & 0.0020029 & 0.0197753 & 0.0047090 & 0.0076158 & 0.0097789 & 0.0130897 & 0.0019742 & 0.0119228 & 0.0017138 & 0.0119228 & 0.0130897 & 0.0011772 & 0.0072244\\
+2 & 1 & extratrees & 0.2176491 & 0.9880881 & 0.8712452 & 0.9362648 & 0.8979795 & 0.8801934 & 0.8500516 & 0.9746341 & 0.9225736 & 0.9790101 & 0.9225736 & 0.8500516 & 0.2340662 & 0.9123429 & 0.0074948 & 0.0017258 & 0.0164954 & 0.0047310 & 0.0076634 & 0.0084006 & 0.0119742 & 0.0019245 & 0.0107260 & 0.0017115 & 0.0107260 & 0.0119742 & 0.0011827 & 0.0067469\\
+4 & 1 & gini & 0.2389563 & 0.9874184 & 0.7789841 & 0.9387227 & 0.9024029 & 0.8872399 & 0.8675998 & 0.9763043 & 0.9131017 & 0.9792479 & 0.9131017 & 0.8675998 & 0.2346807 & 0.9219521 & 0.0255566 & 0.0019928 & 0.0172923 & 0.0045095 & 0.0073979 & 0.0080170 & 0.0150498 & 0.0021775 & 0.0103128 & 0.0016029 & 0.0103128 & 0.0150498 & 0.0011274 & 0.0083772\\
+4 & 1 & extratrees & 0.1862778 & 0.9911372 & 0.8715013 & 0.9452167 & 0.9126264 & 0.8989262 & 0.8749199 & 0.9782574 & 0.9308837 & 0.9815824 & 0.9308837 & 0.8749199 & 0.2363042 & 0.9265887 & 0.0063884 & 0.0011686 & 0.0136912 & 0.0051578 & 0.0084261 & 0.0078035 & 0.0140490 & 0.0023586 & 0.0093819 & 0.0017440 & 0.0093819 & 0.0140490 & 0.0012894 & 0.0079538\\
+7 & 1 & gini & 0.2650118 & 0.9872371 & 0.6980196 & 0.9423194 & 0.9083251 & 0.8933154 & 0.8777617 & 0.9779766 & 0.9134556 & 0.9802842 & 0.9134556 & 0.8777617 & 0.2355799 & 0.9278692 & 0.0289187 & 0.0019528 & 0.0159224 & 0.0073222 & 0.0118250 & 0.0106506 & 0.0175982 & 0.0032251 & 0.0127918 & 0.0026360 & 0.0127918 & 0.0175982 & 0.0018306 & 0.0102085\\
+7 & 1 & extratrees & 0.1586304 & 0.9939225 & 0.8745966 & 0.9518688 & 0.9234107 & 0.9117464 & 0.8917125 & 0.9809369 & 0.9377085 & 0.9836043 & 0.9377085 & 0.8917125 & 0.2379672 & 0.9363247 & 0.0059003 & 0.0011663 & 0.0170840 & 0.0060612 & 0.0098186 & 0.0092601 & 0.0157172 & 0.0026911 & 0.0097681 & 0.0020815 & 0.0097681 & 0.0157172 & 0.0015153 & 0.0089620\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      9855 
+## Number of independent variables:  7 
+## Mtry:                             7 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.005683016
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 9855 samples
+##    7 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (7), centered (7), scaled (7) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 986, 985, 987, 987, 984, 984, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        0.2213064  0.9873431  0.8155033  0.9360055  0.8978272
+##   2     extratrees  0.2176491  0.9880881  0.8712452  0.9362648  0.8979795
+##   4     gini        0.2389563  0.9874184  0.7789841  0.9387227  0.9024029
+##   4     extratrees  0.1862778  0.9911372  0.8715013  0.9452167  0.9126264
+##   7     gini        0.2650118  0.9872371  0.6980196  0.9423194  0.9083251
+##   7     extratrees  0.1586304  0.9939225  0.8745966  0.9518688  0.9234107
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.8801320  0.8550960         0.9750068         0.9141839          
+##   0.8801934  0.8500516         0.9746341         0.9225736          
+##   0.8872399  0.8675998         0.9763043         0.9131017          
+##   0.8989262  0.8749199         0.9782574         0.9308837          
+##   0.8933154  0.8777617         0.9779766         0.9134556          
+##   0.9117464  0.8917125         0.9809369         0.9377085          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9786170            0.9141839       0.8550960    0.2340014          
+##   0.9790101            0.9225736       0.8500516    0.2340662          
+##   0.9792479            0.9131017       0.8675998    0.2346807          
+##   0.9815824            0.9308837       0.8749199    0.2363042          
+##   0.9802842            0.9134556       0.8777617    0.2355799          
+##   0.9836043            0.9377085       0.8917125    0.2379672          
+##   Mean_Balanced_Accuracy
+##   0.9150514             
+##   0.9123429             
+##   0.9219521             
+##   0.9265887             
+##   0.9278692             
+##   0.9363247             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 7, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-combined-rolling-rf-results}Rolling - Z Combined - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 1\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-combined-rolling-rf-results}Rolling - Z Combined - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 1 & 1 & 1\\
+PATH\_MOVING & 1 & 1 & 1\\
+PATH\_TRANSITION & 1 & 1 & 1\\
+SHUTTLE & 1 & 1 & 1\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-combined-rolling-rf-results}Rolling - Z Combined - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 4495 & 0 & 0 & 0\\
+PATH\_MOVING & 0 & 3712 & 0 & 0\\
+PATH\_TRANSITION & 0 & 0 & 542 & 0\\
+SHUTTLE & 0 & 0 & 0 & 1106\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-combined-rolling-rf-results}Rolling - Z Combined - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/plot_sensor-z-combined-rolling-roc-1.pdf}
+\caption{Rolling - Z Combined - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/sensor-z-combined-rolling-only-rf-plot-1.pdf}
+\caption{Rolling Only - Z Combined - Model}
+\end{figure}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-combined-rolling-only-rf-params}Rolling - Z Combined - RF Training Model Results}
+\centering
+\begin{tabular}[t]{rrlrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+\toprule
+mtry & min.node.size & splitrule & logLoss & AUC & prAUC & Accuracy & Kappa & Mean\_F1 & Mean\_Sensitivity & Mean\_Specificity & Mean\_Pos\_Pred\_Value & Mean\_Neg\_Pred\_Value & Mean\_Precision & Mean\_Recall & Mean\_Detection\_Rate & Mean\_Balanced\_Accuracy & logLossSD & AUCSD & prAUCSD & AccuracySD & KappaSD & Mean\_F1SD & Mean\_SensitivitySD & Mean\_SpecificitySD & Mean\_Pos\_Pred\_ValueSD & Mean\_Neg\_Pred\_ValueSD & Mean\_PrecisionSD & Mean\_RecallSD & Mean\_Detection\_RateSD & Mean\_Balanced\_AccuracySD\\
+\midrule
+2 & 1 & gini & 0.2092443 & 0.9880938 & 0.7911908 & 0.9402562 & 0.9049107 & 0.8914347 & 0.8724161 & 0.9768576 & 0.9161420 & 0.9795997 & 0.9161420 & 0.8724161 & 0.2350640 & 0.9246369 & 0.0122806 & 0.0019172 & 0.0222101 & 0.0040960 & 0.0066168 & 0.0083419 & 0.0125129 & 0.0018365 & 0.0123643 & 0.0015327 & 0.0123643 & 0.0125129 & 0.0010240 & 0.0068700\\
+2 & 1 & extratrees & 0.1982292 & 0.9893043 & 0.8571837 & 0.9423192 & 0.9080469 & 0.8950054 & 0.8721871 & 0.9773079 & 0.9251045 & 0.9805200 & 0.9251045 & 0.8721871 & 0.2355798 & 0.9247475 & 0.0084231 & 0.0019184 & 0.0181355 & 0.0050948 & 0.0081853 & 0.0070494 & 0.0116763 & 0.0021278 & 0.0126796 & 0.0019502 & 0.0126796 & 0.0116763 & 0.0012737 & 0.0066021\\
+4 & 1 & gini & 0.2324989 & 0.9879370 & 0.7484365 & 0.9432551 & 0.9098606 & 0.8977124 & 0.8831142 & 0.9782401 & 0.9166231 & 0.9804335 & 0.9166231 & 0.8831142 & 0.2358138 & 0.9306772 & 0.0359954 & 0.0020389 & 0.0197751 & 0.0039461 & 0.0064907 & 0.0096545 & 0.0170026 & 0.0019792 & 0.0108411 & 0.0013759 & 0.0108411 & 0.0170026 & 0.0009865 & 0.0092444\\
+4 & 1 & extratrees & 0.1684797 & 0.9921736 & 0.8580297 & 0.9487683 & 0.9185207 & 0.9073199 & 0.8886466 & 0.9799147 & 0.9309842 & 0.9824366 & 0.9309842 & 0.8886466 & 0.2371921 & 0.9342806 & 0.0048357 & 0.0013914 & 0.0157508 & 0.0057253 & 0.0092208 & 0.0091317 & 0.0138277 & 0.0024343 & 0.0120622 & 0.0020804 & 0.0120622 & 0.0138277 & 0.0014313 & 0.0078614\\
+6 & 1 & gini & 0.2613183 & 0.9879512 & 0.6844065 & 0.9460063 & 0.9143383 & 0.9019314 & 0.8897387 & 0.9794796 & 0.9176327 & 0.9812747 & 0.9176327 & 0.8897387 & 0.2365016 & 0.9346092 & 0.0305293 & 0.0018216 & 0.0194108 & 0.0070256 & 0.0113342 & 0.0112060 & 0.0178685 & 0.0031053 & 0.0119806 & 0.0025157 & 0.0119806 & 0.0178685 & 0.0017564 & 0.0102630\\
+6 & 1 & extratrees & 0.1521853 & 0.9940614 & 0.8602053 & 0.9533232 & 0.9258312 & 0.9149236 & 0.8978963 & 0.9816897 & 0.9364261 & 0.9839393 & 0.9364261 & 0.8978963 & 0.2383308 & 0.9397930 & 0.0068776 & 0.0012333 & 0.0176304 & 0.0067698 & 0.0108987 & 0.0103977 & 0.0165261 & 0.0028885 & 0.0111128 & 0.0024282 & 0.0111128 & 0.0165261 & 0.0016924 & 0.0094147\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = param$mtry, min.node.size = param$min.node.size, splitrule = as.character(param$splitrule),      write.forest = TRUE, probability = classProbs, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  500 
+## Sample size:                      9855 
+## Number of independent variables:  6 
+## Mtry:                             6 
+## Target node size:                 1 
+## Variable importance mode:         none 
+## Splitrule:                        extratrees 
+## OOB prediction error (Brier s.):  0.00519495
+\end{verbatim}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 9855 samples
+##    6 predictor
+##    4 classes: 'PATH_IDLE', 'PATH_MOVING', 'PATH_TRANSITION', 'SHUTTLE' 
+## 
+## Pre-processing: nearest neighbor imputation (6), centered (6), scaled (6) 
+## Resampling: Bootstrapped (10 reps) 
+## Summary of sample sizes: 986, 985, 987, 987, 984, 984, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  splitrule   logLoss    AUC        prAUC      Accuracy   Kappa    
+##   2     gini        0.2092443  0.9880938  0.7911908  0.9402562  0.9049107
+##   2     extratrees  0.1982292  0.9893043  0.8571837  0.9423192  0.9080469
+##   4     gini        0.2324989  0.9879370  0.7484365  0.9432551  0.9098606
+##   4     extratrees  0.1684797  0.9921736  0.8580297  0.9487683  0.9185207
+##   6     gini        0.2613183  0.9879512  0.6844065  0.9460063  0.9143383
+##   6     extratrees  0.1521853  0.9940614  0.8602053  0.9533232  0.9258312
+##   Mean_F1    Mean_Sensitivity  Mean_Specificity  Mean_Pos_Pred_Value
+##   0.8914347  0.8724161         0.9768576         0.9161420          
+##   0.8950054  0.8721871         0.9773079         0.9251045          
+##   0.8977124  0.8831142         0.9782401         0.9166231          
+##   0.9073199  0.8886466         0.9799147         0.9309842          
+##   0.9019314  0.8897387         0.9794796         0.9176327          
+##   0.9149236  0.8978963         0.9816897         0.9364261          
+##   Mean_Neg_Pred_Value  Mean_Precision  Mean_Recall  Mean_Detection_Rate
+##   0.9795997            0.9161420       0.8724161    0.2350640          
+##   0.9805200            0.9251045       0.8721871    0.2355798          
+##   0.9804335            0.9166231       0.8831142    0.2358138          
+##   0.9824366            0.9309842       0.8886466    0.2371921          
+##   0.9812747            0.9176327       0.8897387    0.2365016          
+##   0.9839393            0.9364261       0.8978963    0.2383308          
+##   Mean_Balanced_Accuracy
+##   0.9246369             
+##   0.9247475             
+##   0.9306772             
+##   0.9342806             
+##   0.9346092             
+##   0.9397930             
+## 
+## Tuning parameter 'min.node.size' was held constant at a value of 1
+## logLoss was used to select the optimal model using the smallest value.
+## The final values used for the model were mtry = 6, splitrule =
+##  extratrees and min.node.size = 1.
+\end{verbatim}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-combined-rolling-only-rf-results}Rolling Only - Z Combined - Validation Accuracy}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+  & x\\
+\midrule
+Accuracy & 0.7944191\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-combined-rolling-only-rf-results}Rolling Only - Z Combined - RF Validation Metrics}
+\centering
+\begin{tabular}[t]{lrrl}
+\toprule
+  & Sensitivity & Specificity & MultiClassAUC\\
+\midrule
+PATH\_IDLE & 0.9628476 & 0.9979478 & 0.999614434778278\\
+PATH\_MOVING & 0.5837823 & 0.9643497 & 0.9786197678392\\
+PATH\_TRANSITION & 0.4243542 & 0.9960271 & 0.981267109460529\\
+SHUTTLE & 0.9981917 & 0.7989485 & 0.998560930859161\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-combined-rolling-only-rf-results}Rolling Only - Z Combined - RF Vaidation Confusion Matrix}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+  & PATH\_IDLE & PATH\_MOVING & PATH\_TRANSITION & SHUTTLE\\
+\midrule
+PATH\_IDLE & 4328 & 9 & 0 & 2\\
+PATH\_MOVING & 24 & 2167 & 195 & 0\\
+PATH\_TRANSITION & 0 & 37 & 230 & 0\\
+SHUTTLE & 143 & 1499 & 117 & 1104\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+
+\caption{\label{tab:sensor-z-combined-rolling-only-rf-results}Rolling Only - Z Combined - RF Vaidation LogLoss}
+\centering
+\begin{tabular}[t]{r}
+\toprule
+x\\
+\midrule
+NA\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics{CHP4_RF_Results_files/figure-latex/plot_sensor-z-combined-rolling-only-roc-1.pdf}
+\caption{Rolling Only - Z Combined - ROC using 4 Binary ROC Curves}
+\end{figure}
+
+
+\end{document}
